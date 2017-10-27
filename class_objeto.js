@@ -1,5 +1,8 @@
 //Script general para todos los objetos, que contendrán una posición y un sprite
 
+"use strict"; //Pone el módulo en modo estricto (Para export)
+
+
 ///Constructro del objeto\\\
 function objeto(entradax, entraday, entradasprite){
 
@@ -35,3 +38,5 @@ personaje.cambia_sprite('sprite2');
 console.log(personaje.posicion.x);
 console.log(personaje.posicion.y);
 console.log(personaje.sprite);*/
+
+module.exports.objeto = objeto;
