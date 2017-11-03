@@ -25,18 +25,4 @@ objeto.prototype.cambia_sprite = function (newsprite) {
 	this.sprite = newsprite;
 };
 
-
-/*var personaje = new objeto(0, 1, 'sprite1');
-
-console.log(personaje.posicion.x);
-console.log(personaje.posicion.y);
-console.log(personaje.sprite);
-
-personaje.cambia_pos(1, 2);
-personaje.cambia_sprite('sprite2');
-
-console.log(personaje.posicion.x);
-console.log(personaje.posicion.y);
-console.log(personaje.sprite);*/
-
 module.exports.objeto = objeto;
