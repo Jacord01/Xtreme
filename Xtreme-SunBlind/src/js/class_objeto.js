@@ -1,6 +1,6 @@
 //Script general para todos los objetos, que contendrán una posición y un sprite
 
-"use strict"; //Pone el módulo en modo estricto (Para export)
+"use strict"; //Pone el módulo en modo estricto 
 
 
 ///Constructro del objeto\\\
