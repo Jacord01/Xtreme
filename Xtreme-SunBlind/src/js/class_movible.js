@@ -2,18 +2,22 @@
 
 "use strict";
 
-//Constructora
-function movible(velx, vely, dir){
-	this.velocity = {vx: velx, vy: vely};
-	this.direction = dir;
-}
-var obj = require('./class_objeto');
+//*************CLASS MOVIBLE**************************\\
+function movible(){
 
-//Creamos el objeto object para acceder a la posicion
-var object = new obj.objeto(4, 6, " ");
+	var her = require('./class_objeto');
+  this.herencia = new her.GO(0,0, '');
+  //this.herencia.cambia_sprite('tostadora');
+  this.velocity = {vx: 0, vy: 0};
+  this.direction = 0;
+}
 
 //Metodo para aplicar la velocidad
 movible.prototype.actualiza_pos = function(vx, vy){
-	object.posicion.x = vx*object.posicion.x;
-	object.posicion.y = vy*object.posicion.y;
+
+  this.herencia.cambia_pos(this.herencia.posicion.x += vx,  
+   this.herencia.posicion.y += vy);
+
 };
+
+module.exports.movible = movible;
