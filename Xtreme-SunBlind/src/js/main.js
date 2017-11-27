@@ -8,7 +8,6 @@ var mov = require('./class_movible');
 var per = require('./Protagonista');
 
 function preload() {
-
     game.stage.backgroundColor = '#1ff';
     game.load.image('player', 'images/original.png');
     game.load.image('tostadora', 'images/tostadora.png');
@@ -18,7 +17,6 @@ function preload() {
 var jugador;
 var plats = []; plats.length = 7;
 var plataformas; 
-
 var enem = []; enem.length = 2;
 var enemigos;
 
@@ -26,7 +24,6 @@ var i = 0;
 var objeto;
 var back;
 var temporizador;
-
 var p;
 
 function create() { 
@@ -35,16 +32,15 @@ function create() {
 temporizador = game.time.create(false);
 
 //Imagen de fondo de pantalla
- back = new obj(0,0,'fond');
+ back = new obj(100,50,'tostadora');
  back.reescala_imagen(1,1.2);
 
-jugador = new per(0, 0 , 'player');
+ jugador = new per();
 
 /*
 
 //Activamos la física del juego
   game.physics.startSystem(Phaser.Physics.ARCADE);
-
 
       //CREAMOS AL JUGADOR
 

@@ -7,7 +7,6 @@ var jumpButton;
 
 var PlayScene = {
   create: function () {
-
   	this.stage.backgroundColor = '#124184';
     patata = this.add.sprite(50, 0, 'patata');
 
@@ -24,7 +23,7 @@ var PlayScene = {
     tostadora.create(400, 450, 'tostadora');
 
     tostadora.setAll('body.immovable', true);
-    tostadora.scale.setTo(1, 0.25);
+    tostadora.scale.setTo(1, 0.5);
 
     cursors = this.input.keyboard.createCursorKeys();
     jumpButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
