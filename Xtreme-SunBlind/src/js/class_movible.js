@@ -2,22 +2,24 @@
 
 "use strict";
 
-//*************CLASS MOVIBLE**************************\\
-function movible(){
+var GO = require('./class_objeto');
 
-	var her = require('./class_objeto');
-  this.herencia = new her.GO(0,0, '');
+//*************CLASS MOVIBLE**************************\\
+var movible =  function(){
+  GO.call(this, 0,0,'player');
   //this.herencia.cambia_sprite('tostadora');
   this.velocity = {vx: 0, vy: 0};
   this.direction = 0;
+
 }
+movible.prototype = Object.create(GO.prototype);
+movible.prototype.constructor = movible;
 
 //Metodo para aplicar la velocidad
 movible.prototype.actualiza_pos = function(vx, vy){
 
-  this.herencia.cambia_pos(this.herencia.posicion.x += vx,  
-   this.herencia.posicion.y += vy);
+  this.cambia_pos(this.posicion.x += vx,   this.posicion.y += vy);
 
 };
 
-module.exports.movible = movible;
+module.exports = movible;
