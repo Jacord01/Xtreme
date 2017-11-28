@@ -5,7 +5,7 @@ var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', { preload: preload, creat
 
 var obj = require('./class_objeto');
 var mov = require('./class_movible');
-var per = require('./Protagonista');
+var per = require('./class_protagonista');
 
 function preload() {
     game.stage.backgroundColor = '#1ff';
