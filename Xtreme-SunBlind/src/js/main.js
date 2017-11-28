@@ -15,9 +15,9 @@ function preload() {
 
 var jugador;
 var temporizador;
+var platforms;
 var plataforma;
 var plataforma2;
-
 
 function create() { 
 //Activamos la física del juego
@@ -26,16 +26,19 @@ game.physics.startSystem(Phaser.Physics.ARCADE);
 //Temporizador para el juego en general
 temporizador = game.time.create(false);
 
-//Creamos una plataforma para ver si funciona bien
+//Creamos grupo de plataformas
+platforms = game.add.physicsGroup();
+
 plataforma = new plat('tostadora');
 plataforma.cambia_pos(200,400);
+platforms.add(plataforma.fisica);
 
 plataforma2 = new plat('tostadora');
 plataforma2.cambia_pos(300,600);
+platforms.add(plataforma2.fisica);
 
 //Creamos al jugador
 jugador = new per();
-
 /*
 //Activamos la física del juego
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -103,12 +106,10 @@ jugador = new per();
 } 
 
 function update () {
+    //Para que choque el personaje con las plataformas
+  game.physics.arcade.collide(jugador.fisica, platforms);
+  
   jugador.update();
-
-  //Para que choce el personaje con las plataformas
-
-  game.physics.arcade.collide(jugador.fisica, plataforma.fisica);
-  game.physics.arcade.collide(jugador.fisica, plataforma2.fisica);
 
    /* game.physics.arcade.collide(jugador.fisica, plataformas);
     game.physics.arcade.collide(plataformas, enemigos);

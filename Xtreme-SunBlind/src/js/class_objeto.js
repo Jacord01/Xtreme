@@ -15,6 +15,7 @@ function(entradax, entraday, entradasprite){
 GO.prototype.cambia_pos = function(newposx, newposy){
   this.fisica.x =  newposx % 1280; 
   if(this.fisica.x <0 )
+  
     this.fisica.x = 1280; 
   this.fisica.y =  newposy % 720; 
   if(this.fisica.y <0 )

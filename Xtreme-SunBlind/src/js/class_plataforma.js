@@ -1,6 +1,7 @@
 'use strict';
 
-var entorno = require('./class_entorno');	
+var entorno = require('./class_entorno');
+var juego = require('./main');	
 
 var plataforma = function(texture){
 	entorno.call(this, texture);

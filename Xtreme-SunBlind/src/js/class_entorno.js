@@ -9,7 +9,7 @@ var juego = require('./main');
 
 var entorno =  function(img){
   GO.call(this, 0, 0, img);
-  juego.game.physics.enable(this.fisica, Phaser.Physics.ARCADE);
+  juego.game.physics.arcade.enable(this.fisica);
   this.fisica.body.immovable = true;
 }
 entorno.prototype = Object.create(GO.prototype);
