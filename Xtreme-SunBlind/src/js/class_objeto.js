@@ -27,7 +27,7 @@ GO.prototype.cambia_pos = function(newposx, newposy){
 GO.prototype.cambia_sprite = function (newsprite) {
   //this.objeto = game.remove.sprite(this.posicion.x,this.posicion.y,this.sprite);
   this.sprite = newsprite;
-  this.fisica = game.add.sprite(this.posicion.x,this.posicion.y,this.sprite);
+  this.fisica = juego.game.add.sprite(this.posicion.x,this.posicion.y,this.sprite);
 };
 
 //Metodo para reescalar la imagen que queramos

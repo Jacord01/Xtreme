@@ -25,8 +25,12 @@ var objeto;
 var back;
 var temporizador;
 var p;
+var cursors;
+var jumpButton;
 
 function create() { 
+//Activamos la física del juego
+  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 //Temporizador para el juego en general
 temporizador = game.time.create(false);
@@ -36,9 +40,14 @@ temporizador = game.time.create(false);
  back.reescala_imagen(1,1.2);
 
  jugador = new per();
+ game.physics.arcade.enable(jugador.fisica);
+ jugador.fisica.body.collideWorldBounds = true;
+ jugador.fisica.body.gravity.y = 500;
+
+cursors = game.input.keyboard.createCursorKeys();
+jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 /*
-
 //Activamos la física del juego
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -105,7 +114,23 @@ temporizador = game.time.create(false);
 } 
 
 function update () {
+    jugador.fisica.body.velocity.x = 0;
 
+    if (cursors.left.isDown)
+    {
+        jugador.fisica.body.velocity.x = -250;
+    }
+    else if (cursors.right.isDown)
+    {
+        jugador.fisica.body.velocity.x = 250;
+    }
+
+    if (jumpButton.isDown && (jugador.fisica.body.onFloor() 
+      || jugador.fisica.body.touching.down))
+    //  if (jumpButton.isDown)
+    {
+        jugador.fisica.body.velocity.y = -400;
+    }
   //Para que choce el personaje con las plataformas
  
    /* game.physics.arcade.collide(jugador.fisica, plataformas);
@@ -122,8 +147,6 @@ function update () {
 
     else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
       jugador.fisica.body.velocity.x = 1000;
-     
-
     }
 
      if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && (
