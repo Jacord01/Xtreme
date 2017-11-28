@@ -17,11 +17,10 @@ Protagonista.prototype.constructor = Protagonista;
 
 Protagonista.prototype.create = function (){
 	juego.game.physics.arcade.enable(this.fisica);
- 	this.fisica.body.collideWorldBounds = true; // Para poder hacer después el toroide tenemos que quitarle los bordes
  	this.fisica.body.gravity.y = 4000;
  	cursors = juego.game.input.keyboard.createCursorKeys();
     jumpButton = juego.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.reescala_imagen(0.3,0.3);
+    this.reescala_imagen(0.2,0.2);
 }
 
 Protagonista.prototype.actualizaVida = function (life){

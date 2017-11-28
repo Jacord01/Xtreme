@@ -16,8 +16,6 @@ function preload() {
 var jugador;
 var temporizador;
 var platforms;
-var plataforma;
-var plataforma2;
 
 function create() { 
 //Activamos la física del juego
@@ -28,14 +26,62 @@ temporizador = game.time.create(false);
 
 //Creamos grupo de plataformas
 platforms = game.add.physicsGroup();
+var anchorx;
+var anchory;
+var anchoPlat = 50;
+var largoPlat = 50;
+//conjuntos de plataformas
+anchorx = 0;
+anchory = 0;
+for (var a = -1; a < 26; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
+  p.reescala_imagen(0.1, 0.005);
+  platforms.add(p.fisica);
+}
+anchorx = 0;
+anchory = 150;
+for (var a = 0; a < 10; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
+anchorx = 1280-anchoPlat;
+anchory = 150;
+for (var a = 0; a < 10; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx - (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
+anchorx = 350;
+anchory = 350;
+for (var a = 1; a < 11; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
+anchorx = 0;
+anchory = 550;
+for (var a = 0; a < 10; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
+anchorx = 1280-anchoPlat;
+anchory = 550;
+for (var a = 0; a < 10; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx - (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
 
-plataforma = new plat('tostadora');
-plataforma.cambia_pos(200,400);
-platforms.add(plataforma.fisica);
-
-plataforma2 = new plat('tostadora');
-plataforma2.cambia_pos(300,600);
-platforms.add(plataforma2.fisica);
+anchorx = 0;
+anchory = 700;
+for (var a = -1; a < 26; a++){
+  var p = (new plat('tostadora'));
+  p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
+  platforms.add(p.fisica);
+}
 
 //Creamos al jugador
 jugador = new per();

@@ -5,7 +5,7 @@ var juego = require('./main');
 
 var plataforma = function(texture){
 	entorno.call(this, texture);
-	this.reescala_imagen(1, 0.1);
+	this.reescala_imagen(0.1, 0.05);
 }
 
 plataforma.prototype = Object.create(entorno.prototype);
