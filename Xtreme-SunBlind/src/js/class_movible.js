@@ -15,7 +15,7 @@ movible.prototype.constructor = movible;
 
 //Metodo para aplicar la velocidad
 movible.prototype.actualiza_pos = function(vx, vy){
-  this.cambia_pos(this.posicion.x += vx,   this.posicion.y += vy);
+  this.cambia_pos(this.posicion.x += vx, this.posicion.y += vy);
 };
 
 module.exports = movible;
