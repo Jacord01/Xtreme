@@ -3,9 +3,8 @@
 
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
-var obj = require('./class_objeto');
-var mov = require('./class_movible');
 var per = require('./class_protagonista');
+var plat = require('./class_plataforma');
 
 function preload() {
     game.stage.backgroundColor = '#1ff';
@@ -15,16 +14,10 @@ function preload() {
 }
 
 var jugador;
-var plats = []; plats.length = 7;
-var plataformas; 
-var enem = []; enem.length = 2;
-var enemigos;
-
-var i = 0;
-var objeto;
-var back;
 var temporizador;
-var p;
+var plataforma;
+var plataforma2;
+
 
 function create() { 
 //Activamos la física del juego
@@ -33,11 +26,15 @@ game.physics.startSystem(Phaser.Physics.ARCADE);
 //Temporizador para el juego en general
 temporizador = game.time.create(false);
 
-//Imagen de fondo de pantalla
- back = new obj(100,50,'tostadora');
- back.reescala_imagen(1,1.2);
+//Creamos una plataforma para ver si funciona bien
+plataforma = new plat('tostadora');
+plataforma.cambia_pos(200,400);
 
- jugador = new per();
+plataforma2 = new plat('tostadora');
+plataforma2.cambia_pos(300,600);
+
+//Creamos al jugador
+jugador = new per();
 
 /*
 //Activamos la física del juego
@@ -107,8 +104,12 @@ temporizador = game.time.create(false);
 
 function update () {
   jugador.update();
+
   //Para que choce el personaje con las plataformas
- 
+
+  game.physics.arcade.collide(jugador.fisica, plataforma.fisica);
+  game.physics.arcade.collide(jugador.fisica, plataforma2.fisica);
+
    /* game.physics.arcade.collide(jugador.fisica, plataformas);
     game.physics.arcade.collide(plataformas, enemigos);
     game.physics.arcade.collide(jugador.fisica, enemigos, collisionHandler);
@@ -117,25 +118,6 @@ function update () {
 
 
      //***INPUTS***\\
-    if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-        jugador.fisica.body.velocity.x = -1000;
-      }
-
-    else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-      jugador.fisica.body.velocity.x = 1000;
-    }
-
-     if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && (
-      jugador.fisica.body.onFloor() || jugador.fisica.body.touching.down)){
-       jugador.fisica.body.velocity.y = -1300;
-     
-       
-      }
-
-      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
-      if( jugador.fisica.body.velocity.x != 0 ||  jugador.fisica.body.velocity.y != 0){
-         jugador.cambia_pos(jugador.fisica.x, jugador.fisica.y);
-       }
 
 
 
