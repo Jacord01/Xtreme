@@ -7,8 +7,7 @@ var jumpButton;
 
 var Protagonista = function(){
 	movible.call(this, 'player');
-	this.vida = 0;
-	this.salto = 0;
+	this.vida = 3;
 	this.create();
 }
 
@@ -28,8 +27,12 @@ Protagonista.prototype.actualizaVida = function (life){
 } 
 
 Protagonista.prototype.update = function (){
+
+  //Si no hay inputs consideramos que el jugador está parado
 	 this.fisica.body.velocity.x = 0;
 
+
+   //***INPUTS***
     if (cursors.left.isDown)
     {
         this.fisica.body.velocity.x = -1000;
