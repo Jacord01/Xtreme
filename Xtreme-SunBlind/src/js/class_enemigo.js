@@ -19,7 +19,7 @@ enemigo.prototype.create = function (){
 
 enemigo.prototype.update = function (){
 
-	 this.fisica.body.velocity.x = +300;
+	this.actualiza_pos(300);
 
 	 this.cambia_pos(this.fisica.x, this.fisica.y);
 }

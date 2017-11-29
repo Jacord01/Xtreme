@@ -20,6 +20,8 @@ var temporizador;
 var platforms;
 var enemigs;
 var deadZone;
+var plats = [];
+var tortugas =  [];
 
 function create() { 
 //Activamos la física del juego
@@ -41,7 +43,6 @@ jugador.cambia_pos(300, 650);
 
 //Creamos enemigos
 enemigs = game.add.physicsGroup();
-enemi = game.add.group();
 enemigos();
 
 
@@ -49,12 +50,13 @@ enemigos();
 
 function update () {
     //Para que choque el personaje con las plataformas
-  game.physics.arcade.collide(jugador.fisica, platforms);
+  game.physics.arcade.collide(jugador.fisica, platforms, collisionHandlerPlat);
   game.physics.arcade.collide(enemigs, platforms);
-  game.physics.arcade.collide(enemigs, jugador.fisica, collisionHandler);
+  game.physics.arcade.collide(enemigs, jugador.fisica, collisionHandlerEnem);
   
   jugador.update();
-  enemgs.update();
+  for (var i = 0; i < 2; i++)
+  tortugas[i].update();
 }
 
 function render () {
@@ -62,16 +64,27 @@ function render () {
 }
 
 
-function collisionHandler(){
+function collisionHandlerEnem(){
 
 //Esta parte de aquí mata al jugador y a los enemigos cuando chocan entre si
 
   jugador.fisica.kill();
 
-  enemigo.fisica.kill();
+  for (var i = 0; i < 2; i++)
+    tortugas[i].fisica.kill();
 
   temporizador.loop(2000, revive, this);
   temporizador.start();
+ 
+}
+
+function collisionHandlerPlat(jug, plat){
+
+//Esta parte de aquí mata al jugador y a los enemigos cuando chocan entre si
+  
+if(jugador.fisica.body.touching.up === true)
+  plat.kill();
+
  
 }
 
@@ -79,7 +92,8 @@ function collisionHandler(){
 function revive(){
   jugador.fisica.reset(300,650);
 
-  enemigo.fisica.reset(0,0);
+  for (var i = 0; i < 2; i++)
+   tortugas[i].fisica.reset(i * 1200, 0);
 
   temporizador.stop();
 }
@@ -91,6 +105,7 @@ var anchorx;
 var anchory;
 var anchoPlat = 50;
 var largoPlat = 50;
+var num = 0;
 //conjuntos de plataformas
 anchorx = 0;
 anchory = 0;
@@ -99,6 +114,8 @@ for (var a = -1; a < 26; a++){
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   p.reescala_imagen(0.1, 0.005);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 anchorx = 0;
 anchory = 150;
@@ -106,6 +123,8 @@ for (var a = 0; a < 10; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 anchorx = 1280-anchoPlat;
 anchory = 150;
@@ -113,6 +132,8 @@ for (var a = 0; a < 10; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx - (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 anchorx = 350;
 anchory = 375;
@@ -120,6 +141,8 @@ for (var a = 1; a < 11; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 
 anchorx = 0;
@@ -128,6 +151,8 @@ for (var a = 0; a < 5; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 
 anchorx = 1280 - anchoPlat * 5;
@@ -136,6 +161,8 @@ for (var a = 0; a < 5; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 
 anchorx = 0;
@@ -144,6 +171,8 @@ for (var a = 0; a < 10; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 anchorx = 1280-anchoPlat;
 anchory = 550;
@@ -151,6 +180,8 @@ for (var a = 0; a < 10; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx - (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 
 anchorx = 0;
@@ -159,12 +190,22 @@ for (var a = -1; a < 26; a++){
   var p = (new plat('tostadora'));
   p.cambia_pos(anchorx + (a*p.fisica.width), anchory);
   platforms.add(p.fisica);
+  plats[num] = p;
+  num++;
 }
 }
 
 function enemigos(){
+  for (var i = 0; i < 2; i++){
   var enemigo = new tort();
+  tortugas[i] = enemigo;
   enemigs.add(enemigo.fisica);
+  enemigo.cambia_pos(i * 1200, 0);
+  if (i === 0)
+  tortugas[i].cambia_dir();
+  
+  
+}
 }
 
 //***************************************************************\\

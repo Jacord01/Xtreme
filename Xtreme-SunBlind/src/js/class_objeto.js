@@ -9,9 +9,8 @@ var GO =
 function(entradax, entraday, entradasprite){
   this.posicion = {x: entradax, y: entraday};
   this.sprite = entradasprite;
-  //this.fisica = juego.game.add.sprite(this.posicion.x,this.posicion.y,this.sprite);
-  Phaser.Sprite.call(this, juego, this.posicion.x, this.posicion.y, entradasprite);
-}
+  this.fisica = juego.game.add.sprite(this.posicion.x,this.posicion.y,this.sprite);
+  }
 //Metodo para cambiar la posicion del objeto
 GO.prototype.cambia_pos = function(newposx, newposy){
   this.fisica.x =  newposx % 1280; 
