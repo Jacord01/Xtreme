@@ -79,13 +79,15 @@ function collisionHandlerEnem(){
 }
 
 function collisionHandlerPlat(jug, plat){
-
-//Esta parte de aquí mata al jugador y a los enemigos cuando chocan entre si
-  
 if(jugador.fisica.body.touching.up === true)
-  plat.kill();
-
- 
+    plat.tint = Math.random() *  0xffffff;
+/*  plat.body.immovable = false;
+  for (var i = 0; i < 4000; i++){
+    plat.body.velocity.y = -10; 
+  }
+  plat.body.velocity.y = 0;
+  plat.body.immovable = true;
+}*/
 }
 
 
