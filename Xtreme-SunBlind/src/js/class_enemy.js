@@ -19,6 +19,9 @@ enemigo.prototype.create = function (){
 
 enemigo.prototype.update = function (){
 	this.actualiza_pos(300);
+	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
+         this.cambia_pos(this.x, this.y);
+       }
 }
 
 module.exports = enemigo;
