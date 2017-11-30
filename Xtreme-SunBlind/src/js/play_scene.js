@@ -16,9 +16,9 @@ var PlayScene = {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  //this.game.add.sprite(0,0,'tostadora');
+  this.game.add.sprite(0,0,'fond');
 
-  //Temporizador para el juego en general
+  //temporizador para el juego en general
   temporizador = this.game.time.create(false);
 
   //Creamos grupo de plataformas
@@ -86,7 +86,7 @@ var PlayScene = {
   }
 
   //Creamos al jugador
-  jugador = new player(this.game, 0, 0, 'player', 1, 200, 3);
+  jugador = new player(this.game, 200, 640, 'player', 1, 200, 3);
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
@@ -101,8 +101,8 @@ var PlayScene = {
 
   update: function (){
     //Para que choque el personaje con las plataformas
-    this.game.physics.arcade.collide(jugador, platforms, collisionHandlerPlat);
-    this.game.physics.arcade.collide(enemies, platforms);
+    this.game.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
+    this.game.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
     this.game.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
   },
 
@@ -117,21 +117,25 @@ function collisionHandlerEnem (jug, enem){
   	temporizador.start();
   }
 
-function collisionHandlerPlat (jug, plat){
-  	if(jugador.body.touching.up === true)
+function collisionHandlerJug (jug, plat){
+  	if(jugador.body.touching.up === true){
    		plat.tint = Math.random() *  0xffffff;
-	/*plat.body.immovable = false;
-    for (var i = 0; i < 4000; i++){
-    plat.body.velocity.y = -10; 
-    }
-  	plat.body.velocity.y = 0;
-  	plat.body.immovable = true;
-	}*/
+   		plat.cambia_tocada();
+   		plat.jump();
+  	}
+  }
+
+  function collisionHandlerPlat(enem, plat){
+  	if(plat.tocada){
+  		plat.cambia_tocada();
+  		enem.cambia_vel(0);
+  	}
   }
 
 function revive (jug, enem){
-   jugador.reset(0,0);
+   jugador.reset(640,0);
    temporizador.stop();
   }
+
 
 module.exports = PlayScene;

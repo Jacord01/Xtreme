@@ -14,8 +14,8 @@ var movibl = function(game, entradax, entraday, entradasprite, dir, velx){
 movibl.prototype = Object.create(GO.prototype);
 movibl.prototype.constructor = movibl;
 
-movibl.prototype.actualiza_pos = function(){
-  this.body.velocity.x = this.velocidad * this.direction;
+movibl.prototype.actualiza_pos = function(vl){
+  this.body.velocity.x = vl * this.direction;
 };
 
 movibl.prototype.cambia_dir = function(){

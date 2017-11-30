@@ -6,6 +6,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.create();
+	this.velocidad = 300;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
@@ -18,10 +19,14 @@ enemigo.prototype.create = function (){
 }
 
 enemigo.prototype.update = function (){
-	this.actualiza_pos(300);
+	this.actualiza_pos(this.velocidad);
 	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
        }
 }
 
+enemigo.prototype.cambia_vel = function (vl){
+
+	this.velocidad = vl;
+}
 module.exports = enemigo;
