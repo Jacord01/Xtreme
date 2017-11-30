@@ -4,11 +4,12 @@ var mov = require('./class_movibl');
 var player = require('./class_player');
 var plat = require('./class_platform');
 var tort = require('./class_turtle');
+var env = require('./class_environment');
 
 var jugador;
-var temporizador;
 var platforms;
 var enemies;
+var deadZone1; var deadZone2;
 
 var PlayScene = {
   create: function () {
@@ -17,9 +18,6 @@ var PlayScene = {
 
   //Imagen de fondo
   this.game.add.sprite(0,0,'fond');
-
-  //temporizador para el juego en general
-  temporizador = this.game.time.create(false);
 
   //Creamos grupo de plataformas
   platforms = this.game.add.physicsGroup();
@@ -97,6 +95,15 @@ var PlayScene = {
   	if (i === 0)
   		enemigo.cambia_dir();
   }
+
+  //Creamos las deadzones
+  deadZone1 = new env(this.game, -50, 640, 'fond');
+  deadZone1.reescala_imagen(0.05,0.08);
+  deadZone1.visible = false;
+
+  deadZone2 = new env(this.game, 1260, 640, 'fond');
+  deadZone2.reescala_imagen(0.05,0.08);
+  deadZone2.visible = false;
  },
 
   update: function (){
@@ -104,6 +111,8 @@ var PlayScene = {
     this.game.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
     this.game.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
     this.game.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
+    this.game.physics.arcade.collide(enemies, deadZone1, DeadZone1);
+    this.game.physics.arcade.collide(enemies, deadZone2, DeadZone2);
   },
 
   render: function(){
@@ -112,14 +121,18 @@ var PlayScene = {
 };
 
 function collisionHandlerEnem (jug, enem){
+	if(!enem.stunt){
+
   	jugador.kill();
-  	temporizador.loop(2000, revive, this);
-  	temporizador.start();
+  	setTimeout(function(){ jug.reset(640,0); }, 2000);
+ 	}
+
+  else 
+  	enem.kill();
   }
 
 function collisionHandlerJug (jug, plat){
   	if(jugador.body.touching.up === true){
-   		plat.tint = Math.random() *  0xffffff;
    		plat.cambia_tocada();
    		plat.jump();
   	}
@@ -128,13 +141,18 @@ function collisionHandlerJug (jug, plat){
   function collisionHandlerPlat(enem, plat){
   	if(plat.tocada){
   		plat.cambia_tocada();
-  		enem.cambia_vel(0);
+  		enem.stunt = true;
+  		setTimeout(function(){ enem.stunt = false; }, 3000);
   	}
   }
 
-function revive (jug, enem){
-   jugador.reset(640,0);
-   temporizador.stop();
+  function DeadZone1(dead, enem){
+
+  	enem.cambia_pos(1200,0);
+  }
+
+  function DeadZone2(dead, enem){
+  	enem.cambia_pos(0,0);
   }
 
 

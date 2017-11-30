@@ -7,6 +7,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
 	this.juego = game;
 	this.create();
 	this.velocidad = 300;
+	this.stunt = false;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
@@ -19,7 +20,10 @@ enemigo.prototype.create = function (){
 }
 
 enemigo.prototype.update = function (){
+	if(!this.stunt)
 	this.actualiza_pos(this.velocidad);
+else 
+	this.actualiza_pos(0);
 	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
        }
