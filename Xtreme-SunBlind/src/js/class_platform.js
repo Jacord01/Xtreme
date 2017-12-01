@@ -25,10 +25,12 @@ plataforma.prototype.cambia_tocada = function (){
 plataforma.prototype.jump = function(){
 	if(this.arriba === false)
 	{
+	this.iniPointY = this.y;
 	this.arriba = true;
 	this.immovable = false;
 	this.body.gravity.y = 400;
 	this.body.velocity.y = -100
+
 
 	this.temporizador.loop(500, vuelve, this);
   	this.temporizador.start();
@@ -39,6 +41,7 @@ plataforma.prototype.jump = function(){
 function vuelve(){
 	this.body.gravity.y = 0;
 	this.body.velocity.y = 0;
+	this.y = this.iniPointY;
 	this.immovable = true;
 	this.tocada = false;
 	this.temporizador.stop();
