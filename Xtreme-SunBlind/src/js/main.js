@@ -5,10 +5,7 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-	this.game.load.baseURL = 'https://Jacord01.io/Xtreme/src/';
-	this.game.load.crossOrigin = 'anonymous';
-
-    //this.game.load.image('preloader_bar', 'images/preloader_bar.png');
+    this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
   create: function () {
@@ -23,7 +20,6 @@ var PreloaderScene = {
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
-    //Cargamos todas las imagenes
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#1ff';
