@@ -7,12 +7,15 @@ var tort = require('./class_turtle');
 var env = require('./class_environment');
 
 var jugador;
-var platforms;
+var platforms; var platformsIni;
 var enemies;
 var deadZone1; var deadZone2;
+var juego;
 
 var PlayScene = {
   create: function () {
+
+  	juego = this.game;
   //Activamos la física del juego
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -21,67 +24,56 @@ var PlayScene = {
 
   //Creamos grupo de plataformas
   platforms = this.game.add.physicsGroup();
+  platformsIni = this.game.add.physicsGroup();
   var anchorx;
   var anchory;	
-  var anchoPlat = 50;
+  var anchoPlat = 500;
   var largoPlat = 50;
 	
   //conjuntos de plataformas
   anchorx = 0; anchory = 0;
   for (var a = -1; a < 26; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	p.reescala_imagen(0.1, 0.005);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, true, false);
   }
-  anchorx = 0; anchory = 150;
+  anchorx = 0; anchory = 200;
   for (var a = 0; a < 10; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
-  anchorx = 1280-anchoPlat; anchory = 150;
+  anchorx = 1280-anchoPlat; anchory = 200;
   for (var a = 0; a < 10; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx - (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 350; anchory = 375;
   for (var a = 1; a < 11; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 400;
   for (var a = 0; a < 5; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
-  anchorx = 1280 - anchoPlat * 5; anchory = 400;
+  anchorx = 1280 - 250; anchory = 400;
   for (var a = 0; a < 5; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 550;
   for (var a = 0; a < 10; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 1280-anchoPlat; anchory = 550;
   for (var a = 0; a < 10; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx - (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 700;
   for (var a = -1; a < 26; a++){
-  	var p = (new plat(this.game, 0, 0, 'tostadora'));
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	platforms.add(p);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
+
+  //Plataformas para cuando muera el jugador
+   var anchorx = 535; var anchory = 100;
+  	for (var a = 0; a < 4; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, true);
+  }		
+   	platformsIni.visible = false;
 
   //Creamos al jugador
   jugador = new player(this.game, 200, 640, 'player', 1, 200, 3);
@@ -109,6 +101,8 @@ var PlayScene = {
   update: function (){
     //Para que choque el personaje con las plataformas
     this.game.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
+    if(jugador.revive)
+    	this.game.physics.arcade.collide(jugador, platformsIni);
     this.game.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
     this.game.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
     this.game.physics.arcade.collide(enemies, deadZone1, DeadZone1);
@@ -124,12 +118,20 @@ function collisionHandlerEnem (jug, enem){
 	if(!enem.stunt){
 
   	jugador.kill();
-  	setTimeout(function(){ jug.reset(640,0); }, 2000);
+  	setTimeout(function(){ revive(jug); platformsIni.visible = true;}, 1000);
+  	 	
  	}
 
   else 
   	enem.kill();
   }
+
+  function revive(jug, game){
+  	jugador.revive = true;
+  	jug.reset(640,0); 
+  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false;}, 3000);
+
+   }
 
 function collisionHandlerJug (jug, plat){
   	if(jugador.body.touching.up === true){
@@ -155,5 +157,19 @@ function collisionHandlerJug (jug, plat){
   	enem.cambia_pos(0,0);
   }
 
+  function creaPlat(a, anchorx, anchory, juego, superior, ini){
+
+  	var p = (new plat(juego, 0, 0, 'tostadora'));
+  	if(superior)
+  		p.reescala_imagen(0.1, 0.001);
+  	p.cambia_pos(anchorx + (a*p.width), anchory);
+  	if(!ini)
+  	platforms.add(p);
+  	else
+  	platformsIni.add(p);
+  }
+
 
 module.exports = PlayScene;
+
+

@@ -8,6 +8,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.vidas = vidas;
 	this.juego = game;
+  this.revive = false;
 	this.create();
 }
 
