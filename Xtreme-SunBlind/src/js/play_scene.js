@@ -122,7 +122,6 @@ var PlayScene = {
 
 function collisionHandlerEnem (jug, enem){
 	if(!enem.stunt){
-
   	jugador.kill();
   	jugador.vidas--;
   	if(jugador.vidas > 0){
@@ -138,10 +137,10 @@ function collisionHandlerEnem (jug, enem){
   }
 
   function revive(jug, game){
-
+  	jugador.muerto = true;
   	jugador.revive = true;
   	jug.reset(640,0); 
-  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false;}, 2000);
+  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false; jugador.muerto = false;}, 2000);
 
    }
 

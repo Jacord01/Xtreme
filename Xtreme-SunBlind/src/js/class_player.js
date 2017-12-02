@@ -9,6 +9,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	this.vidas = vidas;
 	this.juego = game;
   this.revive = false;
+  this.muerto = false;
 	this.create();
 }
 
@@ -24,6 +25,7 @@ Protagonista.prototype.create = function (){
 
 Protagonista.prototype.update = function (){
 
+if (!this.muerto){
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    
@@ -44,9 +46,10 @@ Protagonista.prototype.update = function (){
     }
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
-      if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
-         this.cambia_pos(this.x, this.y);
-       }
+      //if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
+      //   this.cambia_pos(this.x, this.y);
+      // }
+   }
 }
 
 module.exports = Protagonista;
