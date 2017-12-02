@@ -27,6 +27,7 @@ var PreloaderScene = {
     this.game.load.image('tostadora', 'images/tostadora.png');
     this.game.load.image('fond', 'images/Olaya.png');
     this.game.load.image('enemigo', 'images/juen.png');
+    this.game.load.image('perder', 'images/lose.png');
   },
 
   create: function () {

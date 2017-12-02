@@ -11,16 +11,22 @@ var platforms; var platformsIni;
 var enemies;
 var deadZone1; var deadZone2;
 var juego;
+var perder;
 
 var PlayScene = {
   create: function () {
 
   	juego = this.game;
+
+  this.game.add.sprite(0,0, 'perder');
   //Activamos la física del juego
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
   this.game.add.sprite(0,0,'fond');
+  perder = new go(juego, 500,0, 'perder');
+  perder.reescala_imagen(0.2,0.2);
+  perder.visible = false;
 
   //Creamos grupo de plataformas
   platforms = this.game.add.physicsGroup();
@@ -118,7 +124,12 @@ function collisionHandlerEnem (jug, enem){
 	if(!enem.stunt){
 
   	jugador.kill();
+  	jugador.vidas--;
+  	if(jugador.vidas > 0){
   	setTimeout(function(){ revive(jug); platformsIni.visible = true;}, 1000);
+  	}
+
+  	else perder.visible = true;
   	 	
  	}
 
@@ -127,9 +138,10 @@ function collisionHandlerEnem (jug, enem){
   }
 
   function revive(jug, game){
+
   	jugador.revive = true;
   	jug.reset(640,0); 
-  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false;}, 3000);
+  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false;}, 2000);
 
    }
 
