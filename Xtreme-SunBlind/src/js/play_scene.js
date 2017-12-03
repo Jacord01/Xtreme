@@ -82,7 +82,9 @@ var PlayScene = {
    	platformsIni.visible = false;
 
   //Creamos al jugador
-  jugador = new player(this.game, 200, 640, 'player', 1, 200, 3);
+  jugador = new player(this.game, 200, 0, 'player', 1, 200, 3);
+  jugador.animations.add('walk');
+  jugador.animations.play('walk', 9, true);
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();

@@ -23,7 +23,7 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#1ff';
-    this.game.load.image('player', 'images/original.png');
+    this.game.load.spritesheet('player', 'images/aliensito.png', 60, 57, 6);
     this.game.load.image('tostadora', 'images/tostadora.png');
     this.game.load.image('fond', 'images/Olaya.png');
     this.game.load.image('enemigo', 'images/juen.png');

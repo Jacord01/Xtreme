@@ -20,7 +20,7 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 4000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.reescala_imagen(0.2,0.2);
+    this.reescala_imagen(1.7,1.7);
 }
 
 Protagonista.prototype.update = function (){
@@ -32,10 +32,12 @@ if (!this.muerto){
     if (cursors.left.isDown)
     {
         this.body.velocity.x = -1000;
+        this.scale.x = -1.7;
     }
     else if (cursors.right.isDown)
     {
         this.body.velocity.x = 1000;
+        this.scale.x = 1.7;
     }
 
     if (jumpButton.isDown && (this.body.onFloor() 
@@ -46,9 +48,9 @@ if (!this.muerto){
     }
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
-      //if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
-      //   this.cambia_pos(this.x, this.y);
-      // }
+      if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
+         this.cambia_pos(this.x, this.y);
+       }
    }
 }
 
