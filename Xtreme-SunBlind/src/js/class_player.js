@@ -14,6 +14,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.origVel = 500;
   this.vel = 500;
   this.corriendo = false;
+  this.borracho = false;
 	this.create();
 }
 
@@ -57,10 +58,11 @@ Protagonista.prototype.update = function (){
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){
-  if(this.orina<10){
+
   this.orina = this.orina + orina;
-  this.vel = this.vel - (this.orina * 20);
-}
+  if(this.orina>10)
+    this.orina = 10; 
+  this.vel = this.origVel - (this.orina * 20);
 }
 
 module.exports = Protagonista;

@@ -29,6 +29,7 @@ var PreloaderScene = {
     this.game.load.image('enemigo', 'images/juen.png');
     this.game.load.image('perder', 'images/lose.png');
     this.game.load.image('energetica', 'images/Energetica.png');
+    this.game.load.image('alcohol', 'images/alcohol.png');
   },
 
   create: function () {

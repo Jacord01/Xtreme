@@ -6,6 +6,7 @@ var plat = require('./class_platform');
 var tort = require('./class_turtle');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
+var alc = require('./class_alcohol');
 
 var jugador;
 var platforms; var platformsIni;
@@ -94,14 +95,14 @@ var PlayScene = {
   jugador.animations.play('walk', 9, true);
 
   //Creamos enemigos
-  enemies = this.game.add.physicsGroup();
+ /* enemies = this.game.add.physicsGroup();
   for (var i = 0; i < 2; i++){
   	var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
   	enemies.add(enemigo);
   	enemigo.cambia_pos(i * 1200, 0);
   	if (i === 0)
   		enemigo.cambia_dir();
-  }
+  }*/
 
   //Creamos las deadzones
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -132,9 +133,18 @@ var PlayScene = {
 
     	if(PU === 0){
 
-    		var energetica = new ener(juego,'energetica', 2);
+    		var aleatorio = juego.rnd.integerInRange(0, 2);
+
+    		if(aleatorio === 0){
+    		var energetica = new ener(juego,'energetica');
  			powerUps.add(energetica);
   			PU++;
+  				}	
+  				else if(aleatorio === 1){
+  			var alcohol = new alc(juego, 'alcohol');
+  			powerUps.add(alcohol);
+  			PU++;
+  		}
 }	
 
   },
@@ -161,7 +171,7 @@ function collisionHandlerEnem (jug, enem){
   	jugador.vidas--;
   	jugador.vel = jugador.origVel;
   	if(jugador.vidas > 0){
-  	setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0;}, 1000);
+  	setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
   	}
 
   	else perder.visible = true;
@@ -185,6 +195,13 @@ function collisionHandlerJug (jug, plat){
    		plat.cambia_tocada();
    		plat.jump();
   	}
+
+
+
+
+
+
+
   }
 
   function collisionHandlerPlat(enem, plat){

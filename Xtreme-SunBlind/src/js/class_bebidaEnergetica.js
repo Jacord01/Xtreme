@@ -1,8 +1,9 @@
 var PU = require('./class_powerUp');	
 
-var bebidaEnergetica = function(game, entradasprite, orina){
+var bebidaEnergetica = function(game, entradasprite){
 
-	PU.call(this, game, entradasprite, orina);
+	this.orina = 2;
+	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.1,0.1);
 	this.incremento = 2;
 	
