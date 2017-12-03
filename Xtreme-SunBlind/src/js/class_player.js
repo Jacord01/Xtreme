@@ -48,13 +48,13 @@ Protagonista.prototype.update = function (){
     {
         this.body.velocity.x = -this.vel;
         this.scale.x = -1.4;
-        this.animations.play('walk', 9, true);
+        this.animations.play('walk', 6, true);
     }
     else if (cursors.right.isDown)
     {
         this.body.velocity.x = this.vel;
         this.scale.x = 1.4;
-        this.animations.play('walk', 9, true);
+        this.animations.play('walk', 6, true);
     }
 
     this.vel = this.origVel - (this.orina * 20);
