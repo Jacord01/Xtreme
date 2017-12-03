@@ -16,7 +16,7 @@ enemigo.prototype.constructor = enemigo;
 enemigo.prototype.create = function (){
 	this.juego.physics.arcade.enable(this);
  	this.body.gravity.y = 4000;
-    this.reescala_imagen(0.05,0.04);
+    this.reescala_imagen(0.05,0.02);
 }
 
 enemigo.prototype.update = function (){

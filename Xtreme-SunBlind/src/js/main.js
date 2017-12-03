@@ -28,6 +28,7 @@ var PreloaderScene = {
     this.game.load.image('fond', 'images/Olaya.png');
     this.game.load.image('enemigo', 'images/juen.png');
     this.game.load.image('perder', 'images/lose.png');
+    this.game.load.image('energetica', 'images/Energetica.png');
   },
 
   create: function () {

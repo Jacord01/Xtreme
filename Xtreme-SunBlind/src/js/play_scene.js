@@ -5,6 +5,7 @@ var player = require('./class_player');
 var plat = require('./class_platform');
 var tort = require('./class_turtle');
 var env = require('./class_environment');
+var ener = require('./class_bebidaEnergetica');
 
 var jugador;
 var platforms; var platformsIni;
@@ -12,6 +13,8 @@ var enemies;
 var deadZone1; var deadZone2;
 var juego;
 var perder;
+var powerUps; var PU;
+
 
 var PlayScene = {
   create: function () {
@@ -31,11 +34,15 @@ var PlayScene = {
   //Creamos grupo de plataformas
   platforms = this.game.add.physicsGroup();
   platformsIni = this.game.add.physicsGroup();
+  powerUps = this.game.add.physicsGroup();
+
+
   var anchorx;
   var anchory;	
   var anchoPlat = 500;
   var largoPlat = 50;
-	
+
+
   //conjuntos de plataformas
   anchorx = 0; anchory = 0;
   for (var a = -1; a < 26; a++){
@@ -82,7 +89,7 @@ var PlayScene = {
    	platformsIni.visible = false;
 
   //Creamos al jugador
-  jugador = new player(this.game, 200, 0, 'player', 1, 200, 3);
+  jugador = new player(this.game, 200, 600, 'player', 1, 200, 3);
   jugador.animations.add('walk');
   jugador.animations.play('walk', 9, true);
 
@@ -104,30 +111,57 @@ var PlayScene = {
   deadZone2 = new env(this.game, 1260, 640, 'fond');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
+
+
+	PU = 0; //Número de bebidas en el juego
+
  },
 
   update: function (){
     //Para que choque el personaje con las plataformas
-    this.game.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
+    juego.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
     if(jugador.revive)
-    	this.game.physics.arcade.collide(jugador, platformsIni);
-    this.game.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
-    this.game.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
-    this.game.physics.arcade.collide(enemies, deadZone1, DeadZone1);
-    this.game.physics.arcade.collide(enemies, deadZone2, DeadZone2);
+    	juego.physics.arcade.collide(jugador, platformsIni);
+    juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
+    juego.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
+    juego.physics.arcade.collide(enemies, deadZone1, DeadZone1);
+    juego.physics.arcade.collide(enemies, deadZone2, DeadZone2);
+    juego.physics.arcade.collide(powerUps, platforms);
+    juego.physics.arcade.collide(powerUps, jugador, collisionHandlerPower);    
+
+
+    	if(PU === 0){
+
+    		var energetica = new ener(juego,'energetica', 2);
+ 			powerUps.add(energetica);
+  			PU++;
+}	
+
   },
 
   render: function(){
-
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
+  	juego.debug.text('VELOCIDAD: ' + jugador.vel, 32, 70);
   }
 };
+
+function collisionHandlerPower(jug, pw){
+
+	jug.incrementaOrina(pw.orina);
+	pw.efecto(jug);
+	pw.kill();
+	PU--; 
+
+}
 
 function collisionHandlerEnem (jug, enem){
 	if(!enem.stunt){
   	jugador.kill();
   	jugador.vidas--;
+  	jugador.vel = jugador.origVel;
   	if(jugador.vidas > 0){
-  	setTimeout(function(){ revive(jug); platformsIni.visible = true;}, 1000);
+  	setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0;}, 1000);
   	}
 
   	else perder.visible = true;
