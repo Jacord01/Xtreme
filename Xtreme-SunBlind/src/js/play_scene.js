@@ -31,7 +31,9 @@ var PlayScene = {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  this.game.add.sprite(0,0,'fond');
+  var fondo = this.game.add.sprite(0,0,'fond');
+  fondo.width = 1280;
+  fondo.height = 720;
   perder = new go(juego, 500,0, 'perder');
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
@@ -50,47 +52,56 @@ var PlayScene = {
 
 
   //conjuntos de plataformas
+  var sprite;
+  var numbr = this.game.rnd.integerInRange(0, 2);
+  if (numbr === 0)
+  	sprite = 'plat0';
+  else if (numbr === 1)
+  	sprite = 'plat1';
+  else 
+  	sprite = 'plat2';
+
   anchorx = 0; anchory = 0;
   for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, true, false);
+  	creaPlat(a, anchorx, anchory, juego, true, false, sprite);
   }
   anchorx = 0; anchory = 200;
-  for (var a = 0; a < 10; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 8; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 1280-anchoPlat; anchory = 200;
-  for (var a = 0; a < 10; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 8; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 350; anchory = 375;
-  for (var a = 1; a < 11; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 1; a < 8; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 0; anchory = 400;
-  for (var a = 0; a < 5; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 4; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 1280 - 250; anchory = 400;
-  for (var a = 0; a < 5; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 4; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 0; anchory = 550;
-  for (var a = 0; a < 10; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 8; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 1280-anchoPlat; anchory = 550;
-  for (var a = 0; a < 10; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  for (var a = 0; a < 8; a++){
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
   anchorx = 0; anchory = 700;
   for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
+  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
   }
 
   //Plataformas para cuando muera el jugador
-   var anchorx = 535; var anchory = 100;
+   var anchorx = 510; var anchory = 100;
   	for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, true);
+  	creaPlat(a, anchorx, anchory, juego, false, true, sprite);
   }		
    	platformsIni.visible = false;
 
@@ -220,13 +231,6 @@ function collisionHandlerJug (jug, plat){
    		plat.cambia_tocada();
    		plat.jump();
   	}
-
-
-
-
-
-
-
   }
 
   function collisionHandlerPlat(enem, plat){
@@ -246,11 +250,10 @@ function collisionHandlerJug (jug, plat){
   	enem.cambia_pos(0,0);
   }
 
-  function creaPlat(a, anchorx, anchory, juego, superior, ini){
-
-  	var p = (new plat(juego, 0, 0, 'tostadora'));
+  function creaPlat(a, anchorx, anchory, juego, superior, ini, sprite){
+  	var p = (new plat(juego, 0, 0, sprite));
   	if(superior)
-  		p.reescala_imagen(0.1, 0.001);
+  		p.reescala_imagen(1, 0.1);
   	p.cambia_pos(anchorx + (a*p.width), anchory);
   	if(!ini)
   	platforms.add(p);

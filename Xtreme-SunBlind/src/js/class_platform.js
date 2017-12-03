@@ -6,21 +6,26 @@ var entorno = require('./class_environment');
 
 var plataforma = function(game, entradax, entraday, entradasprite){
 	entorno.call(this, game, entradax, entraday, entradasprite);
-	this.reescala_imagen(0.1, 0.05);
+	this.reescala_imagen(1, 0.5 );
 	this.tocada = false;
 	this.arriba = false;
 	this.iniPointY = entraday;
 	this.temporizador = this.game.time.create(false);
+	this.create();
+	
 }
 
 plataforma.prototype = Object.create(entorno.prototype);
 plataforma.prototype.constructor = plataforma;
 
+plataforma.prototype.create = function (){
+    this.animations.add('plat');
+  	this.animations.play('plat', 4, true );
+}
+
 plataforma.prototype.cambia_tocada = function (){
 	this.tocada = !this.tocada;
 }
-
-
 
 plataforma.prototype.jump = function(){
 	if(this.arriba === false)
