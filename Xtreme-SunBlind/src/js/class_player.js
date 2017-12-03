@@ -11,6 +11,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.revive = false;
   this.muerto = false;
   this.orina = 0;
+  this.escala = 1.4;
   this.origVel = 500;
   this.vel = 500;
   this.corriendo = false;
@@ -25,7 +26,7 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 4000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.reescala_imagen(1.4,1.1);
+    this.reescala_imagen(1.2,1);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.play('stay');
@@ -39,21 +40,26 @@ Protagonista.prototype.update = function (){
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
 
-	 if (this.borracho)
+	 if (this.borracho){
 	 	this.vel = -this.vel;
+   }
 
 	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    
     if (cursors.left.isDown)
     {
         this.body.velocity.x = -this.vel;
-        this.scale.x = -1.4;
+        if(!this.borracho)
+          this.scale.x = -this.escala;
+        else this.scale.x = this.escala;
         this.animations.play('walk', 6, true);
     }
     else if (cursors.right.isDown)
     {
         this.body.velocity.x = this.vel;
-        this.scale.x = 1.4;
+        if(!this.borracho)
+        this.scale.x = this.escala;
+        else this.scale.x = -this.escala;
         this.animations.play('walk', 6, true);
     }
 

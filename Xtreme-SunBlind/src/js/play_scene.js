@@ -8,9 +8,9 @@ var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
 
-var jugador;
+var jugador; var nivel;
 var platforms; var platformsIni;
-var enemies;
+var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2;
 var juego;
 var perder;
@@ -21,6 +21,10 @@ var PlayScene = {
   create: function () {
 
   	juego = this.game;
+  	nivel = 1;
+  	numeroEnemigos = (nivel * 4 ); 
+  	enemigosPorNivel = 2;
+  	enemigosEnPantalla = 0;
 
   this.game.add.sprite(0,0, 'perder');
   //Activamos la física del juego
@@ -37,6 +41,7 @@ var PlayScene = {
   platformsIni = this.game.add.physicsGroup();
   powerUps = this.game.add.physicsGroup();
 
+  PU = 0; //Número de bebidas en el juego
 
   var anchorx;
   var anchory;	
@@ -93,14 +98,20 @@ var PlayScene = {
   jugador = new player(this.game, 200, 600, 'player', 1, 200, 3);
 
   //Creamos enemigos
-  /*enemies = this.game.add.physicsGroup();
-  for (var i = 0; i < 2; i++){
-  	var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
-  	enemies.add(enemigo);
-  	enemigo.cambia_pos(i * 1200, 0);
-  	if (i === 0)
-  		enemigo.cambia_dir();
-  }*/
+  enemies = this.game.add.physicsGroup();
+  //Hay que crear dos enemigos primero por nivel
+
+  	   		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+  			enemies.add(enemigo);
+  			enemigo.cambia_pos(0, 0);  		
+  			enemigosEnPantalla++;
+
+  			var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+  			enemies.add(enemigo2);
+  			enemigo.cambia_pos(1200, 0);  		
+  			enemigo.cambia_dir();
+  			enemigosEnPantalla++;
+    	
 
   //Creamos las deadzones
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -110,9 +121,6 @@ var PlayScene = {
   deadZone2 = new env(this.game, 1260, 640, 'fond');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
-
-
-	PU = 0; //Número de bebidas en el juego
 
  },
 
@@ -128,6 +136,21 @@ var PlayScene = {
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.collide(powerUps, jugador, collisionHandlerPower);    
 
+    	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
+    		var aleatorio = juego.rnd.integerInRange(0,2);
+    		var x = 0;
+    		if(aleatorio == 0)
+    			x = 0;
+    		else 
+    			x = 1200;
+    		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+  			enemies.add(enemigo);
+  			enemigo.cambia_pos(x, 0);
+  				if (x != 0)
+  					enemigo.cambia_dir();
+  				enemigosEnPantalla++;
+    	}
+
 
     	if(PU === 0){
 
@@ -137,8 +160,9 @@ var PlayScene = {
     		var energetica = new ener(juego,'energetica');
  			powerUps.add(energetica);
   			PU++;
-  				}	
-  				else if(aleatorio === 1){
+  			}
+
+  			else if(aleatorio === 1){
   			var alcohol = new alc(juego, 'alcohol');
   			powerUps.add(alcohol);
   			PU++;
@@ -176,8 +200,11 @@ function collisionHandlerEnem (jug, enem){
   	 	
  	}
 
-  else 
+  else {
   	enem.kill();
+  	enemigosEnPantalla--;
+  	numeroEnemigos--;
+  }
   }
 
   function revive(jug, game){
