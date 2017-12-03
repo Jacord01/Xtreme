@@ -12,13 +12,8 @@ alcohol.prototype = Object.create(PU.prototype);
 alcohol.prototype.constructor = alcohol;
 
 alcohol.prototype.efecto = function(jug){
-
-	if(!jug.borracho){
-		jug.borracho = true;
-		jug.vel = -1 * jug.vel;
-	setTimeout(function(){ jug.vel = -1 * jug.vel; jug.borracho = false;}, 5000);
-}
-
+	jug.borracho = true;
+	setTimeout(function(){jug.borracho = false;}, 5000);
 }
 
 module.exports = alcohol;

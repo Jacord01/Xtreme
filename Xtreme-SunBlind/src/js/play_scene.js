@@ -95,14 +95,14 @@ var PlayScene = {
   jugador.animations.play('walk', 9, true);
 
   //Creamos enemigos
-  enemies = this.game.add.physicsGroup();
+  /*enemies = this.game.add.physicsGroup();
   for (var i = 0; i < 2; i++){
   	var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
   	enemies.add(enemigo);
   	enemigo.cambia_pos(i * 1200, 0);
   	if (i === 0)
   		enemigo.cambia_dir();
-  }
+  }*/
 
   //Creamos las deadzones
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -152,7 +152,7 @@ var PlayScene = {
   render: function(){
   	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
-  	juego.debug.text('VELOCIDAD: ' + jugador.vel, 32, 70);
+  	//he movido la vel al update del jugador para que se vean los cambios
   }
 };
 

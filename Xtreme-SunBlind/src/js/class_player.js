@@ -32,6 +32,14 @@ Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
+
+	 if (this.corriendo)
+	 	this.vel = 2*this.vel;
+
+	 if (this.borracho)
+	 	this.vel = -this.vel;
+
+	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    
     if (cursors.left.isDown)
     {
@@ -43,6 +51,8 @@ Protagonista.prototype.update = function (){
         this.body.velocity.x = this.vel;
         this.scale.x = 1;
     }
+
+    this.vel = this.origVel - (this.orina * 20);
 
     if (jumpButton.isDown && (this.body.onFloor() 
       || this.body.touching.down))
@@ -62,7 +72,6 @@ Protagonista.prototype.incrementaOrina = function (orina){
   this.orina = this.orina + orina;
   if(this.orina>10)
     this.orina = 10; 
-  this.vel = this.origVel - (this.orina * 20);
 }
 
 module.exports = Protagonista;

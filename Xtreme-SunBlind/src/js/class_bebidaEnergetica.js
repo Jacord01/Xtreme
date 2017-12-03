@@ -13,16 +13,9 @@ bebidaEnergetica.prototype = Object.create(PU.prototype);
 bebidaEnergetica.prototype.constructor = bebidaEnergetica;
 
 bebidaEnergetica.prototype.efecto = function(jug){
-
-	if(!jug.corriendo){
-	var aux;
 	jug.corriendo = true;
-	aux = jug.vel;
+	setTimeout(function(){jug.corriendo = false}, 5000);
 
-	jug.vel = aux * this.incremento;
-	
-	setTimeout(function(){ jug.vel = aux; jug.corriendo = false}, 5000);
-}
 }
 
 module.exports = bebidaEnergetica;
