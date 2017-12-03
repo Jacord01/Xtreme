@@ -25,7 +25,10 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 4000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.reescala_imagen(1,1.1);
+    this.reescala_imagen(1.4,1.1);
+    this.animations.add('walk', [0,1,2,3]);
+  this.animations.add('stay', [4,5], 6, true);
+  this.animations.play('stay');
 }
 
 Protagonista.prototype.update = function (){
@@ -44,12 +47,14 @@ Protagonista.prototype.update = function (){
     if (cursors.left.isDown)
     {
         this.body.velocity.x = -this.vel;
-        this.scale.x = -1;
+        this.scale.x = -1.4;
+        this.animations.play('walk', 9, true);
     }
     else if (cursors.right.isDown)
     {
         this.body.velocity.x = this.vel;
-        this.scale.x = 1;
+        this.scale.x = 1.4;
+        this.animations.play('walk', 9, true);
     }
 
     this.vel = this.origVel - (this.orina * 20);
@@ -65,6 +70,9 @@ Protagonista.prototype.update = function (){
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
        }
+
+       if (this.body.velocity.x === 0)
+       	this.animations.play('stay');
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){

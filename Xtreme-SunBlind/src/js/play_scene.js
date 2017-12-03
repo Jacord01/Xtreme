@@ -91,8 +91,6 @@ var PlayScene = {
 
   //Creamos al jugador
   jugador = new player(this.game, 200, 600, 'player', 1, 200, 3);
-  jugador.animations.add('walk');
-  jugador.animations.play('walk', 9, true);
 
   //Creamos enemigos
   /*enemies = this.game.add.physicsGroup();
