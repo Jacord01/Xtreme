@@ -153,7 +153,7 @@ var PlayScene = {
   			enemigo.cambia_pos(x, 0);
   				if (x >= 1000)
   					enemigo.cambia_dir();
-  				enemigo.velocidad = nivel * 10 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  				enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   				enemigosEnPantalla++;
     	}
 
@@ -197,7 +197,18 @@ var PlayScene = {
 function nuevoNivel(){
 	nivel++;
 	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
-	enemigosPorNivel = 2 + (juego.rnd.integerInRange(0,1));
+	var porcentaje = juego.rnd.integerInRange(0,100);
+
+	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
+	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
+	//entonces creamos el número base de enemigos con otra probabilidad de que salgan más enemigos, si esto no ocurre, es decir, estamos en los 3
+	//primeros niveles, entonces simplemente creamos dos enemigos
+	
+	if(nivel > 3 && porcentaje < nivel * 5)
+		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 2));
+	else
+		enemigosPorNivel = 2;
+
 	jugador.reset(640,0);
 	jugador.revive = true;
 	platformsIni.visible = true;
@@ -205,17 +216,19 @@ function nuevoNivel(){
 	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 75);
   	enemies.add(enemigo);
   	enemigo.cambia_pos(0, 0);  		
+  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   	enemigosEnPantalla++;
 
   	var enemigo2 = new tort(juego, 0, 0, 'enemigo', 1, 75);
   	enemies.add(enemigo2);
-  	enemigo.cambia_pos(1200, 0);  		
+  	enemigo.cambia_pos(1200, 0);  	
+  	enemigo2.velocidad = nivel * 7 + enemigo2.velocidad; //Cada nivel los enemigos irán más rápido	
   	enemigo.cambia_dir();
   	enemigosEnPantalla++;
 
 
 	
-	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 5000);
 
 
 }
