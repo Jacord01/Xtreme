@@ -16,6 +16,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.vel = velx;
   this.corriendo = false;
   this.borracho = false;
+  this.invencible = false;
   this.saltando = false;
 	this.create();
 }
@@ -27,6 +28,8 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.anchor.x = 0.5;
+    this.anchor.y = 0.5;
     this.reescala_imagen(1.2,1);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);

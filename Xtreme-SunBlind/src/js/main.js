@@ -27,13 +27,13 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
-    this.game.load.image('tostadora', 'images/tostadora.png');
     this.game.load.image('fond', 'images/space.png');
     this.game.load.image('enemigo', 'images/juen.png');
     this.game.load.image('perder', 'images/lose.png');
     this.game.load.image('energetica', 'images/Energetica.png');
     this.game.load.image('alcohol', 'images/alcohol.png');
     this.game.load.image('agua', 'images/agua.png');
+    this.game.load.image('proteinas', 'images/proteinas.png');
   },
 
   create: function () {

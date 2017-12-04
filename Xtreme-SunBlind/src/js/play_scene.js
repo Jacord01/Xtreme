@@ -8,6 +8,7 @@ var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
 var wat = require('./class_water');
+var prot = require('./class_batidoDeProteinas');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -15,7 +16,7 @@ var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2;
 var juego;
 var perder;
-var powerUps; var PU;
+var powerUps; var PoEliminado;
 
 
 var PlayScene = {
@@ -45,8 +46,6 @@ var PlayScene = {
   platforms = this.game.add.physicsGroup();
   platformsIni = this.game.add.physicsGroup();
   powerUps = this.game.add.physicsGroup();
-
-  PU = 0; //Número de bebidas en el juego
 
   var anchorx;
   var anchory;	
@@ -101,7 +100,7 @@ var PlayScene = {
    	platformsIni.visible = false;
 
   //Creamos al jugador
-  jugador = new player(this.game, 200, 600, 'player', 1, 400, 3);
+  jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
@@ -111,7 +110,7 @@ var PlayScene = {
   			enemies.add(enemigo);
   			enemigo.cambia_pos(0, 0);  		
   			enemigosEnPantalla++;
-
+  			
   			var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 75);
   			enemies.add(enemigo2);
   			enemigo.cambia_pos(1200, 0);  		
@@ -127,6 +126,11 @@ var PlayScene = {
   deadZone2 = new env(this.game, 1260, 640, 'fond');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
+
+  PoEliminado = false;
+
+  Modulo.creaPower();
+
  },
 
   update: function (){
@@ -164,30 +168,6 @@ var PlayScene = {
     		
     	}
 
-
-    	if(PU === 0){
-
-    		var aleatorio = juego.rnd.integerInRange(0, 3);
-
-    		if(aleatorio === 0){
-    		var energetica = new ener(juego,'energetica');
- 			powerUps.add(energetica);
-  			PU++;
-  			}
-
-  			else if(aleatorio === 1){
-  			var alcohol = new alc(juego, 'alcohol');
-  			powerUps.add(alcohol);
-  			PU++;
-  			}
-
-  			else if(aleatorio === 2){
-  				var agua = new wat(juego, 'agua');
-  				powerUps.add(agua);
-  				PU++;
-  			}
-}	
-
   },
 
   render: function(){
@@ -196,6 +176,7 @@ var PlayScene = {
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
+  	juego.debug.text('invencible: ' + jugador.invencible, 232, 90);
   	//he movido la vel al update del jugador para que se vean los cambios
   }
 };
@@ -203,12 +184,14 @@ var PlayScene = {
 function nuevoNivel(){
 	nivel++;
 	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
-	var porcentaje = juego.rnd.integerInRange(0,100);
+	
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
 	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
 	//entonces creamos el número base de enemigos con otra probabilidad de que salgan más enemigos, si esto no ocurre, es decir, estamos en los 3
-	//primeros niveles, entonces simplemente creamos dos enemigos
+	//primeros niveles, entonces simplemente creamos dos enemigos 
+
+	var porcentaje = juego.rnd.integerInRange(0,100);
 	
 	if(nivel > 3 && porcentaje < nivel * 5)
 		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 2));
@@ -234,34 +217,68 @@ function nuevoNivel(){
 
 
 	
-	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 5000);
+	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 
 
 }
+
+
+var Modulo = {};
+Modulo.creaPower = function() {
+			var aleatorio = juego.rnd.integerInRange(0, 3);
+    		var po; 
+    		
+//setTimeout(function(){ }, 2000);
+    		if(aleatorio === 0){
+    		po = new ener(juego,'energetica');
+ 			powerUps.add(po);
+  			}
+
+  			else if(aleatorio === 1){
+  			po = new alc(juego, 'alcohol');
+  			powerUps.add(po);
+  			}
+
+  			else if(aleatorio === 2){
+  				po = new wat(juego, 'agua');
+  				powerUps.add(po);
+  			}
+
+  			else if(aleatorio === 3){
+  				po = new prot(juego, 'proteinas');
+  				powerUps.add(po);
+  			}
+
+}
+module.exports.Modulo = Modulo;
+
 
 function collisionHandlerPower(jug, pw){
 
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
+	pw.limpia();
 	pw.kill();
-	PU--; 
+	Modulo.creaPower(); 
 
 }
 
 function collisionHandlerEnem (jug, enem){
+
 	if(!enem.stunt){
-  	jugador.kill();
-  	jugador.vidas--;
-  	jugador.vel = jugador.origVel;
-  	jugador.borracho = false;
-  	if(jugador.vidas > 0){
-  	setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
-  	}
+		if(!jugador.invencible){
+  			jugador.kill();
+  			jugador.vidas--;
+  			jugador.vel = jugador.origVel;
+  			jugador.borracho = false;
+  			jugador.invencible = false;
+  				if(jugador.vidas > 0)
+  					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+  				else perder.visible = true;
+  			}
+  			//else jugador.invencible = false;
 
-  	else perder.visible = true;
-  	 	
- 	}
-
+}
   else {
   	enem.kill();
   	enemigosEnPantalla--;

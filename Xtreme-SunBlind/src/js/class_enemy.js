@@ -34,3 +34,20 @@ enemigo.prototype.cambia_vel = function (vl){
 	this.velocidad = vl;
 }
 module.exports = enemigo;
+
+
+
+
+
+
+/*//var Modulo = {};
+//Module.creaPower = function() {
+
+//}
+//module.exports.Modulo = Modulo;
+
+//-----
+
+//var module = require('Modulo');
+//module.Modulo.creaPower
+*/
