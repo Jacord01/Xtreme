@@ -82,7 +82,7 @@ Protagonista.prototype.update = function (){
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando)
+    if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
           this.orina = 0;
         }

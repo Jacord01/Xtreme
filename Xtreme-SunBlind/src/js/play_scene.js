@@ -7,6 +7,7 @@ var tort = require('./class_turtle');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
+var wat = require('./class_water');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -126,7 +127,6 @@ var PlayScene = {
   deadZone2 = new env(this.game, 1260, 640, 'fond');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
-
  },
 
   update: function (){
@@ -167,7 +167,7 @@ var PlayScene = {
 
     	if(PU === 0){
 
-    		var aleatorio = juego.rnd.integerInRange(0, 2);
+    		var aleatorio = juego.rnd.integerInRange(0, 3);
 
     		if(aleatorio === 0){
     		var energetica = new ener(juego,'energetica');
@@ -179,7 +179,13 @@ var PlayScene = {
   			var alcohol = new alc(juego, 'alcohol');
   			powerUps.add(alcohol);
   			PU++;
-  		}
+  			}
+
+  			else if(aleatorio === 2){
+  				var agua = new wat(juego, 'agua');
+  				powerUps.add(agua);
+  				PU++;
+  			}
 }	
 
   },
@@ -247,6 +253,7 @@ function collisionHandlerEnem (jug, enem){
   	jugador.kill();
   	jugador.vidas--;
   	jugador.vel = jugador.origVel;
+  	jugador.borracho = false;
   	if(jugador.vidas > 0){
   	setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
   	}
