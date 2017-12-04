@@ -4,7 +4,7 @@ var bebidaEnergetica = function(game, entradasprite){
 
 	this.orina = 2;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.1,0.1);
+	this.reescala_imagen(0.07,0.07);
 	this.incremento = 2;
 	
 }

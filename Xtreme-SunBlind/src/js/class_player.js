@@ -16,6 +16,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.vel = velx;
   this.corriendo = false;
   this.borracho = false;
+  this.saltando = false;
 	this.create();
 }
 
@@ -46,6 +47,7 @@ Protagonista.prototype.update = function (){
    }
 
 	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
+   this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    
     if (cursors.left.isDown)
     {
@@ -72,8 +74,19 @@ Protagonista.prototype.update = function (){
       || this.body.touching.down))
 
     {
+
         this.body.velocity.y = -1000;
     }
+
+    if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
+             this.saltando = true;
+    else this.saltando = false;
+
+    if(cursors.up.isDown && !this.saltando)
+        {
+          this.orina = 0;
+        }
+
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){

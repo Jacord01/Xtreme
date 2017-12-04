@@ -21,8 +21,10 @@ var PlayScene = {
   create: function () {
 
   	juego = this.game;
+
   	nivel = 1;
-  	numeroEnemigos = (nivel * 4 ); 
+  	//Para el nivel 1
+  	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
   	enemigosPorNivel = 2;
   	enemigosEnPantalla = 0;
 
@@ -52,56 +54,48 @@ var PlayScene = {
 
 
   //conjuntos de plataformas
-  var sprite;
-  var numbr = this.game.rnd.integerInRange(0, 2);
-  if (numbr === 0)
-  	sprite = 'plat0';
-  else if (numbr === 1)
-  	sprite = 'plat1';
-  else 
-  	sprite = 'plat2';
 
   anchorx = 0; anchory = 0;
   for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, true, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, true, false);
   }
   anchorx = 0; anchory = 200;
   for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 1280-anchoPlat; anchory = 200;
   for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 350; anchory = 375;
   for (var a = 1; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 400;
   for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 1280 - 250; anchory = 400;
   for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 550;
   for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 1280-anchoPlat; anchory = 550;
   for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
   anchorx = 0; anchory = 700;
   for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, false);
   }
 
   //Plataformas para cuando muera el jugador
    var anchorx = 510; var anchory = 100;
   	for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, true, sprite);
+  	creaPlat(a, anchorx, anchory, juego, false, true);
   }		
    	platformsIni.visible = false;
 
@@ -151,15 +145,23 @@ var PlayScene = {
     		var aleatorio = juego.rnd.integerInRange(0,2);
     		var x = 0;
     		if(aleatorio == 0)
-    			x = 0;
+    			x = juego.rnd.integerInRange(0,200);
     		else 
-    			x = 1200;
+    			x = juego.rnd.integerInRange(1000,1200);
     		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 75);
   			enemies.add(enemigo);
   			enemigo.cambia_pos(x, 0);
-  				if (x != 0)
+  				if (x >= 1000)
   					enemigo.cambia_dir();
+  				enemigo.velocidad = nivel * 10 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   				enemigosEnPantalla++;
+    	}
+
+    	if(numeroEnemigos <= 0){
+
+    		jugador.kill();
+    		nuevoNivel();
+    		
     	}
 
 
@@ -185,9 +187,38 @@ var PlayScene = {
   render: function(){
   	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
+  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
+  	juego.debug.text('NIVEL: ' + nivel, 232, 30);
+  	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	//he movido la vel al update del jugador para que se vean los cambios
   }
 };
+
+function nuevoNivel(){
+	nivel++;
+	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
+	enemigosPorNivel = 2 + (juego.rnd.integerInRange(0,1));
+	jugador.reset(640,0);
+	jugador.revive = true;
+	platformsIni.visible = true;
+
+	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 75);
+  	enemies.add(enemigo);
+  	enemigo.cambia_pos(0, 0);  		
+  	enemigosEnPantalla++;
+
+  	var enemigo2 = new tort(juego, 0, 0, 'enemigo', 1, 75);
+  	enemies.add(enemigo2);
+  	enemigo.cambia_pos(1200, 0);  		
+  	enemigo.cambia_dir();
+  	enemigosEnPantalla++;
+
+
+	
+	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+
+
+}
 
 function collisionHandlerPower(jug, pw){
 
@@ -250,7 +281,8 @@ function collisionHandlerJug (jug, plat){
   	enem.cambia_pos(0,0);
   }
 
-  function creaPlat(a, anchorx, anchory, juego, superior, ini, sprite){
+  function creaPlat(a, anchorx, anchory, juego, superior, ini){
+  	var sprite = 'plat2';
   	var p = (new plat(juego, 0, 0, sprite));
   	if(superior)
   		p.reescala_imagen(1, 0.1);
