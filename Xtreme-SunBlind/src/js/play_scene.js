@@ -139,11 +139,11 @@ var PlayScene = {
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
     juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
-    juego.physics.arcade.collide(enemies, jugador, collisionHandlerEnem);
-    juego.physics.arcade.collide(enemies, deadZone1, DeadZone1);
-    juego.physics.arcade.collide(enemies, deadZone2, DeadZone2);
+    juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
+    juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
+    juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
     juego.physics.arcade.collide(powerUps, platforms);
-    juego.physics.arcade.collide(powerUps, jugador, collisionHandlerPower);    
+    juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
     		var aleatorio = juego.rnd.integerInRange(0,2);
@@ -176,7 +176,8 @@ var PlayScene = {
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
-  	juego.debug.text('invencible: ' + jugador.invencible, 232, 90);
+  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
   	//he movido la vel al update del jugador para que se vean los cambios
   }
 };
@@ -228,8 +229,7 @@ Modulo.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
     		
-//setTimeout(function(){ }, 2000);
-    		if(aleatorio === 0){
+setTimeout(function(){ if(aleatorio === 0){
     		po = new ener(juego,'energetica');
  			powerUps.add(po);
   			}
@@ -248,7 +248,8 @@ Modulo.creaPower = function() {
   				po = new prot(juego, 'proteinas');
   				powerUps.add(po);
   			}
-
+	}, 2000);
+    		
 }
 module.exports.Modulo = Modulo;
 
@@ -276,7 +277,12 @@ function collisionHandlerEnem (jug, enem){
   					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
   				else perder.visible = true;
   			}
-  			//else jugador.invencible = false;
+  			else if (jugador.invencible) {
+  				enem.kill();
+  				enemigosEnPantalla--;
+  				numeroEnemigos--;
+  				jugador.invencible = false;
+  			}
 
 }
   else {
