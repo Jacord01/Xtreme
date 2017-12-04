@@ -23,7 +23,7 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#1ff';
-    this.game.load.spritesheet('player', 'images/aliensito.png', 60, 57, 6);
+    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);

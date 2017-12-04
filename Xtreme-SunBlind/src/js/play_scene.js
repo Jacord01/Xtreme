@@ -106,18 +106,18 @@ var PlayScene = {
    	platformsIni.visible = false;
 
   //Creamos al jugador
-  jugador = new player(this.game, 200, 600, 'player', 1, 200, 3);
+  jugador = new player(this.game, 200, 600, 'player', 1, 400, 3);
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
   //Hay que crear dos enemigos primero por nivel
 
-  	   		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+  	   		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 75);
   			enemies.add(enemigo);
   			enemigo.cambia_pos(0, 0);  		
   			enemigosEnPantalla++;
 
-  			var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+  			var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 75);
   			enemies.add(enemigo2);
   			enemigo.cambia_pos(1200, 0);  		
   			enemigo.cambia_dir();
@@ -154,7 +154,7 @@ var PlayScene = {
     			x = 0;
     		else 
     			x = 1200;
-    		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 200);
+    		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 75);
   			enemies.add(enemigo);
   			enemigo.cambia_pos(x, 0);
   				if (x != 0)

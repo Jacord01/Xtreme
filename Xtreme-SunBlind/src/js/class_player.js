@@ -12,8 +12,8 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.muerto = false;
   this.orina = 0;
   this.escala = 1.4;
-  this.origVel = 500;
-  this.vel = 500;
+  this.origVel = velx;
+  this.vel = velx;
   this.corriendo = false;
   this.borracho = false;
 	this.create();
@@ -23,12 +23,13 @@ Protagonista.prototype = Object.create(movible.prototype);
 Protagonista.prototype.constructor = Protagonista;
 
 Protagonista.prototype.create = function (){
- 	this.body.gravity.y = 4000;
+ 	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.reescala_imagen(1.2,1);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
+  this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
   this.animations.play('stay');
 }
 
@@ -52,7 +53,8 @@ Protagonista.prototype.update = function (){
         if(!this.borracho)
           this.scale.x = -this.escala;
         else this.scale.x = this.escala;
-        this.animations.play('walk', 6, true);
+        if (this.body.touching.down)
+           this.animations.play('walk', 6, true);
     }
     else if (cursors.right.isDown)
     {
@@ -60,7 +62,8 @@ Protagonista.prototype.update = function (){
         if(!this.borracho)
         this.scale.x = this.escala;
         else this.scale.x = -this.escala;
-        this.animations.play('walk', 6, true);
+        if (this.body.touching.down)
+           this.animations.play('walk', 6, true);
     }
 
     this.vel = this.origVel - (this.orina * 20);
@@ -69,7 +72,7 @@ Protagonista.prototype.update = function (){
       || this.body.touching.down))
 
     {
-        this.body.velocity.y = -1500;
+        this.body.velocity.y = -1000;
     }
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
@@ -77,7 +80,10 @@ Protagonista.prototype.update = function (){
          this.cambia_pos(this.x, this.y);
        }
 
-       if (this.body.velocity.x === 0)
+       if (!this.body.touching.down)
+        this.animations.play('jump', 10 , true);
+
+       else if (this.body.velocity.x === 0)
        	this.animations.play('stay');
 }
 
