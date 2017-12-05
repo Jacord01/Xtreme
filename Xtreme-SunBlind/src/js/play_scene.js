@@ -4,6 +4,7 @@ var mov = require('./class_movibl');
 var player = require('./class_player');
 var plat = require('./class_platform');
 var tort = require('./class_turtle');
+var crab = require('./class_crab');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
@@ -106,16 +107,16 @@ var PlayScene = {
   enemies = this.game.add.physicsGroup();
   //Hay que crear dos enemigos primero por nivel
 
-  	   		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 75);
-  			enemies.add(enemigo);
-  			enemigo.cambia_pos(0, 0);  		
-  			enemigosEnPantalla++;
+  var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 300);
+  enemies.add(enemigo);
+  enemigo.cambia_pos(0, 0);  		
+  enemigosEnPantalla++;
   			
-  			var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 75);
-  			enemies.add(enemigo2);
-  			enemigo.cambia_pos(1200, 0);  		
-  			enemigo.cambia_dir();
-  			enemigosEnPantalla++;
+  var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 300);
+  enemies.add(enemigo2);
+  enemigo2.cambia_pos(1200, 0);  		
+  enemigo2.cambia_dir();
+  enemigosEnPantalla++;
     	
 
   //Creamos las deadzones
@@ -138,6 +139,7 @@ var PlayScene = {
     juego.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
+
     juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
     juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
     juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
@@ -152,20 +154,22 @@ var PlayScene = {
     			x = juego.rnd.integerInRange(0,200);
     		else 
     			x = juego.rnd.integerInRange(1000,1200);
-    		var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 75);
+
+    		var enemigo = new crab(this.game, 0, 0, 'crabby', 1, 300);
   			enemies.add(enemigo);
+  			enemigo.reescala_imagen(0.1,0.1);
   			enemigo.cambia_pos(x, 0);
-  				if (x >= 1000)
-  					enemigo.cambia_dir();
-  				enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
-  				enemigosEnPantalla++;
+
+  			if (x >= 1000)
+  				enemigo.cambia_dir();
+
+  			enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  			enemigosEnPantalla++;
     	}
 
     	if(numeroEnemigos <= 0){
-
     		jugador.kill();
     		nuevoNivel();
-    		
     	}
 
   },
@@ -178,14 +182,12 @@ var PlayScene = {
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
-  	//he movido la vel al update del jugador para que se vean los cambios
   }
 };
 
 function nuevoNivel(){
 	nivel++;
 	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
-	
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
 	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
@@ -203,24 +205,20 @@ function nuevoNivel(){
 	jugador.revive = true;
 	platformsIni.visible = true;
 
-	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 75);
+	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
   	enemies.add(enemigo);
   	enemigo.cambia_pos(0, 0);  		
   	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   	enemigosEnPantalla++;
 
-  	var enemigo2 = new tort(juego, 0, 0, 'enemigo', 1, 75);
+  	var enemigo2 = new tort(juego, 0, 0, 'enemigo', 1, 300);
   	enemies.add(enemigo2);
   	enemigo.cambia_pos(1200, 0);  	
   	enemigo2.velocidad = nivel * 7 + enemigo2.velocidad; //Cada nivel los enemigos irán más rápido	
   	enemigo.cambia_dir();
   	enemigosEnPantalla++;
-
-
 	
 	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
-
-
 }
 
 
@@ -310,13 +308,12 @@ function collisionHandlerJug (jug, plat){
   function collisionHandlerPlat(enem, plat){
   	if(plat.tocada){
   		plat.cambia_tocada();
-  		enem.stunt = true;
-  		setTimeout(function(){ enem.stunt = false; }, 3000);
+  		enem.golpeado = true;
+  		setTimeout(function(){ enem.golpeado = false; }, 3000);
   	}
   }
 
   function DeadZone1(dead, enem){
-
   	enem.cambia_pos(1200,0);
   }
 

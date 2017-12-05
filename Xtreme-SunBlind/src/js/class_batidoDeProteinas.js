@@ -11,7 +11,6 @@ batidoDeProteinas.prototype = Object.create(PU.prototype);
 batidoDeProteinas.prototype.constructor = batidoDeProteinas;
 
 batidoDeProteinas.prototype.efecto = function(jug){
-	console.log('nada');
 	jug.invencible = true;
 	jug.borracho = false;
 	setTimeout(function(){jug.invencible = false}, 5000);
