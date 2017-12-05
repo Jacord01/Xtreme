@@ -1,0 +1,30 @@
+"use strict";
+
+var enemigo = require('./class_enemy');
+
+var fly =  function(game, entradax, entraday, entradasprite, dir, velx){
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
+}
+fly.prototype = Object.create(enemigo.prototype);
+fly.prototype.constructor = fly;
+
+fly.prototype.update = function (){
+if (this.golpeado)
+	this.stunt = true;
+else
+	this.stunt = false;
+
+if(!this.stunt){
+	this.actualiza_pos(this.velocidad);
+	if (this.body.onFloor() || this.body.touching.down){
+		this.body.velocity.y = -700;
+	}
+}
+else 
+	this.actualiza_pos(0);
+	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
+         this.cambia_pos(this.x, this.y);
+       }
+}
+
+module.exports = fly;

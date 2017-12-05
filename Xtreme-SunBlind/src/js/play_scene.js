@@ -5,6 +5,7 @@ var player = require('./class_player');
 var plat = require('./class_platform');
 var tort = require('./class_turtle');
 var crab = require('./class_crab');
+var fly = require('./class_fly');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
@@ -148,23 +149,7 @@ var PlayScene = {
     juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		var aleatorio = juego.rnd.integerInRange(0,2);
-    		var x = 0;
-    		if(aleatorio == 0)
-    			x = juego.rnd.integerInRange(0,200);
-    		else 
-    			x = juego.rnd.integerInRange(1000,1200);
-
-    		var enemigo = new crab(this.game, 0, 0, 'crabby', 1, 300);
-  			enemies.add(enemigo);
-  			enemigo.reescala_imagen(0.1,0.1);
-  			enemigo.cambia_pos(x, 0);
-
-  			if (x >= 1000)
-  				enemigo.cambia_dir();
-
-  			enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
-  			enemigosEnPantalla++;
+    		creaEnemigoRandom();
     	}
 
     	if(numeroEnemigos <= 0){
@@ -331,6 +316,34 @@ function collisionHandlerJug (jug, plat){
   	platforms.add(p);
   	else
   	platformsIni.add(p);
+  }
+
+  function creaEnemigoRandom(){
+  	var aleatorio = juego.rnd.integerInRange(0,2);
+  	var aleatorioEnem = juego.rnd.integerInRange(0,2);
+    var x = 0;
+    if(aleatorio == 0)
+    	x = juego.rnd.integerInRange(0,200);
+    else 
+    	x = juego.rnd.integerInRange(1000,1200);
+    if (aleatorioEnem === 0)
+    	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
+    else if (aleatorioEnem === 1){
+    	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
+    	enemigo.reescala_imagen(0.1,0.1);
+    }
+    else if (aleatorioEnem === 2){
+    	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
+    	enemigo.reescala_imagen(0.08,0.08);
+    }
+  	enemies.add(enemigo);
+  	enemigo.cambia_pos(x, 0);
+
+  	if (x >= 1000)
+  		enemigo.cambia_dir();
+
+  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  	enemigosEnPantalla++;
   }
 
 
