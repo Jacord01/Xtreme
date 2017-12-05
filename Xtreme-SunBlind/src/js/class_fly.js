@@ -4,6 +4,7 @@ var enemigo = require('./class_enemy');
 
 var fly =  function(game, entradax, entraday, entradasprite, dir, velx){
   enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
+  this.body.gravity.y = 1000;
 }
 fly.prototype = Object.create(enemigo.prototype);
 fly.prototype.constructor = fly;
@@ -17,7 +18,7 @@ else
 if(!this.stunt){
 	this.actualiza_pos(this.velocidad);
 	if (this.body.onFloor() || this.body.touching.down){
-		this.body.velocity.y = -700;
+		this.body.velocity.y = -250;
 	}
 }
 else 
