@@ -11,6 +11,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.revive = false;
   this.muerto = false;
   this.orina = 0;
+  this.orinando = false;
   this.escala = 1.4;
   this.origVel = velx;
   this.vel = velx;
@@ -49,8 +50,12 @@ Protagonista.prototype.update = function (){
 	 	this.vel = -this.vel;
    }
 
+   if(this.orinando)
+    this.vel = 0;
+
 	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
+   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);
    
     if (cursors.left.isDown)
     {
@@ -72,7 +77,6 @@ Protagonista.prototype.update = function (){
     }
 
     this.vel = this.origVel - (this.orina * 20);
-
     if (jumpButton.isDown && (this.body.onFloor() 
       || this.body.touching.down))
 
@@ -87,7 +91,11 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
+          console.log('Para que entramos aqui de nuevo');
           this.orina = 0;
+          this.orinando = true;
+          
+          setTimeout(function(){this.orinando = false; console.log('aqui tambien llegamos eh??');}, 1000);
         }
 
 

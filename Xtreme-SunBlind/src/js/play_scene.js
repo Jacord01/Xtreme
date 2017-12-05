@@ -108,16 +108,8 @@ var PlayScene = {
   enemies = this.game.add.physicsGroup();
   //Hay que crear dos enemigos primero por nivel
 
-  var enemigo = new tort(this.game, 0, 0, 'enemigo', 1, 300);
-  enemies.add(enemigo);
-  enemigo.cambia_pos(0, 0);  		
-  enemigosEnPantalla++;
-  			
-  var enemigo2 = new tort(this.game, 0, 0, 'enemigo', 1, 300);
-  enemies.add(enemigo2);
-  enemigo2.cambia_pos(1200, 0);  		
-  enemigo2.cambia_dir();
-  enemigosEnPantalla++;
+  creaEnemigoRandom();
+  creaEnemigoRandom();
     	
 
   //Creamos las deadzones
@@ -172,7 +164,7 @@ var PlayScene = {
 
 function nuevoNivel(){
 	nivel++;
-	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
+	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(1,2);
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
 	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
@@ -182,7 +174,7 @@ function nuevoNivel(){
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
 	if(nivel > 3 && porcentaje < nivel * 5)
-		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 2));
+		enemigosPorNivel = 2 + (juego.rnd.integerInRange(1, 3));
 	else
 		enemigosPorNivel = 2;
 
@@ -190,18 +182,8 @@ function nuevoNivel(){
 	jugador.revive = true;
 	platformsIni.visible = true;
 
-	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
-  	enemies.add(enemigo);
-  	enemigo.cambia_pos(0, 0);  		
-  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
-  	enemigosEnPantalla++;
-
-  	var enemigo2 = new tort(juego, 0, 0, 'enemigo', 1, 300);
-  	enemies.add(enemigo2);
-  	enemigo.cambia_pos(1200, 0);  	
-  	enemigo2.velocidad = nivel * 7 + enemigo2.velocidad; //Cada nivel los enemigos irán más rápido	
-  	enemigo.cambia_dir();
-  	enemigosEnPantalla++;
+	creaEnemigoRandom();
+	creaEnemigoRandom();
 	
 	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
@@ -319,23 +301,40 @@ function collisionHandlerJug (jug, plat){
   }
 
   function creaEnemigoRandom(){
-  	var aleatorio = juego.rnd.integerInRange(0,2);
-  	var aleatorioEnem = juego.rnd.integerInRange(0,2);
+
+  	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
+  	setTimeout(function(){	var aleatorio = juego.rnd.integerInRange(0,2);
+
+  		var p = 0;
+  	if(nivel <= 2)
+  		aleatorioEnem = 0;
+  	else
+  		if(nivel == 3)
+  			p = 1;
+  		else if(nivel > 3)
+  			p = 2;
+
+  		var aleatorioEnem = juego.rnd.integerInRange(0,p);
+  		
     var x = 0;
     if(aleatorio == 0)
-    	x = juego.rnd.integerInRange(0,200);
+    	x = juego.rnd.integerInRange(100,250);
     else 
-    	x = juego.rnd.integerInRange(1000,1200);
+    	x = juego.rnd.integerInRange(950,1100);
+
+   
     if (aleatorioEnem === 0)
     	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
+
     else if (aleatorioEnem === 1){
-    	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
-    	enemigo.reescala_imagen(0.1,0.1);
+    	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
+    	
     }
     else if (aleatorioEnem === 2){
-    	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
-    	enemigo.reescala_imagen(0.08,0.08);
+    	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
     }
+
+
   	enemies.add(enemigo);
   	enemigo.cambia_pos(x, 0);
 
@@ -343,7 +342,11 @@ function collisionHandlerJug (jug, plat){
   		enemigo.cambia_dir();
 
   	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  	
+
+  	 }, 1000); 
   	enemigosEnPantalla++;
+  
   }
 
 

@@ -6,6 +6,7 @@ var crab =  function(game, entradax, entraday, entradasprite, dir, velx){
   enemy.call(this, game, entradax, entraday, entradasprite, dir, velx);
   this.enfado = false;
   this.origVel = velx;
+  this.reescala_imagen(0.1,0.1);
 }
 crab.prototype = Object.create(enemy.prototype);
 crab.prototype.constructor = crab;
