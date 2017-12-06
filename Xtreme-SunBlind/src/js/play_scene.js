@@ -2,7 +2,7 @@
 var go = require('./class_object');
 var mov = require('./class_movibl');
 var player = require('./class_player');
-var plat = require('./class_platform');
+var plat = require('./crea_Plataformas');
 var tort = require('./class_turtle');
 var crab = require('./class_crab');
 var fly = require('./class_fly');
@@ -18,101 +18,41 @@ var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2;
 var juego;
 var perder;
-var powerUps; var PoEliminado;
-
+var powerUps; 
 
 var PlayScene = {
+
   create: function () {
 
-  	juego = this.game;
+  juego = this.game;
 
-  	nivel = 1;
-  	//Para el nivel 1
-  	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,2);
-  	enemigosPorNivel = 2;
-  	enemigosEnPantalla = 0;
-
-  this.game.add.sprite(0,0, 'perder');
   //Activamos la física del juego
-  this.game.physics.startSystem(Phaser.Physics.ARCADE);
+  juego.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
   var fondo = this.game.add.sprite(0,0,'fond');
   fondo.width = 1280;
   fondo.height = 720;
+
+  //Imagen de perder
+  //juego.add.sprite(0,0, 'perder');
   perder = new go(juego, 500,0, 'perder');
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
 
   //Creamos grupo de plataformas
-  platforms = this.game.add.physicsGroup();
-  platformsIni = this.game.add.physicsGroup();
+  plat.creaPlataforma(juego);
+  platforms = plat.devuelvePlat();
+  platformsIni = plat.devuelveIni();
+
+  //Creamos primer PowerUp
   powerUps = this.game.add.physicsGroup();
-
-  var anchorx;
-  var anchory;	
-  var anchoPlat = 500;
-  var largoPlat = 50;
-
-
-  //conjuntos de plataformas
-
-  anchorx = 0; anchory = 0;
-  for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, true, false);
-  }
-  anchorx = 0; anchory = 200;
-  for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 1280-anchoPlat; anchory = 200;
-  for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 350; anchory = 375;
-  for (var a = 1; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 0; anchory = 400;
-  for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 1280 - 250; anchory = 400;
-  for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 0; anchory = 550;
-  for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 1280-anchoPlat; anchory = 550;
-  for (var a = 0; a < 8; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-  anchorx = 0; anchory = 700;
-  for (var a = -1; a < 26; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, false);
-  }
-
-  //Plataformas para cuando muera el jugador
-   var anchorx = 510; var anchory = 100;
-  	for (var a = 0; a < 4; a++){
-  	creaPlat(a, anchorx, anchory, juego, false, true);
-  }		
-   	platformsIni.visible = false;
-
-  //Creamos al jugador
-  jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
+  Modulo.creaPower();
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
-  //Hay que crear dos enemigos primero por nivel
 
-  creaEnemigoRandom();
-  creaEnemigoRandom();
-    	
-
-  //Creamos las deadzones
+  //Creamos las deadzones para los enemigos
   deadZone1 = new env(this.game, -50, 640, 'fond');
   deadZone1.reescala_imagen(0.05,0.08);
   deadZone1.visible = false;
@@ -121,10 +61,13 @@ var PlayScene = {
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
 
-  PoEliminado = false;
+  //Creamos al jugador
+  jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
 
-  Modulo.creaPower();
-
+  //Finalmente, creamos el nivel
+  nivel = 0; //Para el nivel 1
+  nuevoNivel();
+  	
  },
 
   update: function (){
@@ -164,7 +107,19 @@ var PlayScene = {
 
 function nuevoNivel(){
 	nivel++;
-	numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(1,2);
+  enemigosEnPantalla = 0;
+
+  if(nivel != 1)
+	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
+  else numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+
+  jugador.borracho = false;
+  jugador.invencible = false;
+  jugador.corriendo = false;
+
+  //UTILIZAREMOS ESTO MÁS ADELANTE PARA CREAR LAS PLATAFORMAS CADA VEZ QUE PASEMOS DE NIVEL YA QUE HABRÁ ALGUNAS QUE SEA DE DIFERENTE TIPO
+  /*platforms.forEach(function(element) {
+    element.kill();});*/
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
 	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
@@ -178,17 +133,21 @@ function nuevoNivel(){
 	else
 		enemigosPorNivel = 2;
 
+  if(nivel != 1){
 	jugador.reset(640,0);
 	jugador.revive = true;
 	platformsIni.visible = true;
+  setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+}
 
 	creaEnemigoRandom();
 	creaEnemigoRandom();
 	
-	setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+	
 }
 
 
+//Este modulo sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
 var Modulo = {};
 Modulo.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
@@ -258,6 +217,7 @@ function collisionHandlerEnem (jug, enem){
   }
 
   function revive(jug, game){
+    
   	jugador.muerto = true;
   	jugador.revive = true;
   	jug.reset(640,0); 
@@ -286,18 +246,6 @@ function collisionHandlerJug (jug, plat){
 
   function DeadZone2(dead, enem){
   	enem.cambia_pos(0,0);
-  }
-
-  function creaPlat(a, anchorx, anchory, juego, superior, ini){
-  	var sprite = 'plat2';
-  	var p = (new plat(juego, 0, 0, sprite));
-  	if(superior)
-  		p.reescala_imagen(1, 0.1);
-  	p.cambia_pos(anchorx + (a*p.width), anchory);
-  	if(!ini)
-  	platforms.add(p);
-  	else
-  	platformsIni.add(p);
   }
 
   function creaEnemigoRandom(){
@@ -338,7 +286,7 @@ function collisionHandlerJug (jug, plat){
   	enemies.add(enemigo);
   	enemigo.cambia_pos(x, 0);
 
-  	if (x >= 1000)
+  	if (x >= 950)
   		enemigo.cambia_dir();
 
   	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
