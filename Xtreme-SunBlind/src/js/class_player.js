@@ -10,7 +10,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	this.juego = game;
   this.revive = false;
   this.muerto = false;
-  this.orina = 0;
+  this.orina = 10;
   this.orinando = false;
   this.escala = 1.4;
   this.origVel = velx;
@@ -91,11 +91,11 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
-          console.log('Para que entramos aqui de nuevo');
           this.orina = 0;
           this.orinando = true;
+          var prota = this;
           
-          setTimeout(function(){this.orinando = false; console.log('aqui tambien llegamos eh??');}, 1000);
+          setTimeout(function(){prota.orinando = false;}, 1000);
         }
 
 
