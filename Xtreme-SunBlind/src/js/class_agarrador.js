@@ -9,7 +9,7 @@ var agarrador =  function(game, entradax, entraday, entradasprite, jugador){
   this.jug = jugador;
   this.juego = game;
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-  this.reescala_imagen(0.1,0.1);
+  this.reescala_imagen(0.075,0.075);
   this.aleatorio = 0;
 
 }

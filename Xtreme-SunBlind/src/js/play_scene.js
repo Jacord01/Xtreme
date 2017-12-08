@@ -250,10 +250,19 @@ function collisionHandlerJug (jug, plat){
   function collisionHandlerPlat(enem, plat){
   	if(plat.tocada){
   		plat.cambia_tocada();
-  		enem.golpeado = true;
-  		enem.cont = enem.cont + 0.25;
-  		if (enem.cont > 2) enem.cont = 2;
-  		setTimeout(function(){ enem.golpeado = false; }, 3000);
+  		if (!enem.golpeado){
+  			enem.golpeado = true;
+  			enem.cont = enem.cont + 0.25;
+  			if (enem.cont > 2) 
+  				enem.cont = 2;
+  			setTimeout(function(){ enem.golpeado = false;}, 3000);
+  		}
+  		else {
+  			enem.golpeado = false;
+  			enem.cont = enem.cont - 0.25;
+  			if (enem.cont < 1) 
+  				enem.cont = 1;
+  		}
   	}
   }
 
@@ -288,14 +297,14 @@ function collisionHandlerJug (jug, plat){
     	x = juego.rnd.integerInRange(950,1100);
 
    
-    if (nivel <= 5 && aleatorioEnem === 0){
+    if (nivel <= 3 && aleatorioEnem === 0){
     	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
     	enemigo.cambia_pos(x, 0);
     }
 
     else if (aleatorioEnem === 1){
     	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
-    	enemigo.cambia_pos(x, 0);
+    	enemigo.cambia_pos(x, 50);
     	
     }
     else if (aleatorioEnem === 2){
@@ -303,8 +312,8 @@ function collisionHandlerJug (jug, plat){
     	enemigo.cambia_pos(x, 0);
     }
 
-    else if(nivel > 5 && aleatorioEnem === 0){
-    	var enemigo = new ag (juego, 450, 500, 'enemigo', jugador);
+    else if(nivel > 3 && aleatorioEnem === 0){
+    	var enemigo = new ag (juego, 450, 50, 'enemigo', jugador);
     }
 
 
@@ -314,7 +323,7 @@ function collisionHandlerJug (jug, plat){
   	if (x >= 950)
   		enemigo.cambia_dir();
 
-  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  	//enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   	
 
   	 }, 1000); 
