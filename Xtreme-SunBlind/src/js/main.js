@@ -5,7 +5,8 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-
+this.game.load.baseURL = 'https://Jacord01.github.io/Xtreme/src/';
+this.game.load.crossOrigin = 'anonymous';
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
