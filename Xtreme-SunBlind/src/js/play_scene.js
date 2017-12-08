@@ -20,6 +20,8 @@ var deadZone1; var deadZone2;
 var juego;
 var perder;
 var powerUps; 
+var auxRn;
+var agarrador;
 
 var PlayScene = {
 
@@ -52,6 +54,8 @@ var PlayScene = {
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
+  auxRn = false;
+  agarrador = false;
 
   //Creamos las deadzones para los enemigos
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -228,6 +232,8 @@ function collisionHandlerEnem (jug, enem){
   	enem.kill();
   	enemigosEnPantalla--;
   	numeroEnemigos--;
+    if(enem.agarra != undefined)
+      agarrador = false;
   }
   }
 
@@ -267,11 +273,11 @@ function collisionHandlerJug (jug, plat){
   }
 
   function DeadZone1(dead, enem){
-  	enem.cambia_pos(1200,0);
+  	enem.cambia_pos(1200,90);
   }
 
   function DeadZone2(dead, enem){
-  	enem.cambia_pos(0,0);
+  	enem.cambia_pos(0,90);
   }
 
   function creaEnemigoRandom(){
@@ -291,13 +297,19 @@ function collisionHandlerJug (jug, plat){
   		var aleatorioEnem = juego.rnd.integerInRange(0,p);
   		
     var x = 0;
-    if(aleatorio == 0)
+    var y = 0;
+    y = juego.rnd.integerInRange(0, 600);
+    if(aleatorio == 0 && !auxRn){
+      auxRn = true;
     	x = juego.rnd.integerInRange(100,250);
-    else 
+    }
+    else {
+      auxRn = false;
     	x = juego.rnd.integerInRange(950,1100);
+    }
 
    
-    if (nivel <= 3 && aleatorioEnem === 0){
+    if (nivel <= 4 && aleatorioEnem === 0){
     	var enemigo = new tort(juego, x, 0, 'enemigo', 1, 300);
     }
 
@@ -309,8 +321,9 @@ function collisionHandlerJug (jug, plat){
     	var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
     }
 
-    else if(nivel > 3 && aleatorioEnem === 0){
-    	var enemigo = new ag (juego, x, 50, 'enemigo', jugador);
+    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
+    	var enemigo = new ag (juego, x, y, 'enemigo', jugador);
+      agarrador = true;
     }
 
 
@@ -320,7 +333,7 @@ function collisionHandlerJug (jug, plat){
   	if (x >= 950)
   		enemigo.cambia_dir();
 
-  	//enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
   	
 
   	 }, 1000); 

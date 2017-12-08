@@ -42,16 +42,18 @@ agarrador.prototype.update = function(){
 
 agarrador.prototype.agarra = function(jug){
 	var ag = this; //Cagon el this de las narices la de tiempo que he estado para esta bobada
+	ag.medAgarro = 50;
 	ag.agarrando = true;
 	jug.agarrado = true;
 	
-	//agarrador.prototype.cambiaAgarre(ag);
+	agarrador.prototype.cambiaAgarre(ag, jug);
 }
 
-agarrador.prototype.cambiaAgarre = function(ag){
+agarrador.prototype.cambiaAgarre = function(ag, jug){
 
 	ag.medAgarro = ag.medAgarro - 10;
-	setTimeout(function(){agarrador.prototype.cambiaAgarre(ag);}, 350);
+	if(jug.agarrado)
+		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);
 
 }
 
