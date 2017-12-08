@@ -18,12 +18,13 @@ else
 	this.stunt = false;
 
 if(!this.stunt)
-	this.actualiza_pos(this.velocidad);
+	this.actualiza_pos(this.velocidad * this.cont);
 else 
 	this.actualiza_pos(0);
 	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
        }
+       console.log (this.cont);
 }
 
 module.exports = tortuguita;

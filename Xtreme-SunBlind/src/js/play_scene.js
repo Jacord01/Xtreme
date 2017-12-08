@@ -251,6 +251,8 @@ function collisionHandlerJug (jug, plat){
   	if(plat.tocada){
   		plat.cambia_tocada();
   		enem.golpeado = true;
+  		enem.cont = enem.cont + 0.25;
+  		if (enem.cont > 2) enem.cont = 2;
   		setTimeout(function(){ enem.golpeado = false; }, 3000);
   	}
   }
