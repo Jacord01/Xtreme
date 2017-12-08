@@ -298,22 +298,19 @@ function collisionHandlerJug (jug, plat){
 
    
     if (nivel <= 3 && aleatorioEnem === 0){
-    	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
-    	enemigo.cambia_pos(x, 0);
+    	var enemigo = new tort(juego, x, 0, 'enemigo', 1, 300);
     }
 
     else if (aleatorioEnem === 1){
-    	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
-    	enemigo.cambia_pos(x, 50);
+    	var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
     	
     }
     else if (aleatorioEnem === 2){
-    	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
-    	enemigo.cambia_pos(x, 0);
+    	var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
     }
 
     else if(nivel > 3 && aleatorioEnem === 0){
-    	var enemigo = new ag (juego, 450, 50, 'enemigo', jugador);
+    	var enemigo = new ag (juego, x, 50, 'enemigo', jugador);
     }
 
 
