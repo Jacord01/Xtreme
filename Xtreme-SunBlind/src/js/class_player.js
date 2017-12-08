@@ -19,6 +19,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.borracho = false;
   this.invencible = false;
   this.saltando = false;
+  this.agarrado = false;
 	this.create();
 }
 
@@ -50,7 +51,7 @@ Protagonista.prototype.update = function (){
 	 	this.vel = -this.vel;
    }
 
-   if(this.orinando)
+   if(this.orinando || this.agarrado)
     this.vel = 0;
 
 	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
@@ -77,7 +78,7 @@ Protagonista.prototype.update = function (){
     }
 
     this.vel = this.origVel - (this.orina * 20);
-    if (jumpButton.isDown && (this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && (this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -95,7 +96,7 @@ Protagonista.prototype.update = function (){
           this.orinando = true;
           var prota = this;
           
-          setTimeout(function(){prota.orinando = false;}, 1000);
+          setTimeout(function(){prota.orinando = false;}, 2000);
         }
 
 

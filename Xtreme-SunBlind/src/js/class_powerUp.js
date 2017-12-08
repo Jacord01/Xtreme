@@ -23,7 +23,7 @@ powerUp.prototype.constructor = powerUp;
 
 powerUp.prototype.llama = function(){
 	var objeto = this;
-	this.timer = setTimeout(function(){objeto.kill(); escena.Modulo.creaPower(); //Aqui tenemos que llamar a crear un nuevo PU
+	this.timer = setTimeout(function(){objeto.kill(); escena.PU.creaPower(); //Aqui tenemos que llamar a crear un nuevo PU
 	}, 6000);
 
 }

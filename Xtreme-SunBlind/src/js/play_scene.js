@@ -11,6 +11,7 @@ var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
 var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
+var ag = require('./class_agarrador');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -47,7 +48,7 @@ var PlayScene = {
 
   //Creamos primer PowerUp
   powerUps = this.game.add.physicsGroup();
-  Modulo.creaPower();
+  PU.creaPower();
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
@@ -77,7 +78,10 @@ var PlayScene = {
     	juego.physics.arcade.collide(jugador, platformsIni);
 
     juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
+
+    if(!jugador.agarrado)
     juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
+
     juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
     juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
     juego.physics.arcade.collide(powerUps, platforms);
@@ -133,6 +137,7 @@ function nuevoNivel(){
 	else
 		enemigosPorNivel = 2;
 
+
   if(nivel != 1){
 	jugador.reset(640,0);
 	jugador.revive = true;
@@ -141,19 +146,20 @@ function nuevoNivel(){
 }
 
 	creaEnemigoRandom();
-	creaEnemigoRandom();
+	//creaEnemigoRandom();
 	
 	
 }
 
 
-//Este modulo sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
-var Modulo = {};
-Modulo.creaPower = function() {
+//Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
+var PU = {};
+PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
     		
-setTimeout(function(){ if(aleatorio === 0){
+setTimeout(function(){ 
+			if(aleatorio === 0){
     		po = new ener(juego,'energetica');
  			powerUps.add(po);
   			}
@@ -172,10 +178,11 @@ setTimeout(function(){ if(aleatorio === 0){
   				po = new prot(juego, 'proteinas');
   				powerUps.add(po);
   			}
+
 	}, 2000);
     		
 }
-module.exports.Modulo = Modulo;
+module.exports.PU = PU;
 
 
 function collisionHandlerPower(jug, pw){
@@ -184,7 +191,7 @@ function collisionHandlerPower(jug, pw){
 	pw.efecto(jug);
 	pw.limpia();
 	pw.kill();
-	Modulo.creaPower(); 
+	PU.creaPower(); 
 
 }
 
@@ -192,6 +199,13 @@ function collisionHandlerEnem (jug, enem){
 
 	if(!enem.stunt){
 		if(!jugador.invencible){
+			if(enem.agarra != undefined)
+			{
+				enem.agarra(jug);
+
+			}
+
+			else{
   			jugador.kill();
   			jugador.vidas--;
   			jugador.vel = jugador.origVel;
@@ -201,6 +215,7 @@ function collisionHandlerEnem (jug, enem){
   					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
   				else perder.visible = true;
   			}
+  		}
   			else if (jugador.invencible) {
   				enem.kill();
   				enemigosEnPantalla--;
@@ -271,20 +286,28 @@ function collisionHandlerJug (jug, plat){
     	x = juego.rnd.integerInRange(950,1100);
 
    
-    if (aleatorioEnem === 0)
+    if (nivel <= 5 && aleatorioEnem === 0){
     	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
+    	enemigo.cambia_pos(x, 0);
+    }
 
     else if (aleatorioEnem === 1){
     	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
+    	enemigo.cambia_pos(x, 0);
     	
     }
     else if (aleatorioEnem === 2){
     	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
+    	enemigo.cambia_pos(x, 0);
+    }
+
+    else if(nivel > 5 && aleatorioEnem === 0){
+    	var enemigo = new ag (juego, 450, 500, 'enemigo', jugador);
     }
 
 
   	enemies.add(enemigo);
-  	enemigo.cambia_pos(x, 0);
+  	
 
   	if (x >= 950)
   		enemigo.cambia_dir();
