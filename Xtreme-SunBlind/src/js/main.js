@@ -6,6 +6,8 @@ var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
 
+    this.game.load.baseURL = 'https://Jacord01.io/Jacord01/Xtreme/tree/gh-pages/Xtreme-SunBlind/src';
+	this.game.load.crossOrigin = 'anonymous';
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
@@ -47,8 +49,6 @@ var PreloaderScene = {
 
 window.onload = function () {
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
-    this.game.load.baseURL = 'https://Jacord01.io/Jacord01/Xtreme/tree/gh-pages/Xtreme-SunBlind/src';
-	this.game.load.crossOrigin = 'anonymous';
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
