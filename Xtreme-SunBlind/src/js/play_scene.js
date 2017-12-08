@@ -283,7 +283,7 @@ function collisionHandlerJug (jug, plat){
   function creaEnemigoRandom(){
 
   	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
-  	setTimeout(function(){	var aleatorio = juego.rnd.integerInRange(0,2);
+  	setTimeout(function(){
 
   		var p = 0;
   	if(nivel <= 2)
@@ -299,7 +299,7 @@ function collisionHandlerJug (jug, plat){
     var x = 0;
     var y = 0;
     y = juego.rnd.integerInRange(0, 600);
-    if(aleatorio == 0 && !auxRn){
+    if(!auxRn){
       auxRn = true;
     	x = juego.rnd.integerInRange(100,250);
     }
@@ -325,6 +325,9 @@ function collisionHandlerJug (jug, plat){
     	var enemigo = new ag (juego, x, y, 'enemigo', jugador);
       agarrador = true;
     }
+
+    else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
+    	var enemigo = new tort(juego, x, 0, 'enemigo', 1, 300);
 
 
   	enemies.add(enemigo);
