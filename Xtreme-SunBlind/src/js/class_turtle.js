@@ -24,7 +24,6 @@ else
 	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
        }
-       console.log (this.cont);
 }
 
 module.exports = tortuguita;

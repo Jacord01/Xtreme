@@ -12,11 +12,13 @@ var alc = require('./class_alcohol');
 var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
 var ag = require('./class_agarrador');
+var fireball = require('./class_fireball');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
-var deadZone1; var deadZone2;
+var deadZone1; var deadZone2; var deadZone3; var deadZone4;
+var fireballs;
 var juego;
 var perder;
 var powerUps; 
@@ -66,6 +68,18 @@ var PlayScene = {
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
 
+  //Creamos las deadzones para las fireballs
+  deadZone3 = new env(this.game, -50, 0, 'fond');
+  deadZone3.reescala_imagen(0.03,1);
+  deadZone3.visible = false;
+
+  deadZone4 = new env(this.game, 1260, 0, 'fond');
+  deadZone4.reescala_imagen(0.03,1);
+  deadZone4.visible = false;
+
+  //Creamos bolas de fuego
+  fireballs = this.game.add.physicsGroup();
+
   //Creamos al jugador
   jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
 
@@ -84,10 +98,12 @@ var PlayScene = {
     juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
 
     if(!jugador.agarrado)
-    juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
-
+    	juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
+    juego.physics.arcade.overlap(fireballs, jugador, collisionHandlerFireBall);
     juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
     juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
+    juego.physics.arcade.overlap(fireballs, deadZone3, DeadZoneF);
+    juego.physics.arcade.overlap(fireballs, deadZone4, DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
@@ -150,9 +166,7 @@ function nuevoNivel(){
 }
 
 	creaEnemigoRandom();
-	//creaEnemigoRandom();
-	
-	
+	creaFireballs();
 }
 
 
@@ -198,6 +212,27 @@ function collisionHandlerPower(jug, pw){
 	PU.creaPower(); 
 
 }
+
+function collisionHandlerFireBall(jug, fb){
+	if (jugador.invencible){
+		fb.kill();
+		jugador.invencible = false;
+	}
+
+	else{
+		jugador.kill();
+		jugador.vidas--;
+		jugador.vel = jugador.origVel;
+		jugador.borracho = false;
+  		jugador.invencible = false;
+  		if(jugador.vidas > 0)
+  			setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+  		else 
+  			perder.visible = true;
+	}
+
+}
+
 
 function collisionHandlerEnem (jug, enem){
 
@@ -280,6 +315,10 @@ function collisionHandlerJug (jug, plat){
   	enem.cambia_pos(0,90);
   }
 
+  function DeadZoneF(dead, fb){
+  	fb.kill();
+  }
+
   function creaEnemigoRandom(){
 
   	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
@@ -342,6 +381,15 @@ function collisionHandlerJug (jug, plat){
   	 }, 1000); 
   	enemigosEnPantalla++;
   
+  }
+
+  function creaFireballs (){
+  	var x = 1100;
+  	var y = 320;
+  	var fb = new fireball (juego, x, y, 'enemigo', 1, 300);
+  	if (x >= 550)
+  		fb.cambia_dir();
+  	fireballs.add(fb);
   }
 
 
