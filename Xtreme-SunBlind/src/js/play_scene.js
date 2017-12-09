@@ -18,7 +18,7 @@ var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2; var deadZone3; var deadZone4;
-var fireballs;
+var fireballs; var bolaCreada = false;
 var juego;
 var perder;
 var powerUps; 
@@ -69,13 +69,13 @@ var PlayScene = {
   deadZone2.visible = false;
 
   //Creamos las deadzones para las fireballs
-  deadZone3 = new env(this.game, -50, 0, 'fond');
+  deadZone3 = new env(this.game, -40, 0, 'fond');
   deadZone3.reescala_imagen(0.03,1);
-  deadZone3.visible = false;
+  deadZone3.visible = true;
 
   deadZone4 = new env(this.game, 1260, 0, 'fond');
   deadZone4.reescala_imagen(0.03,1);
-  deadZone4.visible = false;
+  deadZone4.visible = true;
 
   //Creamos bolas de fuego
   fireballs = this.game.add.physicsGroup();
@@ -116,6 +116,9 @@ var PlayScene = {
     		nuevoNivel();
     	}
 
+    	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
+    		creaFireballs();
+
   },
 
   render: function(){
@@ -132,6 +135,7 @@ var PlayScene = {
 function nuevoNivel(){
 	nivel++;
   enemigosEnPantalla = 0;
+  bolaCreada = false;
 
   if(nivel != 1)
 	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
@@ -164,9 +168,7 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
-
 	creaEnemigoRandom();
-	creaFireballs();
 }
 
 
@@ -384,12 +386,19 @@ function collisionHandlerJug (jug, plat){
   }
 
   function creaFireballs (){
-  	var x = 1100;
-  	var y = 320;
-  	var fb = new fireball (juego, x, y, 'enemigo', 1, 300);
+  	var x; var y; var r; var time;
+  	bolaCreada = true;
+  	x = 1210; y = 330;
+  	var fb = new fireball (juego, x, y, 'enemigo', 1, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
+
+  	x = 20; y = 300;
+  	var fb2 = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	if (x >= 550)
+  		fb2.cambia_dir();
+  	fireballs.add(fb2);
   }
 
 
