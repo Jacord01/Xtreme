@@ -17,7 +17,7 @@ fireball.prototype.create = function (){
  	this.body.gravity.y = 0;
  	this.reescala_imagen(0.05, 0.02);
  	var bola = this;
-  	setTimeout(function(){bola.sale = true;}, 3000);
+  	setTimeout(function(){bola.sale = true;}, 250);
 }
 
 fireball.prototype.update = function (){

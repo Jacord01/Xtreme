@@ -71,11 +71,11 @@ var PlayScene = {
   //Creamos las deadzones para las fireballs
   deadZone3 = new env(this.game, -40, 0, 'fond');
   deadZone3.reescala_imagen(0.03,1);
-  deadZone3.visible = true;
+  deadZone3.visible = false;
 
   deadZone4 = new env(this.game, 1260, 0, 'fond');
   deadZone4.reescala_imagen(0.03,1);
-  deadZone4.visible = true;
+  deadZone4.visible = false;
 
   //Creamos bolas de fuego
   fireballs = this.game.add.physicsGroup();
