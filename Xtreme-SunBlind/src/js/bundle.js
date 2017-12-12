@@ -80,7 +80,7 @@ alcohol.prototype.efecto = function(jug){
 }
 
 module.exports = alcohol;
-},{"./class_powerUp":14}],3:[function(require,module,exports){
+},{"./class_powerUp":15}],3:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var batidoDeProteinas = function(game, entradasprite){
@@ -101,7 +101,7 @@ batidoDeProteinas.prototype.efecto = function(jug){
 }
 
 module.exports = batidoDeProteinas;
-},{"./class_powerUp":14}],4:[function(require,module,exports){
+},{"./class_powerUp":15}],4:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var bebidaEnergetica = function(game, entradasprite){
@@ -122,7 +122,7 @@ bebidaEnergetica.prototype.efecto = function(jug){
 }
 
 module.exports = bebidaEnergetica;
-},{"./class_powerUp":14}],5:[function(require,module,exports){
+},{"./class_powerUp":15}],5:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
@@ -190,7 +190,7 @@ enemigo.prototype.cambia_vel = function (vl){
 module.exports = enemigo;
 
 
-},{"./class_movibl":10}],7:[function(require,module,exports){
+},{"./class_movibl":11}],7:[function(require,module,exports){
 //clase para los elementos del entorno
 
 "use strict"; 
@@ -205,7 +205,7 @@ entorno.prototype = Object.create(GO.prototype);
 entorno.prototype.constructor = entorno;
 
 module.exports = entorno;
-},{"./class_object":11}],8:[function(require,module,exports){
+},{"./class_object":12}],8:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -213,7 +213,7 @@ var movible = require('./class_movibl');
 var fireball = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
-	this.sale = false;;
+	this.sale = false;
 	this.create();
 }
 
@@ -235,7 +235,7 @@ fireball.prototype.update = function (){
 }
 
 module.exports = fireball;
-},{"./class_movibl":10}],9:[function(require,module,exports){
+},{"./class_movibl":11}],9:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -270,6 +270,30 @@ else
 
 module.exports = fly;
 },{"./class_enemy":6}],10:[function(require,module,exports){
+'use strict';
+
+var fireball = require('./class_fireball');	
+
+var greenfireball = function(game, entradax, entraday, entradasprite, dir, velx, vely){
+	fireball.call(this, game, entradax, entraday, entradasprite, dir, velx);
+	this.juego = game;
+	this.velocidadY = vely;
+	this.cont = 0;
+}
+
+greenfireball.prototype = Object.create(fireball.prototype);
+greenfireball.prototype.constructor = greenfireball;
+
+greenfireball.prototype.update = function (){
+	if (this.sale){
+		this.actualiza_pos(this.velocidad);
+		this.y += ((Math.sin (this.cont))*6);
+		this.cont += 0.25;
+	}
+}
+
+module.exports = greenfireball;
+},{"./class_fireball":8}],11:[function(require,module,exports){
 //Scripta para objetos movibles
 
 "use strict";
@@ -295,7 +319,7 @@ movibl.prototype.cambia_dir = function(){
 }
 
 module.exports = movibl;
-},{"./class_object":11}],11:[function(require,module,exports){
+},{"./class_object":12}],12:[function(require,module,exports){
 //Script general para todos los objetos, que contendrán una posición y un sprite
 
 "use strict"; //Correción en modo estricto
@@ -322,7 +346,7 @@ GO.prototype.reescala_imagen = function (x, y){
 };
 
 module.exports = GO;
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var entorno = require('./class_environment');
@@ -381,7 +405,7 @@ function vuelve(){
 
 
 module.exports = plataforma;
-},{"./class_environment":7}],13:[function(require,module,exports){
+},{"./class_environment":7}],14:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -504,7 +528,7 @@ Protagonista.prototype.incrementaOrina = function (orina){
 }
 
 module.exports = Protagonista;
-},{"./class_movibl":10}],14:[function(require,module,exports){
+},{"./class_movibl":11}],15:[function(require,module,exports){
 
 "use strict";
 
@@ -541,7 +565,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":11,"./play_scene":19}],15:[function(require,module,exports){
+},{"./class_object":12,"./play_scene":20}],16:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -571,7 +595,7 @@ else
 }
 
 module.exports = tortuguita;
-},{"./class_enemy":6}],16:[function(require,module,exports){
+},{"./class_enemy":6}],17:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var agua = function(game, entradasprite){
@@ -591,7 +615,7 @@ agua.prototype.efecto = function(jug){
 
 
 module.exports = agua;
-},{"./class_powerUp":14}],17:[function(require,module,exports){
+},{"./class_powerUp":15}],18:[function(require,module,exports){
 'use strict'
 
 var plat = require('./class_platform');
@@ -681,7 +705,7 @@ plataforma.creaPlataforma = function(juego) {
   
 
 module.exports = plataforma;
-},{"./class_platform":12}],18:[function(require,module,exports){
+},{"./class_platform":13}],19:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
@@ -689,8 +713,7 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-    this.game.load.baseURL = 'https://Jacord01.github.io/Xtreme/Xtreme-SunBlind/src/';
-    this.game.load.crossOrigin = 'anonymous'; 
+
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
@@ -740,7 +763,7 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./play_scene.js":19}],19:[function(require,module,exports){
+},{"./play_scene.js":20}],20:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -756,12 +779,13 @@ var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
 var ag = require('./class_agarrador');
 var fireball = require('./class_fireball');
+var greenfireball = require('./class_greenFireBall');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2; var deadZone3; var deadZone4;
-var fireballs; var bolaCreada = false;
+var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
 var powerUps; 
@@ -861,6 +885,8 @@ var PlayScene = {
 
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
+    	if (!bolaGreenCreada)
+    		creaGreenFireballs();
 
   },
 
@@ -1144,9 +1170,25 @@ function collisionHandlerJug (jug, plat){
   	fireballs.add(fb2);
   }
 
+    function creaGreenFireballs (){
+  	var x; var y; var r; var time;
+  	bolaGreenCreada = true;
+  	x = 1210; y = 270;
+  	var fb = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	if (x >= 550)
+  		fb.cambia_dir();
+  	fireballs.add(fb);
+
+  	x = 20; y = 270;
+  	var fb2 = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	if (x >= 550)
+  		fb2.cambia_dir();
+  	fireballs.add(fb2);
+  }
+
 
 module.exports = PlayScene;
 
 
 
-},{"./class_agarrador":1,"./class_alcohol":2,"./class_batidoDeProteinas":3,"./class_bebidaEnergetica":4,"./class_crab":5,"./class_environment":7,"./class_fireball":8,"./class_fly":9,"./class_movibl":10,"./class_object":11,"./class_player":13,"./class_turtle":15,"./class_water":16,"./crea_Plataformas":17}]},{},[18]);
+},{"./class_agarrador":1,"./class_alcohol":2,"./class_batidoDeProteinas":3,"./class_bebidaEnergetica":4,"./class_crab":5,"./class_environment":7,"./class_fireball":8,"./class_fly":9,"./class_greenFireBall":10,"./class_movibl":11,"./class_object":12,"./class_player":14,"./class_turtle":16,"./class_water":17,"./crea_Plataformas":18}]},{},[19]);

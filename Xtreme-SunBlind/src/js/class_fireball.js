@@ -5,7 +5,7 @@ var movible = require('./class_movibl');
 var fireball = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
-	this.sale = false;;
+	this.sale = false;
 	this.create();
 }
 
