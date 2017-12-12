@@ -119,6 +119,7 @@ var PlayScene = {
 
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
+      
     	if (!bolaGreenCreada)
     		creaGreenFireballs();
 
@@ -397,14 +398,14 @@ function collisionHandlerJug (jug, plat){
   function creaFireballs (){
   	var x; var y; var r; var time;
   	bolaCreada = true;
-  	x = 1210; y = 330;
-  	var fb = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	x = 1210; y = 320;
+  	var fb = new fireball (juego, x, y, 'fireball', 1, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
-  	x = 20; y = 300;
-  	var fb2 = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	x = 20; y = 290;
+  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
@@ -414,13 +415,13 @@ function collisionHandlerJug (jug, plat){
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
   	x = 1210; y = 270;
-  	var fb = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 270;
-  	var fb2 = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);

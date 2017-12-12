@@ -67,7 +67,7 @@ var alcohol = function(game, entradasprite){
 
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.04,0.04);
+	this.reescala_imagen(0.025,0.025);
 	
 }
 
@@ -214,6 +214,7 @@ var fireball = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.sale = false;
+	this.escala = 0.05;
 	this.create();
 }
 
@@ -223,7 +224,7 @@ fireball.prototype.constructor = fireball;
 fireball.prototype.create = function (){
 	this.juego.physics.arcade.enable(this);
  	this.body.gravity.y = 0;
- 	this.reescala_imagen(0.05, 0.02);
+ 	this.reescala_imagen(this.escala, this.escala);
  	var bola = this;
   	setTimeout(function(){bola.sale = true;}, 250);
 }
@@ -279,6 +280,7 @@ var greenfireball = function(game, entradax, entraday, entradasprite, dir, velx,
 	this.juego = game;
 	this.velocidadY = vely;
 	this.cont = 0;
+	this.reescala_imagen(0.075, 0.075);
 }
 
 greenfireball.prototype = Object.create(fireball.prototype);
@@ -316,6 +318,7 @@ movibl.prototype.actualiza_pos = function(vl){
 
 movibl.prototype.cambia_dir = function(){
 	this.direction = this.direction * (-1);
+	this.scale.x = this.scale.x * this.direction;
 }
 
 module.exports = movibl;
@@ -565,7 +568,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":12,"./play_scene":20}],16:[function(require,module,exports){
+},{"./class_object":12,"./play_scene":21}],16:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -602,7 +605,7 @@ var agua = function(game, entradasprite){
 
 	this.orina = 1;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.07,0.07);
+	this.reescala_imagen(0.1,0.1);
 	
 }
 	
@@ -708,12 +711,12 @@ module.exports = plataforma;
 },{"./class_platform":13}],19:[function(require,module,exports){
 'use strict';
 
-var PlayScene = require('./play_scene.js');
+var Menu = require('./menu.js');
 
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-
+    //Aqui se cargaran las imagenes en el gh-pages
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
@@ -725,13 +728,13 @@ var BootScene = {
 
 var PreloaderScene = {
   preload: function () {
-    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+    this.loadingBar = this.game.add.sprite(0, 500, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 5);
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
-    this.game.stage.backgroundColor = '#f1f';
+    this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
@@ -745,10 +748,12 @@ var PreloaderScene = {
     this.game.load.image('proteinas', 'images/proteinas.png');
     this.game.load.image('crabby', 'images/crab.png');
     this.game.load.image('fly', 'images/fly.png');
+    this.game.load.image('fireball', 'images/fireball.png');
+    this.game.load.image('greenfireball', 'images/greenfireball.png');
   },
 
   create: function () {
-    this.game.state.start('play');
+    this.game.state.start('menu');
   }
 };
 
@@ -758,12 +763,47 @@ window.onload = function () {
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
-  game.state.add('play', PlayScene);
+  game.state.add('menu', Menu);
+  //game.state.add('play', PlayScene);
 
   game.state.start('boot');
 };
 
-},{"./play_scene.js":20}],20:[function(require,module,exports){
+},{"./menu.js":20}],20:[function(require,module,exports){
+'use strict';
+
+var PlayScene = require('./play_scene.js');
+
+var button;
+var juego;
+var boton;
+
+var menu = {
+
+  create: function () {
+    juego = this.game;
+
+    juego.state.add('play', PlayScene); 
+
+    button = juego.add.button(juego.world.centerX - 100, 300, 'plat1', actionOnClick, this, 2,1,0);
+
+    button.animations.add('plat1');
+    button.animations.play('plat1', 4, true );
+    button.width = 200;
+    button.height = 100;
+    
+
+ },
+};
+
+function actionOnClick () {
+
+  
+    juego.state.start('play');
+}
+
+module.exports = menu; 
+},{"./play_scene.js":21}],21:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -885,6 +925,7 @@ var PlayScene = {
 
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
+      
     	if (!bolaGreenCreada)
     		creaGreenFireballs();
 
@@ -1163,14 +1204,14 @@ function collisionHandlerJug (jug, plat){
   function creaFireballs (){
   	var x; var y; var r; var time;
   	bolaCreada = true;
-  	x = 1210; y = 330;
-  	var fb = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	x = 1210; y = 320;
+  	var fb = new fireball (juego, x, y, 'fireball', 1, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
-  	x = 20; y = 300;
-  	var fb2 = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	x = 20; y = 290;
+  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
@@ -1180,13 +1221,13 @@ function collisionHandlerJug (jug, plat){
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
   	x = 1210; y = 270;
-  	var fb = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 270;
-  	var fb2 = new greenfireball (juego, x, y, 'enemigo', 1, 200, 500);
+  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
