@@ -313,11 +313,17 @@ function collisionHandlerJug (jug, plat){
   }
 
   function DeadZone1(dead, enem){
-  	enem.cambia_pos(1200,90);
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(1200,90);
+  	},2000);
   }
 
   function DeadZone2(dead, enem){
-  	enem.cambia_pos(0,90);
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(0,90);
+  	},2000);
   }
 
   function DeadZoneF(dead, fb){
