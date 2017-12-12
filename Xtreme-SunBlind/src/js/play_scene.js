@@ -119,6 +119,7 @@ var PlayScene = {
 
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
+      
     	if (!bolaGreenCreada)
     		creaGreenFireballs();
 
