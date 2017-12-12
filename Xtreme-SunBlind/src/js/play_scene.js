@@ -141,6 +141,7 @@ function nuevoNivel(){
   enemigosEnPantalla = 0;
   bolaCreada = false;
 
+
   if(nivel != 1)
 	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
   else numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
@@ -258,7 +259,15 @@ function collisionHandlerEnem (jug, enem){
   			jugador.invencible = false;
   				if(jugador.vidas > 0)
   					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
-  				else perder.visible = true;
+  				else {
+  					perder.visible = true; 
+  					for (var i = 0 ; i < powerUps.children.length; i++){
+  					powerUps.children[i].limpia();
+  					powerUps.children[i].kill();
+  						}
+  					setTimeout(function(){juego.state.start('menu');}, 3000);
+  					
+  				}
   			}
   		}
   			else if (jugador.invencible) {
