@@ -37,6 +37,8 @@ var PreloaderScene = {
     this.game.load.image('proteinas', 'images/proteinas.png');
     this.game.load.image('crabby', 'images/crab.png');
     this.game.load.image('fly', 'images/fly.png');
+    this.game.load.image('fireball', 'images/fireball.png');
+    this.game.load.image('greenfireball', 'images/greenfireball.png');
   },
 
   create: function () {

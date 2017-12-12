@@ -4,7 +4,7 @@ var alcohol = function(game, entradasprite){
 
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.04,0.04);
+	this.reescala_imagen(0.025,0.025);
 	
 }
 

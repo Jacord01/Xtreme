@@ -20,6 +20,7 @@ movibl.prototype.actualiza_pos = function(vl){
 
 movibl.prototype.cambia_dir = function(){
 	this.direction = this.direction * (-1);
+	this.scale.x = this.scale.x * this.direction;
 }
 
 module.exports = movibl;

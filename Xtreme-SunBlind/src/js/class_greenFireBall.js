@@ -7,6 +7,7 @@ var greenfireball = function(game, entradax, entraday, entradasprite, dir, velx,
 	this.juego = game;
 	this.velocidadY = vely;
 	this.cont = 0;
+	this.reescala_imagen(0.075, 0.075);
 }
 
 greenfireball.prototype = Object.create(fireball.prototype);
