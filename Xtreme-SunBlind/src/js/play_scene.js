@@ -13,12 +13,13 @@ var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
 var ag = require('./class_agarrador');
 var fireball = require('./class_fireball');
+var greenfireball = require('./class_greenFireBall');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var deadZone1; var deadZone2; var deadZone3; var deadZone4;
-var fireballs; var bolaCreada = false;
+var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
 var powerUps; 
@@ -118,6 +119,8 @@ var PlayScene = {
 
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
+    	if (!bolaGreenCreada)
+    		creaGreenFireballs();
 
   },
 
@@ -396,6 +399,22 @@ function collisionHandlerJug (jug, plat){
 
   	x = 20; y = 300;
   	var fb2 = new fireball (juego, x, y, 'enemigo', 1, 500);
+  	if (x >= 550)
+  		fb2.cambia_dir();
+  	fireballs.add(fb2);
+  }
+
+    function creaGreenFireballs (){
+  	var x; var y; var r; var time;
+  	bolaGreenCreada = true;
+  	x = 1210; y = 300;
+  	var fb = new greenfireball (juego, x, y, 'enemigo', 1, 500);
+  	if (x >= 550)
+  		fb.cambia_dir();
+  	fireballs.add(fb);
+
+  	x = 20; y = 270;
+  	var fb2 = new greenfireball (juego, x, y, 'enemigo', 1, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
