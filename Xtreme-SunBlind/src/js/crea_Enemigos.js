@@ -6,14 +6,14 @@ var fly = require('./class_fly');
 	
 var enemigoRandom = {};
 var enemies;
-//var platformsIni;
+var ag;
 
 enemigoRandom.creaGrupo = function(juego){
 
   enemies = juego.add.physicsGroup();
 }
 
-enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn) {
+enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador) {
 
     
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
@@ -56,7 +56,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn) {
     }
 
     else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
-      var enemigo = new ag (juego, x, y, 'enemigo', jugador);
+      var enemigo = new ag (juego, x, y - 200, 'enemigo', jugador);
       agarrador = true;
     }
 
@@ -66,6 +66,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn) {
 
     enemies.add(enemigo);
     
+    ag = agarrador;
 
     if (x >= 950)
       enemigo.cambia_dir();
@@ -78,6 +79,10 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn) {
   enemigoRandom.devuelveGrupo = function(){
 
     return enemies;
+  }
+
+  enemigoRandom.devuelveAgarre = function(){
+  	return ag;
   }
   
 

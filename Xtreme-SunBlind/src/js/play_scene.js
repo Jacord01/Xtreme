@@ -110,7 +110,8 @@ var PlayScene = {
     juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn);
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador);
+    		agarrador = enem.devuelveAgarre();
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
@@ -176,7 +177,8 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
-	enem.creaEnemigoRandom(juego, nivel, auxRn);
+	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador);
+	agarrador = enem.devuelveAgarre();
 	auxRn = !auxRn;
 	enemigosEnPantalla++;
 }
