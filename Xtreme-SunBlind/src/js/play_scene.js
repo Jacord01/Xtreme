@@ -44,10 +44,6 @@ var PlayScene = {
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
 
-  //Creamos grupo de plataformas
-  plat.creaPlataforma(juego);
-  platforms = plat.devuelvePlat();
-  platformsIni = plat.devuelveIni();
 
   //Creamos primer PowerUp
   powerUps = this.game.add.physicsGroup();
@@ -141,22 +137,40 @@ var PlayScene = {
 };
 
 function nuevoNivel(){
+
 	nivel++;
   enemigosEnPantalla = 0;
   bolaCreada = false;
 
 
   if(nivel != 1)
-	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
-  else numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+	 numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+  else
+	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
 
   jugador.borracho = false;
   jugador.invencible = false;
   jugador.corriendo = false;
 
-  //UTILIZAREMOS ESTO MÁS ADELANTE PARA CREAR LAS PLATAFORMAS CADA VEZ QUE PASEMOS DE NIVEL YA QUE HABRÁ ALGUNAS QUE SEA DE DIFERENTE TIPO
-  /*platforms.forEach(function(element) {
-    element.kill();});*/
+	
+	//Cada vez que pasamos de nivel (incluso al comenzar el juego), tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
+	//tendremos varios tipos de plataformas y tendremos que cambiarlas	
+	if(nivel != 1){
+ 			 for (var i = 0 ; i < platforms.children.length; i++){
+  				platforms.children[i].kill();
+  				console.log(platforms); }
+
+ 			 for (var i = 0 ; i < platformsIni.children.length; i++){
+  				platformsIni.children[i].kill(); 
+  				console.log(platformsIni); }
+}	
+
+  //Creamos grupo de plataformas
+  plat.creaPlataforma(juego, nivel);
+  platforms = plat.devuelvePlat();
+  platformsIni = plat.devuelveIni();
+
+
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
 	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
@@ -165,8 +179,8 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 3 && porcentaje < nivel * 5)
-		enemigosPorNivel = 2 + (juego.rnd.integerInRange(1, 3));
+	if(nivel > 3 && porcentaje < nivel * 7)
+		enemigosPorNivel = 2 + (juego.rnd.integerInRange(nivel - 4, nivel - 2));
 	else
 		enemigosPorNivel = 2;
 
@@ -308,6 +322,9 @@ function collisionHandlerJug (jug, plat){
    		plat.cambia_tocada();
    		plat.jump();
   	}
+
+  	if(plat.fuego)
+  		console.log('prueba');
   }
 
   function collisionHandlerPlat(enem, plat){

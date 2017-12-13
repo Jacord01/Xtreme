@@ -5,9 +5,12 @@ var plat = require('./class_platform');
 var plataforma = {};
 var platforms;
 var platformsIni;
+var level;
+var fug;
 
-plataforma.creaPlataforma = function(juego) {
+plataforma.creaPlataforma = function(juego, nivel) {
 
+  level = nivel;
   var anchorx;
   var anchory;  
   var anchoPlat = 500;
@@ -15,6 +18,12 @@ plataforma.creaPlataforma = function(juego) {
 
   platforms = juego.add.physicsGroup();
   platformsIni = juego.add.physicsGroup();
+
+  var aleatorio = juego.rnd.integerInRange(0,1);
+  if (aleatorio === 0)
+    fug = false;
+  else fug = true;
+
 
   //conjuntos de plataformas
 
@@ -65,8 +74,38 @@ plataforma.creaPlataforma = function(juego) {
 } 
 
     plataforma.creaPlat = function(a, anchorx, anchory, juego, superior, ini){
-    var sprite = 'plat2';
-    var p = (new plat(juego, 0, 0, sprite));
+
+      var fuego = false; var hielo = false;
+
+    if(level > 0 && !superior){
+      var aleatorio = juego.rnd.integerInRange(0,100);
+    
+
+        if (aleatorio <= 80){
+
+           var sprite = 'plat2';}
+
+         else {
+
+          if(!fug){
+
+           var sprite = 'plat0';
+           hielo = true;
+           }
+
+          else{
+           var sprite = 'plat1';
+           fuego = true;
+          }
+       }
+  }
+  
+
+   else {
+      var sprite = 'plat2';
+    }
+    
+    var p = (new plat(juego, 0, 0, sprite, fuego, hielo));
     if(superior)
       p.reescala_imagen(1, 0.1);
     p.cambia_pos(anchorx + (a*p.width), anchory);
