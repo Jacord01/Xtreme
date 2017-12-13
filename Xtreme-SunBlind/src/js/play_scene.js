@@ -370,7 +370,7 @@ function collisionHandlerJug (jug, plat){
 
    
     if (nivel <= 4 && aleatorioEnem === 0){
-    	var enemigo = new tort(juego, x, 0, 'enemigo', 1, 300);
+    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
     }
 
     else if (aleatorioEnem === 1){
@@ -387,7 +387,7 @@ function collisionHandlerJug (jug, plat){
     }
 
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
-    	var enemigo = new tort(juego, x, 0, 'enemigo', 1, 300);
+    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
 
 
   	enemies.add(enemigo);

@@ -29,6 +29,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
     this.game.load.image('fond', 'images/space.png');
+    this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
     this.game.load.image('enemigo', 'images/juen.png');
     this.game.load.image('perder', 'images/lose.png');
     this.game.load.image('energetica', 'images/Energetica.png');
