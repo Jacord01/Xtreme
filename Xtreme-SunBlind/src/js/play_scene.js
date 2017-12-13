@@ -3,9 +3,7 @@ var go = require('./class_object');
 var mov = require('./class_movibl');
 var player = require('./class_player');
 var plat = require('./crea_Plataformas');
-var tort = require('./class_turtle');
-var crab = require('./class_crab');
-var fly = require('./class_fly');
+var enem = require('./crea_Enemigos');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
@@ -56,9 +54,10 @@ var PlayScene = {
   PU.creaPower();
 
   //Creamos enemigos
-  enemies = this.game.add.physicsGroup();
+  enem.creaGrupo(juego);
   auxRn = false;
   agarrador = false;
+
 
   //Creamos las deadzones para los enemigos
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -96,20 +95,24 @@ var PlayScene = {
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
 
-    juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
+    juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, collisionHandlerPlat);
 
     if(!jugador.agarrado)
-    	juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
+    	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, collisionHandlerEnem);
+
     juego.physics.arcade.overlap(fireballs, jugador, collisionHandlerFireBall);
-    juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
-    juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
+
+    juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone1, DeadZone1);
+    juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone2, DeadZone2);
     juego.physics.arcade.overlap(fireballs, deadZone3, DeadZoneF);
     juego.physics.arcade.overlap(fireballs, deadZone4, DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		creaEnemigoRandom();
+    		enem.creaEnemigoRandom(juego, nivel, auxRn);
+    		auxRn = !auxRn;
+    		enemigosEnPantalla++;
     	}
 
     	if(numeroEnemigos <= 0){
@@ -173,7 +176,9 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
-	creaEnemigoRandom();
+	enem.creaEnemigoRandom(juego, nivel, auxRn);
+	auxRn = !auxRn;
+	enemigosEnPantalla++;
 }
 
 
@@ -326,82 +331,18 @@ function collisionHandlerJug (jug, plat){
   	enem.kill();
   	setTimeout(function(){
   		enem.reset(1200,90);
-  	},2000);
+  	},1000);
   }
 
   function DeadZone2(dead, enem){
   	enem.kill();
   	setTimeout(function(){
   		enem.reset(0,90);
-  	},2000);
+  	},100);
   }
 
   function DeadZoneF(dead, fb){
   	fb.kill();
-  }
-
-  function creaEnemigoRandom(){
-
-  	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
-  	setTimeout(function(){
-
-  		var p = 0;
-  	if(nivel <= 2)
-  		aleatorioEnem = 0;
-  	else
-  		if(nivel == 3)
-  			p = 1;
-  		else if(nivel > 3)
-  			p = 2;
-
-  		var aleatorioEnem = juego.rnd.integerInRange(0,p);
-  		
-    var x = 0;
-    var y = 0;
-    y = juego.rnd.integerInRange(0, 600);
-    if(!auxRn){
-      auxRn = true;
-    	x = juego.rnd.integerInRange(100,250);
-    }
-    else {
-      auxRn = false;
-    	x = juego.rnd.integerInRange(950,1100);
-    }
-
-   
-    if (nivel <= 4 && aleatorioEnem === 0){
-    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
-    }
-
-    else if (aleatorioEnem === 1){
-    	var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
-    	
-    }
-    else if (aleatorioEnem === 2){
-    	var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
-    }
-
-    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
-    	var enemigo = new ag (juego, x, y, 'enemigo', jugador);
-      agarrador = true;
-    }
-
-    else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
-    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
-
-
-  	enemies.add(enemigo);
-  	
-
-  	if (x >= 950)
-  		enemigo.cambia_dir();
-
-  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
-  	
-
-  	 }, 1000); 
-  	enemigosEnPantalla++;
-  
   }
 
   function creaFireballs (){
