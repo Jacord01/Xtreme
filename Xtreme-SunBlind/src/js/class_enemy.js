@@ -9,6 +9,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
 	this.velocidad = velx;
 	this.stunt = false;
 	this.golpeado = false;
+	this.cont = 1;
 }
 
 enemigo.prototype = Object.create(movible.prototype);

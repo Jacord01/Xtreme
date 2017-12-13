@@ -4,7 +4,7 @@ var agua = function(game, entradasprite){
 
 	this.orina = 1;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.07,0.07);
+	this.reescala_imagen(0.1,0.1);
 	
 }
 	

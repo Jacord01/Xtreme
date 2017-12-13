@@ -16,15 +16,16 @@ crab.prototype.update = function(){
 		this.enfado = true;
 		this.golpeado = false;
 	}
-	else if (this.golpeado && this.enfado)
+	else if (this.golpeado && this.enfado){
 		this.stunt = true;
+	}
 	else
 		this.stunt = false;
 
 	if (this.enfado && !this.stunt)
-		this.actualiza_pos(this.velocidad * 1.5);
+		this.actualiza_pos(this.velocidad * 1.25 * this.cont);
 	else if (!this.enfado && !this.stunt)
-		this.actualiza_pos(this.velocidad);
+		this.actualiza_pos(this.velocidad * this.cont);
 	else
 		this.actualiza_pos(0);
 

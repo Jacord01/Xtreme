@@ -12,14 +12,19 @@ var alc = require('./class_alcohol');
 var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
 var ag = require('./class_agarrador');
+var fireball = require('./class_fireball');
+var greenfireball = require('./class_greenFireBall');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
-var deadZone1; var deadZone2;
+var deadZone1; var deadZone2; var deadZone3; var deadZone4;
+var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
 var powerUps; 
+var auxRn;
+var agarrador;
 
 var PlayScene = {
 
@@ -52,6 +57,8 @@ var PlayScene = {
 
   //Creamos enemigos
   enemies = this.game.add.physicsGroup();
+  auxRn = false;
+  agarrador = false;
 
   //Creamos las deadzones para los enemigos
   deadZone1 = new env(this.game, -50, 640, 'fond');
@@ -61,6 +68,18 @@ var PlayScene = {
   deadZone2 = new env(this.game, 1260, 640, 'fond');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
+
+  //Creamos las deadzones para las fireballs
+  deadZone3 = new env(this.game, -40, 0, 'fond');
+  deadZone3.reescala_imagen(0.03,1);
+  deadZone3.visible = false;
+
+  deadZone4 = new env(this.game, 1260, 0, 'fond');
+  deadZone4.reescala_imagen(0.03,1);
+  deadZone4.visible = false;
+
+  //Creamos bolas de fuego
+  fireballs = this.game.add.physicsGroup();
 
   //Creamos al jugador
   jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
@@ -80,10 +99,12 @@ var PlayScene = {
     juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
 
     if(!jugador.agarrado)
-    juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
-
+    	juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
+    juego.physics.arcade.overlap(fireballs, jugador, collisionHandlerFireBall);
     juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
     juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
+    juego.physics.arcade.overlap(fireballs, deadZone3, DeadZoneF);
+    juego.physics.arcade.overlap(fireballs, deadZone4, DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
 
@@ -95,6 +116,12 @@ var PlayScene = {
     		jugador.kill();
     		nuevoNivel();
     	}
+
+    	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
+    		creaFireballs();
+      
+    	if (!bolaGreenCreada)
+    		creaGreenFireballs();
 
   },
 
@@ -112,6 +139,8 @@ var PlayScene = {
 function nuevoNivel(){
 	nivel++;
   enemigosEnPantalla = 0;
+  bolaCreada = false;
+
 
   if(nivel != 1)
 	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
@@ -144,11 +173,7 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
-
 	creaEnemigoRandom();
-	//creaEnemigoRandom();
-	
-	
 }
 
 
@@ -195,6 +220,27 @@ function collisionHandlerPower(jug, pw){
 
 }
 
+function collisionHandlerFireBall(jug, fb){
+	if (jugador.invencible){
+		fb.kill();
+		jugador.invencible = false;
+	}
+
+	else{
+		jugador.kill();
+		jugador.vidas--;
+		jugador.vel = jugador.origVel;
+		jugador.borracho = false;
+  		jugador.invencible = false;
+  		if(jugador.vidas > 0)
+  			setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+  		else 
+  			perder.visible = true;
+	}
+
+}
+
+
 function collisionHandlerEnem (jug, enem){
 
 	if(!enem.stunt){
@@ -213,7 +259,15 @@ function collisionHandlerEnem (jug, enem){
   			jugador.invencible = false;
   				if(jugador.vidas > 0)
   					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
-  				else perder.visible = true;
+  				else {
+  					perder.visible = true; 
+  					for (var i = 0 ; i < powerUps.children.length; i++){
+  					powerUps.children[i].limpia();
+  					powerUps.children[i].kill();
+  						}
+  					setTimeout(function(){juego.state.start('menu');}, 3000);
+  					
+  				}
   			}
   		}
   			else if (jugador.invencible) {
@@ -228,6 +282,8 @@ function collisionHandlerEnem (jug, enem){
   	enem.kill();
   	enemigosEnPantalla--;
   	numeroEnemigos--;
+    if(enem.agarra != undefined)
+      agarrador = false;
   }
   }
 
@@ -250,23 +306,44 @@ function collisionHandlerJug (jug, plat){
   function collisionHandlerPlat(enem, plat){
   	if(plat.tocada){
   		plat.cambia_tocada();
-  		enem.golpeado = true;
-  		setTimeout(function(){ enem.golpeado = false; }, 3000);
+  		if (!enem.golpeado){
+  			enem.golpeado = true;
+  			enem.cont = enem.cont + 0.25;
+  			if (enem.cont > 2) 
+  				enem.cont = 2;
+  			setTimeout(function(){ enem.golpeado = false;}, 3000);
+  		}
+  		else {
+  			enem.golpeado = false;
+  			enem.cont = enem.cont - 0.25;
+  			if (enem.cont < 1) 
+  				enem.cont = 1;
+  		}
   	}
   }
 
   function DeadZone1(dead, enem){
-  	enem.cambia_pos(1200,0);
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(1200,90);
+  	},2000);
   }
 
   function DeadZone2(dead, enem){
-  	enem.cambia_pos(0,0);
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(0,90);
+  	},2000);
+  }
+
+  function DeadZoneF(dead, fb){
+  	fb.kill();
   }
 
   function creaEnemigoRandom(){
 
   	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
-  	setTimeout(function(){	var aleatorio = juego.rnd.integerInRange(0,2);
+  	setTimeout(function(){
 
   		var p = 0;
   	if(nivel <= 2)
@@ -280,30 +357,37 @@ function collisionHandlerJug (jug, plat){
   		var aleatorioEnem = juego.rnd.integerInRange(0,p);
   		
     var x = 0;
-    if(aleatorio == 0)
+    var y = 0;
+    y = juego.rnd.integerInRange(0, 600);
+    if(!auxRn){
+      auxRn = true;
     	x = juego.rnd.integerInRange(100,250);
-    else 
+    }
+    else {
+      auxRn = false;
     	x = juego.rnd.integerInRange(950,1100);
+    }
 
    
-    if (nivel <= 5 && aleatorioEnem === 0){
-    	var enemigo = new tort(juego, 0, 0, 'enemigo', 1, 300);
-    	enemigo.cambia_pos(x, 0);
+    if (nivel <= 4 && aleatorioEnem === 0){
+    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
     }
 
     else if (aleatorioEnem === 1){
-    	var enemigo = new fly(juego, 0, 0, 'fly', 1, 200);
-    	enemigo.cambia_pos(x, 0);
+    	var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
     	
     }
     else if (aleatorioEnem === 2){
-    	var enemigo = new crab(juego, 0, 0, 'crabby', 1, 300);
-    	enemigo.cambia_pos(x, 0);
+    	var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
     }
 
-    else if(nivel > 5 && aleatorioEnem === 0){
-    	var enemigo = new ag (juego, 450, 500, 'enemigo', jugador);
+    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
+    	var enemigo = new ag (juego, x, y, 'enemigo', jugador);
+      agarrador = true;
     }
+
+    else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
+    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
 
 
   	enemies.add(enemigo);
@@ -318,6 +402,38 @@ function collisionHandlerJug (jug, plat){
   	 }, 1000); 
   	enemigosEnPantalla++;
   
+  }
+
+  function creaFireballs (){
+  	var x; var y; var r; var time;
+  	bolaCreada = true;
+  	x = 1210; y = 320;
+  	var fb = new fireball (juego, x, y, 'fireball', 1, 500);
+  	if (x >= 550)
+  		fb.cambia_dir();
+  	fireballs.add(fb);
+
+  	x = 20; y = 290;
+  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 500);
+  	if (x >= 550)
+  		fb2.cambia_dir();
+  	fireballs.add(fb2);
+  }
+
+    function creaGreenFireballs (){
+  	var x; var y; var r; var time;
+  	bolaGreenCreada = true;
+  	x = 1210; y = 270;
+  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	if (x >= 550)
+  		fb.cambia_dir();
+  	fireballs.add(fb);
+
+  	x = 20; y = 270;
+  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	if (x >= 550)
+  		fb2.cambia_dir();
+  	fireballs.add(fb2);
   }
 
 

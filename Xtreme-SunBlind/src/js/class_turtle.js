@@ -4,10 +4,18 @@ var enemigo = require('./class_enemy');
 
 var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx){
   enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
-  this.reescala_imagen(0.05,0.02);
+  
+  this.create();
 }
 tortuguita.prototype = Object.create(enemigo.prototype);
 tortuguita.prototype.constructor = tortuguita;
+
+tortuguita.prototype.create = function () {
+	this.reescala_imagen(1,0.8);
+	this.body.gravity.y = 2000;
+	this.animations.add('mueve',[0,1,2], 5, true);
+	this.animations.play('mueve');
+}
 
 tortuguita.prototype.update = function (){
 if (this.golpeado){
@@ -18,7 +26,7 @@ else
 	this.stunt = false;
 
 if(!this.stunt)
-	this.actualiza_pos(this.velocidad);
+	this.actualiza_pos(this.velocidad * this.cont);
 else 
 	this.actualiza_pos(0);
 	if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){

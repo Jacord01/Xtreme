@@ -11,13 +11,14 @@ fly.prototype = Object.create(enemigo.prototype);
 fly.prototype.constructor = fly;
 
 fly.prototype.update = function (){
-if (this.golpeado)
+if (this.golpeado){
 	this.stunt = true;
+}
 else
 	this.stunt = false;
 
 if(!this.stunt){
-	this.actualiza_pos(this.velocidad);
+	this.actualiza_pos(this.velocidad * (this.cont));
 	if (this.body.onFloor() || this.body.touching.down){
 		this.body.velocity.y = -250;
 	}
