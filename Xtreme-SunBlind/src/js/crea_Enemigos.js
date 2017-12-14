@@ -3,6 +3,8 @@
 var tort = require('./class_turtle');
 var crab = require('./class_crab');
 var fly = require('./class_fly');
+var ag = require('./class_agarrador');
+
 	
 var enemigoRandom = {};
 var enemies;
@@ -13,7 +15,7 @@ enemigoRandom.creaGrupo = function(juego){
   enemies = juego.add.physicsGroup();
 }
 
-enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador) {
+enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugador) {
 
     
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
@@ -56,7 +58,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador) {
     }
 
     else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
-      var enemigo = new ag (juego, x, y - 200, 'enemigo', jugador);
+      var enemigo = new ag(juego, x, y - 200, 'enemigo', jugador);
       agarrador = true;
     }
 

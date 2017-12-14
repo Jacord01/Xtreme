@@ -77,11 +77,11 @@ plataforma.creaPlataforma = function(juego, nivel) {
 
       var fuego = false; var hielo = false;
 
-    if(level > 0 && !superior){
+    if(level > 6 && !superior && !ini){
       var aleatorio = juego.rnd.integerInRange(0,100);
     
 
-        if (aleatorio <= 80){
+        if (aleatorio <= 95 - (nivel - 6) ){
 
            var sprite = 'plat2';}
 
