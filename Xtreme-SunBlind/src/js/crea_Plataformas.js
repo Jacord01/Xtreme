@@ -77,7 +77,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
 
       var fuego = false; var hielo = false;
 
-    if(level > 6 && !superior && !ini){
+    if(level >= 6 && !superior && !ini){
       var aleatorio = juego.rnd.integerInRange(0,100);
     
 
