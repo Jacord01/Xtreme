@@ -1,4 +1,45 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+var HUD = {};
+var vida1; var vida2; var vida3;
+
+HUD.create = function(game){
+	
+	vida1 =  game.add.sprite(10,10,'vidas');
+	vida2 = game.add.sprite(74, 10, 'vidas');
+	vida3 = game.add.sprite(138, 10, 'vidas');
+}
+
+HUD.restaVida = function(jug){
+
+	if(jug.vidas >= 3){
+		vida1.visible = true;
+		vida2.visible = true;
+		vida3.visible = true;
+	}
+
+	else if(jug.vidas === 2){
+		vida1.visible = true;
+		vida2.visible = true;
+		vida3.visible = false;
+	}
+
+	else if(jug.vidas === 1){
+		vida1.visible = true;
+		vida2.visible = false;
+		vida3.visible = false;
+	}	
+
+	else {
+		vida1.visible = false;
+		vida2.visible = false;
+		vida3.visible = false;
+	}
+}
+
+module.exports = HUD;
+},{}],2:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
@@ -60,7 +101,7 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 
 
 module.exports = agarrador;
-},{"./class_enemy":6}],2:[function(require,module,exports){
+},{"./class_enemy":7}],3:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var alcohol = function(game, entradasprite){
@@ -80,7 +121,7 @@ alcohol.prototype.efecto = function(jug){
 }
 
 module.exports = alcohol;
-},{"./class_powerUp":15}],3:[function(require,module,exports){
+},{"./class_powerUp":16}],4:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var batidoDeProteinas = function(game, entradasprite){
@@ -101,7 +142,7 @@ batidoDeProteinas.prototype.efecto = function(jug){
 }
 
 module.exports = batidoDeProteinas;
-},{"./class_powerUp":15}],4:[function(require,module,exports){
+},{"./class_powerUp":16}],5:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var bebidaEnergetica = function(game, entradasprite){
@@ -122,7 +163,7 @@ bebidaEnergetica.prototype.efecto = function(jug){
 }
 
 module.exports = bebidaEnergetica;
-},{"./class_powerUp":15}],5:[function(require,module,exports){
+},{"./class_powerUp":16}],6:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
@@ -161,7 +202,7 @@ crab.prototype.update = function(){
 }
 
 module.exports = crab;
-},{"./class_enemy":6}],6:[function(require,module,exports){
+},{"./class_enemy":7}],7:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -190,7 +231,7 @@ enemigo.prototype.cambia_vel = function (vl){
 module.exports = enemigo;
 
 
-},{"./class_movibl":11}],7:[function(require,module,exports){
+},{"./class_movibl":12}],8:[function(require,module,exports){
 //clase para los elementos del entorno
 
 "use strict"; 
@@ -205,7 +246,7 @@ entorno.prototype = Object.create(GO.prototype);
 entorno.prototype.constructor = entorno;
 
 module.exports = entorno;
-},{"./class_object":12}],8:[function(require,module,exports){
+},{"./class_object":13}],9:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -236,7 +277,7 @@ fireball.prototype.update = function (){
 }
 
 module.exports = fireball;
-},{"./class_movibl":11}],9:[function(require,module,exports){
+},{"./class_movibl":12}],10:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -270,7 +311,7 @@ else
 }
 
 module.exports = fly;
-},{"./class_enemy":6}],10:[function(require,module,exports){
+},{"./class_enemy":7}],11:[function(require,module,exports){
 'use strict';
 
 var fireball = require('./class_fireball');	
@@ -295,7 +336,7 @@ greenfireball.prototype.update = function (){
 }
 
 module.exports = greenfireball;
-},{"./class_fireball":8}],11:[function(require,module,exports){
+},{"./class_fireball":9}],12:[function(require,module,exports){
 //Scripta para objetos movibles
 
 "use strict";
@@ -322,7 +363,7 @@ movibl.prototype.cambia_dir = function(){
 }
 
 module.exports = movibl;
-},{"./class_object":12}],12:[function(require,module,exports){
+},{"./class_object":13}],13:[function(require,module,exports){
 //Script general para todos los objetos, que contendrán una posición y un sprite
 
 "use strict"; //Correción en modo estricto
@@ -349,7 +390,7 @@ GO.prototype.reescala_imagen = function (x, y){
 };
 
 module.exports = GO;
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var entorno = require('./class_environment');
@@ -358,7 +399,7 @@ var entorno = require('./class_environment');
 
 var plataforma = function(game, entradax, entraday, entradasprite, fuego, hielo){
 	entorno.call(this, game, entradax, entraday, entradasprite);
-	this.reescala_imagen(1, 0.5 );
+	this.reescala_imagen(1, 0.5);
 	this.tocada = false;
 	this.arriba = false;
 	this.iniPointY = entraday;
@@ -412,7 +453,7 @@ function vuelve(){
 
 
 module.exports = plataforma;
-},{"./class_environment":7}],14:[function(require,module,exports){
+},{"./class_environment":8}],15:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -535,7 +576,7 @@ Protagonista.prototype.incrementaOrina = function (orina){
 }
 
 module.exports = Protagonista;
-},{"./class_movibl":11}],15:[function(require,module,exports){
+},{"./class_movibl":12}],16:[function(require,module,exports){
 
 "use strict";
 
@@ -572,7 +613,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":12,"./play_scene":24}],16:[function(require,module,exports){
+},{"./class_object":13,"./play_scene":25}],17:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -610,7 +651,7 @@ else
 }
 
 module.exports = tortuguita;
-},{"./class_enemy":6}],17:[function(require,module,exports){
+},{"./class_enemy":7}],18:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var agua = function(game, entradasprite){
@@ -630,7 +671,7 @@ agua.prototype.efecto = function(jug){
 
 
 module.exports = agua;
-},{"./class_powerUp":15}],18:[function(require,module,exports){
+},{"./class_powerUp":16}],19:[function(require,module,exports){
 'use strict'
 
 var tort = require('./class_turtle');
@@ -722,7 +763,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
   
 
 module.exports = enemigoRandom;
-},{"./class_agarrador":1,"./class_crab":5,"./class_fly":9,"./class_turtle":16}],19:[function(require,module,exports){
+},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17}],20:[function(require,module,exports){
 'use strict'
 
 var plat = require('./class_platform');
@@ -851,11 +892,12 @@ plataforma.creaPlataforma = function(juego, nivel) {
   
 
 module.exports = plataforma;
-},{"./class_platform":13}],20:[function(require,module,exports){
+},{"./class_platform":14}],21:[function(require,module,exports){
 'use strict'
 
 var escena = require('./play_scene');
 var plat = require('./crea_Plataformas');
+var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
 
@@ -876,15 +918,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 	}
 
 	else{
-		jug.kill();
-		jug.vidas--;
-		jug.vel = jug.origVel;
-		jug.borracho = false;
-  		jug.invencible = false;
-  		if(jug.vidas > 0)
-  			setTimeout(function(){ escena.estadosJugador.revive( plat.devuelveIni()); plat.devuelveIni().visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
-  		else 
-  			escena.perd.Perder();
+		escena.estadosJugador.jugadorMuerte();
 	}
 
 }
@@ -969,7 +1003,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   }
 
   module.exports = colisiones;
-},{"./crea_Plataformas":19,"./play_scene":24}],21:[function(require,module,exports){
+},{"./HUD":1,"./crea_Plataformas":20,"./play_scene":25}],22:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -1001,6 +1035,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
+    this.game.load.spritesheet('vidas', 'images/Vidas.png');
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
@@ -1053,7 +1088,7 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./menu.js":22}],22:[function(require,module,exports){
+},{"./menu.js":23}],23:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
@@ -1106,7 +1141,7 @@ function actionOnClickInfo(){
 
 
 module.exports = menu; 
-},{"./menuInformacion":23,"./play_scene.js":24}],23:[function(require,module,exports){
+},{"./menuInformacion":24,"./play_scene.js":25}],24:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
@@ -1234,7 +1269,7 @@ function cambiaImagenes(){
 }
 
 module.exports = menuInformacion;
-},{"./menu.js":22}],24:[function(require,module,exports){
+},{"./menu.js":23}],25:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -1249,6 +1284,7 @@ var prot = require('./class_batidoDeProteinas');
 var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
+var HUD = require('./HUD');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -1301,6 +1337,9 @@ var PlayScene = {
 
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+
+  //Creamos el hud
+  HUD.create(juego);
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -1436,7 +1475,12 @@ var perd = {};
 
 perd.Perder = function(){
 
-  perder.visible = true;
+    perder.visible = true; 
+    for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+    setTimeout(function(){juego.state.start('menu');}, 3000);
 }
 
 module.exports.perd = perd;
@@ -1480,6 +1524,7 @@ var estadosJugador = {};
 
         jugador.kill();
         jugador.vidas--;
+        HUD.restaVida(jugador);
         jugador.vel = jugador.origVel;
         jugador.borracho = false;
         jugador.invencible = false;
@@ -1488,13 +1533,8 @@ var estadosJugador = {};
             setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
           else 
             {
-            perder.visible = true; 
-            for (var i = 0 ; i < powerUps.children.length; i++){
-            powerUps.children[i].limpia();
-            powerUps.children[i].kill();
-              }
-            setTimeout(function(){juego.state.start('menu');}, 3000);
-          }
+              perd.Perder();
+            }
 
   }
 
@@ -1565,4 +1605,4 @@ var estadosJugador = {};
 
 
 module.exports = PlayScene;
-},{"./class_alcohol":2,"./class_batidoDeProteinas":3,"./class_bebidaEnergetica":4,"./class_environment":7,"./class_fireball":8,"./class_greenFireBall":10,"./class_movibl":11,"./class_object":12,"./class_player":14,"./class_water":17,"./crea_Enemigos":18,"./crea_Plataformas":19,"./handleCollisions":20}]},{},[21]);
+},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Plataformas":20,"./handleCollisions":21}]},{},[22]);
