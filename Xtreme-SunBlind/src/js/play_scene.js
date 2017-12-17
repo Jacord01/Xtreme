@@ -12,6 +12,7 @@ var prot = require('./class_batidoDeProteinas');
 var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
+var HUD = require('./HUD');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -64,6 +65,9 @@ var PlayScene = {
 
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+
+  //Creamos el hud
+  HUD.create(juego);
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -199,7 +203,12 @@ var perd = {};
 
 perd.Perder = function(){
 
-  perder.visible = true;
+    perder.visible = true; 
+    for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+    setTimeout(function(){juego.state.start('menu');}, 3000);
 }
 
 module.exports.perd = perd;
@@ -243,6 +252,7 @@ var estadosJugador = {};
 
         jugador.kill();
         jugador.vidas--;
+        HUD.restaVida(jugador);
         jugador.vel = jugador.origVel;
         jugador.borracho = false;
         jugador.invencible = false;
@@ -251,13 +261,8 @@ var estadosJugador = {};
             setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
           else 
             {
-            perder.visible = true; 
-            for (var i = 0 ; i < powerUps.children.length; i++){
-            powerUps.children[i].limpia();
-            powerUps.children[i].kill();
-              }
-            setTimeout(function(){juego.state.start('menu');}, 3000);
-          }
+              perd.Perder();
+            }
 
   }
 

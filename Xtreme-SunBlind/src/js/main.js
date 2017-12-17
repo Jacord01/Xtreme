@@ -29,6 +29,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
+    this.game.load.spritesheet('vidas', 'images/Vidas.png');
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);

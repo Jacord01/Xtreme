@@ -2,6 +2,7 @@
 
 var escena = require('./play_scene');
 var plat = require('./crea_Plataformas');
+var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
 
@@ -22,15 +23,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 	}
 
 	else{
-		jug.kill();
-		jug.vidas--;
-		jug.vel = jug.origVel;
-		jug.borracho = false;
-  		jug.invencible = false;
-  		if(jug.vidas > 0)
-  			setTimeout(function(){ escena.estadosJugador.revive( plat.devuelveIni()); plat.devuelveIni().visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
-  		else 
-  			escena.perd.Perder();
+		escena.estadosJugador.jugadorMuerte();
 	}
 
 }
