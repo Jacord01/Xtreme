@@ -112,13 +112,13 @@ var PlayScene = {
   },
 
   render: function(){
-  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
   }
 };
 
@@ -241,14 +241,14 @@ var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
 
-        jug.kill();
-        jug.vidas--;
-        jug.vel = jugador.origVel;
-        jug.borracho = false;
-        jug.invencible = false;
+        jugador.kill();
+        jugador.vidas--;
+        jugador.vel = jugador.origVel;
+        jugador.borracho = false;
+        jugador.invencible = false;
 
-        if(jug.vidas > 0)
-            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
+        if(jugador.vidas > 0)
+            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
           else 
             {
             perder.visible = true; 
@@ -265,7 +265,7 @@ var estadosJugador = {};
     
     jugador.muerto = true;
     jugador.revive = true;
-    jug.reset(640,0); 
+    jugador.reset(640,0); 
     setTimeout(function(){ jugador.revive = false; platformsIni.visible = false; jugador.muerto = false;}, 2000);
 
    }

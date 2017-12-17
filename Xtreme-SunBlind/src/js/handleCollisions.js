@@ -28,7 +28,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 		jug.borracho = false;
   		jug.invencible = false;
   		if(jug.vidas > 0)
-  			setTimeout(function(){ escena.estadosJugador.revive(jug); plat.devuelveIni().visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
+  			setTimeout(function(){ escena.estadosJugador.revive( plat.devuelveIni()); plat.devuelveIni().visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
   		else 
   			escena.perd.Perder();
 	}
@@ -43,7 +43,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 			if(enem.agarra != undefined)
 				  enem.agarra(jug);
 
-			else escena.estadosJugador.jugadorMuerte(jug);
+			else escena.estadosJugador.jugadorMuerte();
 
   		}
   			else if (jug.invencible) {

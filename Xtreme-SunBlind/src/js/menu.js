@@ -1,33 +1,52 @@
 'use strict';
 
 var PlayScene = require('./play_scene.js');
+var menuInformacion = require('./menuInformacion');
 
-var button;
+var buttonJuego; var buttonInfo; 
 var juego;
-var boton;
 
 var menu = {
 
   create: function () {
     juego = this.game;
 
+    juego.state.add('info', menuInformacion);
+
     juego.state.add('play', PlayScene); 
 
-    button = juego.add.button(juego.world.centerX - 100, 300, 'plat1', actionOnClick, this, 2,1,0);
+   juego.add.sprite(0,0,'Menu');
 
-    button.animations.add('plat1');
-    button.animations.play('plat1', 4, true );
-    button.width = 200;
-    button.height = 100;
-    
+    //Boton que nos lleva al juego
+    buttonJuego = juego.add.button(juego.world.centerX - 75, 275, 'plat0', actionOnClickJuego, this, 2,1,0);
+    buttonJuego.animations.add('plat0');
+    buttonJuego.animations.play('plat0', 4, true );
+    buttonJuego.width = 150;
+    buttonJuego.height = 60;
 
+    //Boton para el menú de información
+    buttonInfo = juego.add.button(juego.world.centerX - 75, 475, 'plat0', actionOnClickInfo, this, 2,1,0);
+    buttonInfo.animations.add('plat0');
+    buttonInfo.animations.play('plat0', 4, true );
+    buttonInfo.width = 150;
+    buttonInfo.height = 60;
  },
 };
 
-function actionOnClick () {
+
+
+function actionOnClickJuego () {
 
   
     juego.state.start('play');
 }
+
+function actionOnClickInfo(){
+
+	juego.state.start('info');
+}
+
+
+
 
 module.exports = menu; 
