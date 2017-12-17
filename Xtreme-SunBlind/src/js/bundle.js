@@ -356,7 +356,7 @@ var entorno = require('./class_environment');
 
 
 
-var plataforma = function(game, entradax, entraday, entradasprite){
+var plataforma = function(game, entradax, entraday, entradasprite, fuego, hielo){
 	entorno.call(this, game, entradax, entraday, entradasprite);
 	this.reescala_imagen(1, 0.5 );
 	this.tocada = false;
@@ -364,6 +364,9 @@ var plataforma = function(game, entradax, entraday, entradasprite){
 	this.iniPointY = entraday;
 	this.temporizador = this.game.time.create(false);
 	this.create();
+	this.tipo;
+	this.fuego = fuego;
+	this.hielo = hielo;
 	
 }
 
@@ -373,6 +376,7 @@ plataforma.prototype.constructor = plataforma;
 plataforma.prototype.create = function (){
     this.animations.add('plat');
   	this.animations.play('plat', 4, true );
+
 }
 
 plataforma.prototype.cambia_tocada = function (){
@@ -465,9 +469,9 @@ Protagonista.prototype.update = function (){
    if(this.orinando || this.agarrado)
     this.vel = 0;
 
-	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
+	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
-   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);
+   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    
     if (cursors.left.isDown)
     {
@@ -568,7 +572,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":12,"./play_scene":21}],16:[function(require,module,exports){
+},{"./class_object":12,"./play_scene":24}],16:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -629,14 +633,109 @@ module.exports = agua;
 },{"./class_powerUp":15}],18:[function(require,module,exports){
 'use strict'
 
+var tort = require('./class_turtle');
+var crab = require('./class_crab');
+var fly = require('./class_fly');
+var ag = require('./class_agarrador');
+
+	
+var enemigoRandom = {};
+var enemies;
+var ag;
+
+enemigoRandom.creaGrupo = function(juego){
+
+  enemies = juego.add.physicsGroup();
+}
+
+enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugador) {
+
+    
+    //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
+    setTimeout(function(){
+
+      var p = 0;
+    if(nivel <= 2)
+      aleatorioEnem = 0;
+    else
+      if(nivel == 3)
+        p = 1;
+      else if(nivel > 3)
+        p = 2;
+
+    var aleatorioEnem = juego.rnd.integerInRange(0,p);
+      
+    var x = 0;
+    var y = 0;
+    y = juego.rnd.integerInRange(0, 600);
+    if(!auxRn){
+      auxRn = true;
+      x = juego.rnd.integerInRange(100,250);
+    }
+    else {
+      auxRn = false;
+      x = juego.rnd.integerInRange(950,1100);
+    }
+
+   
+    if (nivel <= 4 && aleatorioEnem === 0){
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
+    }
+
+    else if (aleatorioEnem === 1){
+      var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
+      
+    }
+    else if (aleatorioEnem === 2){
+      var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
+    }
+
+    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
+      var enemigo = new ag(juego, x, y - 200, 'enemigo', jugador);
+      agarrador = true;
+    }
+
+    else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
+
+
+    enemies.add(enemigo);
+    
+    ag = agarrador;
+
+    if (x >= 950)
+      enemigo.cambia_dir();
+
+    enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+
+     }, 1000);         
+} 
+
+  enemigoRandom.devuelveGrupo = function(){
+
+    return enemies;
+  }
+
+  enemigoRandom.devuelveAgarre = function(){
+  	return ag;
+  }
+  
+
+module.exports = enemigoRandom;
+},{"./class_agarrador":1,"./class_crab":5,"./class_fly":9,"./class_turtle":16}],19:[function(require,module,exports){
+'use strict'
+
 var plat = require('./class_platform');
 	
 var plataforma = {};
 var platforms;
 var platformsIni;
+var level;
+var fug;
 
-plataforma.creaPlataforma = function(juego) {
+plataforma.creaPlataforma = function(juego, nivel) {
 
+  level = nivel;
   var anchorx;
   var anchory;  
   var anchoPlat = 500;
@@ -644,6 +743,12 @@ plataforma.creaPlataforma = function(juego) {
 
   platforms = juego.add.physicsGroup();
   platformsIni = juego.add.physicsGroup();
+
+  var aleatorio = juego.rnd.integerInRange(0,1);
+  if (aleatorio === 0)
+    fug = false;
+  else fug = true;
+
 
   //conjuntos de plataformas
 
@@ -694,8 +799,38 @@ plataforma.creaPlataforma = function(juego) {
 } 
 
     plataforma.creaPlat = function(a, anchorx, anchory, juego, superior, ini){
-    var sprite = 'plat2';
-    var p = (new plat(juego, 0, 0, sprite));
+
+      var fuego = false; var hielo = false;
+
+    if(level >= 6 && !superior && !ini){
+      var aleatorio = juego.rnd.integerInRange(0,100);
+    
+
+        if (aleatorio <= 95 - (nivel - 6) ){
+
+           var sprite = 'plat2';}
+
+         else {
+
+          if(!fug){
+
+           var sprite = 'plat0';
+           hielo = true;
+           }
+
+          else{
+           var sprite = 'plat1';
+           fuego = true;
+          }
+       }
+  }
+  
+
+   else {
+      var sprite = 'plat2';
+    }
+    
+    var p = (new plat(juego, 0, 0, sprite, fuego, hielo));
     if(superior)
       p.reescala_imagen(1, 0.1);
     p.cambia_pos(anchorx + (a*p.width), anchory);
@@ -716,7 +851,125 @@ plataforma.creaPlataforma = function(juego) {
   
 
 module.exports = plataforma;
-},{"./class_platform":13}],19:[function(require,module,exports){
+},{"./class_platform":13}],20:[function(require,module,exports){
+'use strict'
+
+var escena = require('./play_scene');
+var plat = require('./crea_Plataformas');
+var colisiones = {};
+var enemigosEnPantalla;
+
+colisiones.collisionHandlerPower = function(jug, pw){
+
+	jug.incrementaOrina(pw.orina);
+	pw.efecto(jug);
+	pw.limpia();
+	pw.kill();
+	escena.PU.creaPower(); 
+
+}
+
+colisiones.collisionHandlerFireBall = function(jug, fb){
+	if (jug.invencible){
+		fb.kill();
+		jug.invencible = false;
+	}
+
+	else{
+		jug.kill();
+		jug.vidas--;
+		jug.vel = jug.origVel;
+		jug.borracho = false;
+  		jug.invencible = false;
+  		if(jug.vidas > 0)
+  			setTimeout(function(){ escena.estadosJugador.revive( plat.devuelveIni()); plat.devuelveIni().visible = true; jug.orina = 0; jug.vel = jug.origVel;}, 1000);
+  		else 
+  			escena.perd.Perder();
+	}
+
+}
+
+colisiones.collisionHandlerEnem = function(jug, enem){
+
+	if(!enem.stunt){
+		if(!jug.invencible){
+
+			if(enem.agarra != undefined)
+				  enem.agarra(jug);
+
+			else escena.estadosJugador.jugadorMuerte();
+
+  		}
+  			else if (jug.invencible) {
+  				enem.kill();
+  				escena.enemigos.reducePantalla();
+  				escena.enemigos.reduceNumero();
+  				jug.invencible = false;
+  			}
+
+}
+  else {
+  	enem.kill();
+  	escena.enemigos.reducePantalla();
+  	escena.enemigos.reduceNumero();
+    if(enem.agarra != undefined)
+    	//Va a llegar un momento en el que aquí va a petar, sólo hay que hacer que agarrador pase al MAIN, pero HAY QUE HACERLO Y ES MUY TARDE YA
+      agarrador = false;
+  }
+  }
+
+  colisiones.collisionHandlerJug = function(jug, plat){
+  	if(jug.body.touching.up === true){
+   		plat.cambia_tocada();
+   		plat.jump();
+  	}
+
+  	if(plat.fuego){
+      jugMuerte(jug);
+  		
+    }
+  }
+
+  colisiones.collisionHandlerPlat = function(enem, plat){
+  	if(plat.tocada){
+  		plat.cambia_tocada();
+  		if (!enem.golpeado){
+  			enem.golpeado = true;
+  			enem.cont = enem.cont + 0.25;
+  			if (enem.cont > 2) 
+  				enem.cont = 2;
+  			setTimeout(function(){ enem.golpeado = false;}, 3000);
+  		}
+  		else {
+  			enem.golpeado = false;
+  			enem.cont = enem.cont - 0.25;
+  			if (enem.cont < 1) 
+  				enem.cont = 1;
+  		}
+  	}
+  }
+
+
+    colisiones.DeadZone1 = function(dead, enem){
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(1200,90);
+  	},1000);
+  }
+
+  colisiones.DeadZone2 = function(dead, enem){
+  	enem.kill();
+  	setTimeout(function(){
+  		enem.reset(0,90);
+  	},100);
+  }
+
+  colisiones.DeadZoneF = function(dead, fb){
+  	fb.kill();
+  }
+
+  module.exports = colisiones;
+},{"./crea_Plataformas":19,"./play_scene":24}],21:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -736,29 +989,51 @@ var BootScene = {
 
 var PreloaderScene = {
   preload: function () {
+
+  	//Carga de la imagen de la barra de carga
     this.loadingBar = this.game.add.sprite(0, 500, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 5);
     this.load.setPreloadSprite(this.loadingBar);
 
-    // TODO: load here the assets for the game
+	//Carga de imagenes para el juego
+
+	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
+
+    //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
+
+    //Fondo
     this.game.load.image('fond', 'images/space.png');
+        this.game.load.image('perder', 'images/lose.png');
+
+    //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
     this.game.load.image('enemigo', 'images/juen.png');
-    this.game.load.image('perder', 'images/lose.png');
-    this.game.load.image('energetica', 'images/Energetica.png');
-    this.game.load.image('alcohol', 'images/alcohol.png');
-    this.game.load.image('agua', 'images/agua.png');
-    this.game.load.image('proteinas', 'images/proteinas.png');
     this.game.load.image('crabby', 'images/crab.png');
     this.game.load.image('fly', 'images/fly.png');
     this.game.load.image('fireball', 'images/fireball.png');
     this.game.load.image('greenfireball', 'images/greenfireball.png');
+
+    //Bebidas
+    this.game.load.image('energetica', 'images/Energetica.png');
+    this.game.load.image('agua', 'images/agua.png');
+    this.game.load.image('alcohol', 'images/alcohol.png');
+    this.game.load.image('proteinas', 'images/proteinas.png');
+
+
+    //Imagenes de fondo  de menu
+    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
+    this.game.load.image('Enemigos', 'images/Menus/Enemigos.png');
+    this.game.load.image('Plataformas', 'images/Menus/Plataformas.png');
+    this.game.load.image('Menu', 'images/Menus/MenuPrincipal.png');
+    this.game.load.image('Pis', 'images/Menus/Pis.png');
+    this.game.load.image('Controles', 'images/Menus/Controles.png');
+
   },
 
   create: function () {
@@ -778,62 +1053,207 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./menu.js":20}],20:[function(require,module,exports){
+},{"./menu.js":22}],22:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
+var menuInformacion = require('./menuInformacion');
 
-var button;
+var buttonJuego; var buttonInfo; 
 var juego;
-var boton;
 
 var menu = {
 
   create: function () {
     juego = this.game;
 
+    juego.state.add('info', menuInformacion);
+
     juego.state.add('play', PlayScene); 
 
-    button = juego.add.button(juego.world.centerX - 100, 300, 'plat1', actionOnClick, this, 2,1,0);
+   juego.add.sprite(0,0,'Menu');
 
-    button.animations.add('plat1');
-    button.animations.play('plat1', 4, true );
-    button.width = 200;
-    button.height = 100;
-    
+    //Boton que nos lleva al juego
+    buttonJuego = juego.add.button(juego.world.centerX - 75, 275, 'plat0', actionOnClickJuego, this, 2,1,0);
+    buttonJuego.animations.add('plat0');
+    buttonJuego.animations.play('plat0', 4, true );
+    buttonJuego.width = 150;
+    buttonJuego.height = 60;
 
+    //Boton para el menú de información
+    buttonInfo = juego.add.button(juego.world.centerX - 75, 475, 'plat0', actionOnClickInfo, this, 2,1,0);
+    buttonInfo.animations.add('plat0');
+    buttonInfo.animations.play('plat0', 4, true );
+    buttonInfo.width = 150;
+    buttonInfo.height = 60;
  },
 };
 
-function actionOnClick () {
+
+
+function actionOnClickJuego () {
 
   
     juego.state.start('play');
 }
 
+function actionOnClickInfo(){
+
+	juego.state.start('info');
+}
+
+
+
+
 module.exports = menu; 
-},{"./play_scene.js":21}],21:[function(require,module,exports){
+},{"./menuInformacion":23,"./play_scene.js":24}],23:[function(require,module,exports){
+'use strict';
+
+var men = require('./menu.js');
+
+var buttonInfoD; var buttonInfoI;
+var Pot; var Enem; var Plat; var Pis; var Ctrl;
+var cont;
+var juego;
+
+var menuInformacion = {
+
+	create: function(){
+	juego = this.game;
+	//Cargamos las imágenes del menú
+	Pot = juego.add.sprite(0,0,'Potenciadores');
+    Pot.visible = false;
+    Enem = juego.add.sprite(0,0,'Enemigos');
+    Enem.visible = false;
+    Plat = juego.add.sprite(0,0, 'Plataformas');
+    Plat.visible = false;
+    Pis = juego.add.sprite(0,0, 'Pis');
+    Pis.visible = false;
+    Ctrl = juego.add.sprite(0,0,'Controles');
+    Ctrl.visible = false;
+
+	cont = 0;
+
+	cambiaImagenes();
+
+	
+
+	 //Boton para cambiar entre la info Derecha
+    buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'plat0', cambiainfoD, this, 2,1,0);
+    buttonInfoD.animations.add('plat0');
+    buttonInfoD.animations.play('plat0', 4, true );
+    buttonInfoD.width = 100;
+    buttonInfoD.height = 50;
+
+    //Boton para cambiar entre la info Izquierda
+    buttonInfoI = juego.add.button(juego.world.centerX - 600, 650, 'plat0', cambiainfoI, this, 2,1,0);
+    buttonInfoI.animations.add('plat0');
+    buttonInfoI.animations.play('plat0', 4, true );
+    buttonInfoI.width = 100;
+    buttonInfoI.height = 50;
+
+    //Boton para volver atrás desde la info
+    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
+    buttonInfoI.animations.add('plat2');
+    buttonInfoI.animations.play('plat2', 4, true );
+    buttonInfoI.width = 100;
+    buttonInfoI.height = 50;
+
+	}
+};
+
+
+function vuelveAMenu(){
+
+	juego.state.start('menu');
+}
+
+
+function cambiainfoD(){
+
+	cont++;
+
+	if (cont >= 5)
+		cont = 0;
+
+	cambiaImagenes();
+}
+
+function cambiainfoI(){
+
+	cont--;
+
+	if (cont < 0)
+		cont = 4;
+
+	cambiaImagenes();
+}
+
+function cambiaImagenes(){
+
+	if(cont === 0){
+		Pot.visible = true;
+		Enem.visible = false;
+		Plat.visible = false;
+		Pis.visible = false;
+		Ctrl.visible = false;
+	}
+	else if (cont === 1){
+		Enem.visible = true;
+		Pot.visible = false;
+		Plat.visible = false;
+		Pis.visible = false;
+		Ctrl.visible = false;
+	}
+
+	else if(cont === 2){
+		Plat.visible = true;
+		Pot.visible = false;
+		Enem.visible = false;
+		Pis.visible = false;
+		Ctrl.visible = false;
+	}
+
+	else if(cont === 3){
+		Plat.visible = false;
+		Pot.visible = false;
+		Enem.visible = false;
+		Pis.visible = true;
+		Ctrl.visible = false;
+	}
+
+	else if(cont === 4){
+		Plat.visible = false;
+		Pot.visible = false;
+		Enem.visible = false;
+		Pis.visible = false;
+		Ctrl.visible = true;
+	}
+
+
+}
+
+module.exports = menuInformacion;
+},{"./menu.js":22}],24:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
 var player = require('./class_player');
 var plat = require('./crea_Plataformas');
-var tort = require('./class_turtle');
-var crab = require('./class_crab');
-var fly = require('./class_fly');
+var enem = require('./crea_Enemigos');
 var env = require('./class_environment');
 var ener = require('./class_bebidaEnergetica');
 var alc = require('./class_alcohol');
 var wat = require('./class_water');
 var prot = require('./class_batidoDeProteinas');
-var ag = require('./class_agarrador');
 var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
+var cols = require('./handleCollisions');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
-var deadZone1; var deadZone2; var deadZone3; var deadZone4;
+var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
@@ -851,53 +1271,36 @@ var PlayScene = {
   juego.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  var fondo = this.game.add.sprite(0,0,'fond');
+  var fondo = juego.add.sprite(0,0,'fond');
   fondo.width = 1280;
   fondo.height = 720;
 
   //Imagen de perder
-  //juego.add.sprite(0,0, 'perder');
   perder = new go(juego, 500,0, 'perder');
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
 
-  //Creamos grupo de plataformas
-  plat.creaPlataforma(juego);
-  platforms = plat.devuelvePlat();
-  platformsIni = plat.devuelveIni();
 
   //Creamos primer PowerUp
-  powerUps = this.game.add.physicsGroup();
+  powerUps = juego.add.physicsGroup();
   PU.creaPower();
 
   //Creamos enemigos
-  enemies = this.game.add.physicsGroup();
+  enem.creaGrupo(juego);
   auxRn = false;
   agarrador = false;
 
-  //Creamos las deadzones para los enemigos
-  deadZone1 = new env(this.game, -50, 640, 'fond');
-  deadZone1.reescala_imagen(0.05,0.08);
-  deadZone1.visible = false;
 
-  deadZone2 = new env(this.game, 1260, 640, 'fond');
-  deadZone2.reescala_imagen(0.05,0.08);
-  deadZone2.visible = false;
+  //Creamos las deadzones 
+  deadZones = juego.add.physicsGroup();
+  creaDeadZone();
 
-  //Creamos las deadzones para las fireballs
-  deadZone3 = new env(this.game, -40, 0, 'fond');
-  deadZone3.reescala_imagen(0.03,1);
-  deadZone3.visible = false;
-
-  deadZone4 = new env(this.game, 1260, 0, 'fond');
-  deadZone4.reescala_imagen(0.03,1);
-  deadZone4.visible = false;
 
   //Creamos bolas de fuego
-  fireballs = this.game.add.physicsGroup();
+  fireballs = juego.add.physicsGroup();
 
   //Creamos al jugador
-  jugador = new player(this.game, 200, 600, 'player', 1, 500 , 3);
+  jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -907,24 +1310,29 @@ var PlayScene = {
 
   update: function (){
     //Para que choque el personaje con las plataformas
-    juego.physics.arcade.collide(jugador, platforms, collisionHandlerJug);
+    juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
 
-    juego.physics.arcade.collide(enemies, platforms, collisionHandlerPlat);
+    juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado)
-    	juego.physics.arcade.overlap(enemies, jugador, collisionHandlerEnem);
-    juego.physics.arcade.overlap(fireballs, jugador, collisionHandlerFireBall);
-    juego.physics.arcade.overlap(enemies, deadZone1, DeadZone1);
-    juego.physics.arcade.overlap(enemies, deadZone2, DeadZone2);
-    juego.physics.arcade.overlap(fireballs, deadZone3, DeadZoneF);
-    juego.physics.arcade.overlap(fireballs, deadZone4, DeadZoneF);
+    if(!jugador.agarrado){
+        	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
+    }
+
+    juego.physics.arcade.overlap(fireballs, jugador, cols.collisionHandlerFireBall);
+
+    juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone1, cols.DeadZone1);
+    juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone2, cols.DeadZone2);
+    juego.physics.arcade.overlap(fireballs, deadZones, cols.DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
-    juego.physics.arcade.overlap(powerUps, jugador, collisionHandlerPower);    
+    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		creaEnemigoRandom();
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
+    		agarrador = enem.devuelveAgarre();
+    		auxRn = !auxRn;
+    		enemigosEnPantalla++;
     	}
 
     	if(numeroEnemigos <= 0){
@@ -935,49 +1343,66 @@ var PlayScene = {
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
       
-    	if (!bolaGreenCreada)
+    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos == 4)
     		creaGreenFireballs();
 
   },
 
   render: function(){
-  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
   }
 };
 
 function nuevoNivel(){
+
 	nivel++;
   enemigosEnPantalla = 0;
   bolaCreada = false;
+  bolaGreenCreada = false;
 
 
   if(nivel != 1)
-	numeroEnemigos = nivel + juego.rnd.integerInRange(1,5);
-  else numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+	 numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+  else
+	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
 
   jugador.borracho = false;
   jugador.invencible = false;
   jugador.corriendo = false;
 
-  //UTILIZAREMOS ESTO MÁS ADELANTE PARA CREAR LAS PLATAFORMAS CADA VEZ QUE PASEMOS DE NIVEL YA QUE HABRÁ ALGUNAS QUE SEA DE DIFERENTE TIPO
-  /*platforms.forEach(function(element) {
-    element.kill();});*/
+	
+	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
+	//tendremos varios tipos de plataformas y hay que cambiarlas	
+	if(nivel != 1){
+ 			 for (var i = 0 ; i < platforms.children.length; i++){
+  				platforms.children[i].kill();}
+
+ 			 for (var i = 0 ; i < platformsIni.children.length; i++){
+  				platformsIni.children[i].kill(); }
+}	
+
+  //Creamos grupo de plataformas
+  plat.creaPlataforma(juego, nivel);
+  platforms = plat.devuelvePlat();
+  platformsIni = plat.devuelveIni();
+
+
 
 	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
-	//entra en rango del número del nivel * 5 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
+	//entra en rango del número del nivel * 7 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
 	//entonces creamos el número base de enemigos con otra probabilidad de que salgan más enemigos, si esto no ocurre, es decir, estamos en los 3
 	//primeros niveles, entonces simplemente creamos dos enemigos 
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 3 && porcentaje < nivel * 5)
-		enemigosPorNivel = 2 + (juego.rnd.integerInRange(1, 3));
+	if(nivel > 3 && porcentaje < nivel * 7)
+		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 1));
 	else
 		enemigosPorNivel = 2;
 
@@ -988,9 +1413,33 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
-	creaEnemigoRandom();
+	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
+	agarrador = enem.devuelveAgarre();
+	auxRn = !auxRn;
+	enemigosEnPantalla++;
 }
 
+
+var enemigos = {}
+
+enemigos.reduceNumero = function () {
+  numeroEnemigos--;
+}
+
+enemigos.reducePantalla = function(){
+  enemigosEnPantalla--;
+}
+
+module.exports.enemigos = enemigos;
+
+var perd = {};
+
+perd.Perder = function(){
+
+  perder.visible = true;
+}
+
+module.exports.perd = perd;
 
 //Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
 var PU = {};
@@ -1025,199 +1474,40 @@ setTimeout(function(){
 module.exports.PU = PU;
 
 
-function collisionHandlerPower(jug, pw){
+var estadosJugador = {};
 
-	jug.incrementaOrina(pw.orina);
-	pw.efecto(jug);
-	pw.limpia();
-	pw.kill();
-	PU.creaPower(); 
+  estadosJugador.jugadorMuerte = function(jug){
 
-}
+        jugador.kill();
+        jugador.vidas--;
+        jugador.vel = jugador.origVel;
+        jugador.borracho = false;
+        jugador.invencible = false;
 
-function collisionHandlerFireBall(jug, fb){
-	if (jugador.invencible){
-		fb.kill();
-		jugador.invencible = false;
-	}
+        if(jugador.vidas > 0)
+            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+          else 
+            {
+            perder.visible = true; 
+            for (var i = 0 ; i < powerUps.children.length; i++){
+            powerUps.children[i].limpia();
+            powerUps.children[i].kill();
+              }
+            setTimeout(function(){juego.state.start('menu');}, 3000);
+          }
 
-	else{
-		jugador.kill();
-		jugador.vidas--;
-		jugador.vel = jugador.origVel;
-		jugador.borracho = false;
-  		jugador.invencible = false;
-  		if(jugador.vidas > 0)
-  			setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
-  		else 
-  			perder.visible = true;
-	}
-
-}
-
-
-function collisionHandlerEnem (jug, enem){
-
-	if(!enem.stunt){
-		if(!jugador.invencible){
-			if(enem.agarra != undefined)
-			{
-				enem.agarra(jug);
-
-			}
-
-			else{
-  			jugador.kill();
-  			jugador.vidas--;
-  			jugador.vel = jugador.origVel;
-  			jugador.borracho = false;
-  			jugador.invencible = false;
-  				if(jugador.vidas > 0)
-  					setTimeout(function(){ revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
-  				else {
-  					perder.visible = true; 
-  					for (var i = 0 ; i < powerUps.children.length; i++){
-  					powerUps.children[i].limpia();
-  					powerUps.children[i].kill();
-  						}
-  					setTimeout(function(){juego.state.start('menu');}, 3000);
-  					
-  				}
-  			}
-  		}
-  			else if (jugador.invencible) {
-  				enem.kill();
-  				enemigosEnPantalla--;
-  				numeroEnemigos--;
-  				jugador.invencible = false;
-  			}
-
-}
-  else {
-  	enem.kill();
-  	enemigosEnPantalla--;
-  	numeroEnemigos--;
-    if(enem.agarra != undefined)
-      agarrador = false;
-  }
   }
 
-  function revive(jug, game){
+   estadosJugador.revive = function(jug, game){
     
-  	jugador.muerto = true;
-  	jugador.revive = true;
-  	jug.reset(640,0); 
-  	setTimeout(function(){ jugador.revive = false; platformsIni.visible = false; jugador.muerto = false;}, 2000);
+    jugador.muerto = true;
+    jugador.revive = true;
+    jugador.reset(640,0); 
+    setTimeout(function(){ jugador.revive = false; platformsIni.visible = false; jugador.muerto = false;}, 2000);
 
    }
 
-function collisionHandlerJug (jug, plat){
-  	if(jugador.body.touching.up === true){
-   		plat.cambia_tocada();
-   		plat.jump();
-  	}
-  }
-
-  function collisionHandlerPlat(enem, plat){
-  	if(plat.tocada){
-  		plat.cambia_tocada();
-  		if (!enem.golpeado){
-  			enem.golpeado = true;
-  			enem.cont = enem.cont + 0.25;
-  			if (enem.cont > 2) 
-  				enem.cont = 2;
-  			setTimeout(function(){ enem.golpeado = false;}, 3000);
-  		}
-  		else {
-  			enem.golpeado = false;
-  			enem.cont = enem.cont - 0.25;
-  			if (enem.cont < 1) 
-  				enem.cont = 1;
-  		}
-  	}
-  }
-
-  function DeadZone1(dead, enem){
-  	enem.kill();
-  	setTimeout(function(){
-  		enem.reset(1200,90);
-  	},2000);
-  }
-
-  function DeadZone2(dead, enem){
-  	enem.kill();
-  	setTimeout(function(){
-  		enem.reset(0,90);
-  	},2000);
-  }
-
-  function DeadZoneF(dead, fb){
-  	fb.kill();
-  }
-
-  function creaEnemigoRandom(){
-
-  	//Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
-  	setTimeout(function(){
-
-  		var p = 0;
-  	if(nivel <= 2)
-  		aleatorioEnem = 0;
-  	else
-  		if(nivel == 3)
-  			p = 1;
-  		else if(nivel > 3)
-  			p = 2;
-
-  		var aleatorioEnem = juego.rnd.integerInRange(0,p);
-  		
-    var x = 0;
-    var y = 0;
-    y = juego.rnd.integerInRange(0, 600);
-    if(!auxRn){
-      auxRn = true;
-    	x = juego.rnd.integerInRange(100,250);
-    }
-    else {
-      auxRn = false;
-    	x = juego.rnd.integerInRange(950,1100);
-    }
-
-   
-    if (nivel <= 4 && aleatorioEnem === 0){
-    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
-    }
-
-    else if (aleatorioEnem === 1){
-    	var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
-    	
-    }
-    else if (aleatorioEnem === 2){
-    	var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
-    }
-
-    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
-    	var enemigo = new ag (juego, x, y, 'enemigo', jugador);
-      agarrador = true;
-    }
-
-    else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
-    	var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
-
-
-  	enemies.add(enemigo);
-  	
-
-  	if (x >= 950)
-  		enemigo.cambia_dir();
-
-  	enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
-  	
-
-  	 }, 1000); 
-  	enemigosEnPantalla++;
-  
-  }
+  module.exports.estadosJugador = estadosJugador;
 
   function creaFireballs (){
   	var x; var y; var r; var time;
@@ -1251,9 +1541,28 @@ function collisionHandlerJug (jug, plat){
   	fireballs.add(fb2);
   }
 
+  function creaDeadZone(){
+      //Para los enemigos
+  deadZone1 = new env(juego, -50, 640, 'fond');
+  deadZone1.reescala_imagen(0.05,0.08);
+  deadZone1.visible = false;
+
+  deadZone2 = new env(juego, 1260, 640, 'fond');
+  deadZone2.reescala_imagen(0.05,0.08);
+  deadZone2.visible = false;
+
+  //Para las fireballs
+  var deadZone3 = new env(juego, -40, 0, 'fond');
+  deadZone3.reescala_imagen(0.03,1);
+  deadZone3.visible = false;
+  deadZones.add(deadZone3);
+
+  var deadZone4 = new env(juego, 1260, 0, 'fond');
+  deadZone4.reescala_imagen(0.03,1);
+  deadZone4.visible = false;
+  deadZones.add(deadZone4);
+  }
+
 
 module.exports = PlayScene;
-
-
-
-},{"./class_agarrador":1,"./class_alcohol":2,"./class_batidoDeProteinas":3,"./class_bebidaEnergetica":4,"./class_crab":5,"./class_environment":7,"./class_fireball":8,"./class_fly":9,"./class_greenFireBall":10,"./class_movibl":11,"./class_object":12,"./class_player":14,"./class_turtle":16,"./class_water":17,"./crea_Plataformas":18}]},{},[19]);
+},{"./class_alcohol":2,"./class_batidoDeProteinas":3,"./class_bebidaEnergetica":4,"./class_environment":7,"./class_fireball":8,"./class_greenFireBall":10,"./class_movibl":11,"./class_object":12,"./class_player":14,"./class_water":17,"./crea_Enemigos":18,"./crea_Plataformas":19,"./handleCollisions":20}]},{},[21]);

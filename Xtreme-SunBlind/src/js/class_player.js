@@ -54,9 +54,9 @@ Protagonista.prototype.update = function (){
    if(this.orinando || this.agarrado)
     this.vel = 0;
 
-	 this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
+	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
-   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);
+   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    
     if (cursors.left.isDown)
     {

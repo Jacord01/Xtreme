@@ -4,7 +4,7 @@ var entorno = require('./class_environment');
 
 
 
-var plataforma = function(game, entradax, entraday, entradasprite){
+var plataforma = function(game, entradax, entraday, entradasprite, fuego, hielo){
 	entorno.call(this, game, entradax, entraday, entradasprite);
 	this.reescala_imagen(1, 0.5 );
 	this.tocada = false;
@@ -12,6 +12,9 @@ var plataforma = function(game, entradax, entraday, entradasprite){
 	this.iniPointY = entraday;
 	this.temporizador = this.game.time.create(false);
 	this.create();
+	this.tipo;
+	this.fuego = fuego;
+	this.hielo = hielo;
 	
 }
 
@@ -21,6 +24,7 @@ plataforma.prototype.constructor = plataforma;
 plataforma.prototype.create = function (){
     this.animations.add('plat');
   	this.animations.play('plat', 4, true );
+
 }
 
 plataforma.prototype.cambia_tocada = function (){
