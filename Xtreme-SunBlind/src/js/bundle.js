@@ -3,12 +3,25 @@
 
 var HUD = {};
 var vida1; var vida2; var vida3;
+var punct1; var punct2; var nivel;
 
 HUD.create = function(game){
 	
 	vida1 =  game.add.sprite(10,10,'vidas');
 	vida2 = game.add.sprite(74, 10, 'vidas');
 	vida3 = game.add.sprite(138, 10, 'vidas');
+
+	punct1 = game.add.sprite(300, 80, 'numeros');
+ 	punct1.width = 50;
+ 	punct1.height = 80;
+
+ 	punct2 = game.add.sprite(350,80, 'numeros');
+ 	punct2.width = 50;
+ 	punct2.height = 80;
+
+ 	nivel = game.add.sprite(200,100, 'nivel');
+ 	nivel.width = 100;
+ 	nivel.height = 50;
 }
 
 HUD.restaVida = function(jug){
@@ -36,6 +49,17 @@ HUD.restaVida = function(jug){
 		vida2.visible = false;
 		vida3.visible = false;
 	}
+}
+
+HUD.nivel = function(lvl){
+
+  punct1.visible = true; punct2.visible = true; nivel.visible = true;
+
+  punct1.frame = Math.floor(lvl / 10);
+
+  punct2.frame = lvl % 10;
+
+  setTimeout(function(){punct1.visible = false; punct2.visible = false; nivel.visible = false;}, 3000);
 }
 
 module.exports = HUD;
@@ -847,7 +871,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
       var aleatorio = juego.rnd.integerInRange(0,100);
     
 
-        if (aleatorio <= 95 - (nivel - 6) ){
+        if (aleatorio <= 95 - (level - 6) ){
 
            var sprite = 'plat2';}
 
@@ -959,7 +983,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   	}
 
   	if(plat.fuego){
-      jugMuerte(jug);
+      escena.estadosJugador.jugadorMuerte();
   		
     }
   }
@@ -1044,7 +1068,11 @@ var PreloaderScene = {
 
     //Fondo
     this.game.load.image('fond', 'images/space.png');
-        this.game.load.image('perder', 'images/lose.png');
+    this.game.load.image('perder', 'images/lose.png');
+    this.game.load.spritesheet('numeros', 'images/Numeros.png', 98.1,200,10);
+    this.game.load.image('nivel', 'images/Nivel.png');
+    
+    
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -1401,6 +1429,9 @@ var PlayScene = {
 function nuevoNivel(){
 
 	nivel++;
+
+  HUD.nivel(nivel);
+
   enemigosEnPantalla = 0;
   bolaCreada = false;
   bolaGreenCreada = false;
@@ -1452,6 +1483,7 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
+
 	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
 	auxRn = !auxRn;

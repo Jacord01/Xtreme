@@ -38,7 +38,11 @@ var PreloaderScene = {
 
     //Fondo
     this.game.load.image('fond', 'images/space.png');
-        this.game.load.image('perder', 'images/lose.png');
+    this.game.load.image('perder', 'images/lose.png');
+    this.game.load.spritesheet('numeros', 'images/Numeros.png', 98.1,200,10);
+    this.game.load.image('nivel', 'images/Nivel.png');
+    
+    
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
