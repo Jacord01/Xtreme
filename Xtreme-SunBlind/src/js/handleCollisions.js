@@ -64,7 +64,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   	}
 
   	if(plat.fuego){
-      jugMuerte(jug);
+      escena.estadosJugador.jugadorMuerte();
   		
     }
   }

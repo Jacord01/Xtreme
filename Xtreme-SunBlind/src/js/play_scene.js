@@ -129,6 +129,9 @@ var PlayScene = {
 function nuevoNivel(){
 
 	nivel++;
+
+  HUD.nivel(nivel);
+
   enemigosEnPantalla = 0;
   bolaCreada = false;
   bolaGreenCreada = false;
@@ -180,6 +183,7 @@ function nuevoNivel(){
 	platformsIni.visible = true;
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
+
 	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
 	auxRn = !auxRn;
