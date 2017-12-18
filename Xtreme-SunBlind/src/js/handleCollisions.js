@@ -53,7 +53,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   	escena.enemigos.reduceNumero();
     if(enem.agarra != undefined)
     	//Va a llegar un momento en el que aquí va a petar, sólo hay que hacer que agarrador pase al MAIN, pero HAY QUE HACERLO Y ES MUY TARDE YA
-      agarrador = false;
+      escena.agarrador = false;
   }
   }
 
@@ -63,7 +63,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
    		plat.jump();
   	}
 
-  	if(plat.fuego){
+  	if(plat.fuego &&  jug.body.touching.up === false){
       escena.estadosJugador.jugadorMuerte();
   		
     }

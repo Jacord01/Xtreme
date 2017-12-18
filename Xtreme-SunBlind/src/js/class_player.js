@@ -1,8 +1,10 @@
 'use strict';
 
-var movible = require('./class_movibl');	
+var movible = require('./class_movibl');
+var HUD = require('./HUD');	
 var cursors;
 var jumpButton;
+var escudo;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -32,11 +34,16 @@ Protagonista.prototype.create = function (){
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
-    this.reescala_imagen(1.45,1.15);
+    this.reescala_imagen(1.45,0.85);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
   this.animations.play('stay');
+  escudo = this.game.add.sprite(this.x ,this.y,'escudo');
+  escudo.visible = false;
+  escudo.width = 120;
+  escudo.height = 90;
+
 }
 
 Protagonista.prototype.update = function (){
@@ -50,6 +57,14 @@ Protagonista.prototype.update = function (){
 	 if (this.borracho){
 	 	this.vel = -this.vel;
    }
+
+   if(this.invencible){
+    escudo.visible = true;
+    escudo.x = this.x - 65;
+    escudo.y = this.y - 40;
+  }
+   else 
+    escudo.visible = false;
 
    if(this.orinando || this.agarrado)
     this.vel = 0;
@@ -93,6 +108,7 @@ Protagonista.prototype.update = function (){
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
           this.orina = 0;
+          HUD.cambiaPis(this.orina);
           this.orinando = true;
           var prota = this;
           
@@ -117,6 +133,8 @@ Protagonista.prototype.incrementaOrina = function (orina){
   this.orina = this.orina + orina;
   if(this.orina>10)
     this.orina = 10; 
+  HUD.cambiaPis(this.orina);
+
 }
 
 module.exports = Protagonista;

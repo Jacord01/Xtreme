@@ -29,7 +29,11 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
-    this.game.load.spritesheet('vidas', 'images/Vidas.png');
+    this.game.load.image('escudo', 'images/Escudo.png');
+	this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
+
+
+
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
@@ -38,9 +42,15 @@ var PreloaderScene = {
 
     //Fondo
     this.game.load.image('fond', 'images/space.png');
+
+    //HUD
     this.game.load.image('perder', 'images/lose.png');
     this.game.load.spritesheet('numeros', 'images/Numeros.png', 98.1,200,10);
     this.game.load.image('nivel', 'images/Nivel.png');
+    this.game.load.image('interiorPis', 'images/InteriorPis.png');
+    this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
+    this.game.load.spritesheet('vidas', 'images/Vidas.png');
+    
     
     
 

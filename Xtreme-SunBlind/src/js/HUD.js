@@ -3,12 +3,18 @@
 var HUD = {};
 var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
+var pisDentro; var pisFuera;
+var ebrio;
 
 HUD.create = function(game){
+
+	//VidasPlayer
 	
 	vida1 =  game.add.sprite(10,10,'vidas');
 	vida2 = game.add.sprite(74, 10, 'vidas');
 	vida3 = game.add.sprite(138, 10, 'vidas');
+
+	//Nivel
 
 	punct1 = game.add.sprite(300, 80, 'numeros');
  	punct1.width = 50;
@@ -21,6 +27,23 @@ HUD.create = function(game){
  	nivel = game.add.sprite(200,100, 'nivel');
  	nivel.width = 100;
  	nivel.height = 50;
+
+ 	//Medidor de Pis
+
+ 	pisDentro = game.add.sprite(950,30, 'interiorPis');
+ 	pisDentro.height = 20;
+ 	pisDentro.width = 0;
+
+ 	pisFuera = game.add.sprite(950,30, 'exteriorPis');
+ 	pisFuera.height = 20;
+ 	pisFuera.width = 300; 	
+
+ 	//Jugador ebrio
+ 	 ebrio = game.add.sprite(0 ,0,'borracho');
+ 	 ebrio.visible = false;
+
+ 	 ebrio.animations.add('drunk', [0,1,2,3], 6, true);
+ 	 ebrio.play('drunk');
 }
 
 HUD.restaVida = function(jug){
@@ -59,6 +82,21 @@ HUD.nivel = function(lvl){
   punct2.frame = lvl % 10;
 
   setTimeout(function(){punct1.visible = false; punct2.visible = false; nivel.visible = false;}, 3000);
+}
+
+HUD.cambiaPis = function(pis){
+
+	 	pisDentro.width = pis * 30;
+}
+
+HUD.borracho = function(){
+
+	 ebrio.visible = true;
+}
+
+HUD.noBorracho = function(){
+
+	ebrio.visible = false;
 }
 
 module.exports = HUD;
