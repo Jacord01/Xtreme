@@ -4,12 +4,18 @@
 var HUD = {};
 var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
+var pisDentro; var pisFuera;
+var ebrio;
 
 HUD.create = function(game){
+
+	//VidasPlayer
 	
 	vida1 =  game.add.sprite(10,10,'vidas');
 	vida2 = game.add.sprite(74, 10, 'vidas');
 	vida3 = game.add.sprite(138, 10, 'vidas');
+
+	//Nivel
 
 	punct1 = game.add.sprite(300, 80, 'numeros');
  	punct1.width = 50;
@@ -22,6 +28,23 @@ HUD.create = function(game){
  	nivel = game.add.sprite(200,100, 'nivel');
  	nivel.width = 100;
  	nivel.height = 50;
+
+ 	//Medidor de Pis
+
+ 	pisDentro = game.add.sprite(950,30, 'interiorPis');
+ 	pisDentro.height = 20;
+ 	pisDentro.width = 0;
+
+ 	pisFuera = game.add.sprite(950,30, 'exteriorPis');
+ 	pisFuera.height = 20;
+ 	pisFuera.width = 300; 	
+
+ 	//Jugador ebrio
+ 	 ebrio = game.add.sprite(0 ,0,'borracho');
+ 	 ebrio.visible = false;
+
+ 	 ebrio.animations.add('drunk', [0,1,2,3], 6, true);
+ 	 ebrio.play('drunk');
 }
 
 HUD.restaVida = function(jug){
@@ -60,6 +83,21 @@ HUD.nivel = function(lvl){
   punct2.frame = lvl % 10;
 
   setTimeout(function(){punct1.visible = false; punct2.visible = false; nivel.visible = false;}, 3000);
+}
+
+HUD.cambiaPis = function(pis){
+
+	 	pisDentro.width = pis * 30;
+}
+
+HUD.borracho = function(){
+
+	 ebrio.visible = true;
+}
+
+HUD.noBorracho = function(){
+
+	ebrio.visible = false;
 }
 
 module.exports = HUD;
@@ -126,7 +164,8 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 
 module.exports = agarrador;
 },{"./class_enemy":7}],3:[function(require,module,exports){
-var PU = require('./class_powerUp');	
+var PU = require('./class_powerUp');
+var HUD = require('./HUD');	
 
 var alcohol = function(game, entradasprite){
 
@@ -141,11 +180,12 @@ alcohol.prototype.constructor = alcohol;
 
 alcohol.prototype.efecto = function(jug){
 	jug.borracho = true;
-	setTimeout(function(){jug.borracho = false;}, 5000);
+	HUD.borracho();
+	setTimeout(function(){jug.borracho = false; HUD.noBorracho();}, 5000);
 }
 
 module.exports = alcohol;
-},{"./class_powerUp":16}],4:[function(require,module,exports){
+},{"./HUD":1,"./class_powerUp":16}],4:[function(require,module,exports){
 var PU = require('./class_powerUp');	
 
 var batidoDeProteinas = function(game, entradasprite){
@@ -480,9 +520,11 @@ module.exports = plataforma;
 },{"./class_environment":8}],15:[function(require,module,exports){
 'use strict';
 
-var movible = require('./class_movibl');	
+var movible = require('./class_movibl');
+var HUD = require('./HUD');	
 var cursors;
 var jumpButton;
+var escudo;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -512,11 +554,16 @@ Protagonista.prototype.create = function (){
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
-    this.reescala_imagen(1.45,1.15);
+    this.reescala_imagen(1.45,0.85);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
   this.animations.play('stay');
+  escudo = this.game.add.sprite(this.x ,this.y,'escudo');
+  escudo.visible = false;
+  escudo.width = 120;
+  escudo.height = 90;
+
 }
 
 Protagonista.prototype.update = function (){
@@ -530,6 +577,14 @@ Protagonista.prototype.update = function (){
 	 if (this.borracho){
 	 	this.vel = -this.vel;
    }
+
+   if(this.invencible){
+    escudo.visible = true;
+    escudo.x = this.x - 65;
+    escudo.y = this.y - 40;
+  }
+   else 
+    escudo.visible = false;
 
    if(this.orinando || this.agarrado)
     this.vel = 0;
@@ -573,6 +628,7 @@ Protagonista.prototype.update = function (){
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
           this.orina = 0;
+          HUD.cambiaPis(this.orina);
           this.orinando = true;
           var prota = this;
           
@@ -597,10 +653,12 @@ Protagonista.prototype.incrementaOrina = function (orina){
   this.orina = this.orina + orina;
   if(this.orina>10)
     this.orina = 10; 
+  HUD.cambiaPis(this.orina);
+
 }
 
 module.exports = Protagonista;
-},{"./class_movibl":12}],16:[function(require,module,exports){
+},{"./HUD":1,"./class_movibl":12}],16:[function(require,module,exports){
 
 "use strict";
 
@@ -871,7 +929,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
       var aleatorio = juego.rnd.integerInRange(0,100);
     
 
-        if (aleatorio <= 95 - (level - 6) ){
+        if (aleatorio <= 95 - (level - level / 10) ){
 
            var sprite = 'plat2';}
 
@@ -972,7 +1030,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   	escena.enemigos.reduceNumero();
     if(enem.agarra != undefined)
     	//Va a llegar un momento en el que aquí va a petar, sólo hay que hacer que agarrador pase al MAIN, pero HAY QUE HACERLO Y ES MUY TARDE YA
-      agarrador = false;
+      escena.agarrador = false;
   }
   }
 
@@ -982,7 +1040,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
    		plat.jump();
   	}
 
-  	if(plat.fuego){
+  	if(plat.fuego &&  jug.body.touching.up === false){
       escena.estadosJugador.jugadorMuerte();
   		
     }
@@ -1059,7 +1117,11 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
-    this.game.load.spritesheet('vidas', 'images/Vidas.png');
+    this.game.load.image('escudo', 'images/Escudo.png');
+	this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
+
+
+
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
@@ -1068,9 +1130,15 @@ var PreloaderScene = {
 
     //Fondo
     this.game.load.image('fond', 'images/space.png');
+
+    //HUD
     this.game.load.image('perder', 'images/lose.png');
     this.game.load.spritesheet('numeros', 'images/Numeros.png', 98.1,200,10);
     this.game.load.image('nivel', 'images/Nivel.png');
+    this.game.load.image('interiorPis', 'images/InteriorPis.png');
+    this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
+    this.game.load.spritesheet('vidas', 'images/Vidas.png');
+    
     
     
 
@@ -1365,6 +1433,7 @@ var PlayScene = {
 
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+  jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
   HUD.create(juego);
@@ -1410,12 +1479,13 @@ var PlayScene = {
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
       
-    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos == 4)
+    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos === 4)
     		creaGreenFireballs();
 
   },
 
   render: function(){
+    //juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
@@ -1443,6 +1513,7 @@ function nuevoNivel(){
 	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
 
   jugador.borracho = false;
+  HUD.noBorracho();
   jugador.invencible = false;
   jugador.corriendo = false;
 
@@ -1562,7 +1633,7 @@ var estadosJugador = {};
         jugador.invencible = false;
 
         if(jugador.vidas > 0)
-            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; HUD.cambiaPis(jugador.orina); HUD.noBorracho(); jugador.vel = jugador.origVel;}, 1000);
           else 
             {
               perd.Perder();
@@ -1600,13 +1671,13 @@ var estadosJugador = {};
     function creaGreenFireballs (){
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
-  	x = 1210; y = 270;
+  	x = 1210; y = 450;
   	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
-  	x = 20; y = 270;
+  	x = 20; y = 450;
   	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb2.cambia_dir();

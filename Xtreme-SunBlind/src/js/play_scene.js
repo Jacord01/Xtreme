@@ -65,6 +65,7 @@ var PlayScene = {
 
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+  jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
   HUD.create(juego);
@@ -110,12 +111,13 @@ var PlayScene = {
     	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
     		creaFireballs();
       
-    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos == 4)
+    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos === 4)
     		creaGreenFireballs();
 
   },
 
   render: function(){
+    //juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
@@ -143,6 +145,7 @@ function nuevoNivel(){
 	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
 
   jugador.borracho = false;
+  HUD.noBorracho();
   jugador.invencible = false;
   jugador.corriendo = false;
 
@@ -262,7 +265,7 @@ var estadosJugador = {};
         jugador.invencible = false;
 
         if(jugador.vidas > 0)
-            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; jugador.vel = jugador.origVel;}, 1000);
+            setTimeout(function(){ estadosJugador.revive(jug); platformsIni.visible = true; jugador.orina = 0; HUD.cambiaPis(jugador.orina); HUD.noBorracho(); jugador.vel = jugador.origVel;}, 1000);
           else 
             {
               perd.Perder();
@@ -300,13 +303,13 @@ var estadosJugador = {};
     function creaGreenFireballs (){
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
-  	x = 1210; y = 270;
+  	x = 1210; y = 450;
   	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
-  	x = 20; y = 270;
+  	x = 20; y = 450;
   	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
   	if (x >= 550)
   		fb2.cambia_dir();
