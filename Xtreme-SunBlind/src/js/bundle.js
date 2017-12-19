@@ -525,6 +525,7 @@ var HUD = require('./HUD');
 var cursors;
 var jumpButton;
 var escudo;
+var daVida;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -542,7 +543,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.invencible = false;
   this.saltando = false;
   this.agarrado = false;
-	this.create();
+  this.create();
 }
 
 Protagonista.prototype = Object.create(movible.prototype);
@@ -552,6 +553,7 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    daVida = this.juego.input.keyboard.addKey(Phaser.Keyboard.P);	
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
     this.reescala_imagen(1.45,0.85);
@@ -592,6 +594,7 @@ Protagonista.prototype.update = function (){
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
+   //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    
     if (cursors.left.isDown)
     {
@@ -627,6 +630,7 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
+
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
@@ -634,6 +638,9 @@ Protagonista.prototype.update = function (){
           
           setTimeout(function(){prota.orinando = false;}, 2000);
         }
+        
+    if(daVida.isDown)
+   		 this.vidas = 10;    
 
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
