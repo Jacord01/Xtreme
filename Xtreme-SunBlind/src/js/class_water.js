@@ -2,7 +2,7 @@ var PU = require('./class_powerUp');
 
 var agua = function(game, entradasprite){
 
-	this.orina = 1;
+	this.orina = 2;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.1,0.1);
 	

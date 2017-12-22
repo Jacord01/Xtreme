@@ -3,7 +3,7 @@ var HUD = require('./HUD');
 
 var alcohol = function(game, entradasprite){
 
-	this.orina = 3;
+	this.orina = 5;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.025,0.025);
 	

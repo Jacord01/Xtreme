@@ -2,7 +2,7 @@ var PU = require('./class_powerUp');
 
 var bebidaEnergetica = function(game, entradasprite){
 
-	this.orina = 2;
+	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.07,0.07);
 	

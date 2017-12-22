@@ -33,7 +33,6 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    daVida = this.juego.input.keyboard.addKey(Phaser.Keyboard.P);	
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
     this.reescala_imagen(1.45,0.85);
@@ -61,15 +60,17 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
-    escudo.visible = true;
+    if(!this.orinando) 
+      escudo.visible = true;
     escudo.x = this.x - 65;
     escudo.y = this.y - 40;
   }
    else 
     escudo.visible = false;
 
-   if(this.orinando || this.agarrado)
+   if(this.orinando || this.agarrado){
     this.vel = 0;
+  }
 
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
@@ -95,7 +96,7 @@ Protagonista.prototype.update = function (){
            this.animations.play('walk', 6, true);
     }
 
-    this.vel = this.origVel - (this.orina * 20);
+    this.vel = this.origVel - (this.orina * 10);
     if (jumpButton.isDown && !this.agarrado && (this.body.onFloor() 
       || this.body.touching.down))
 
@@ -119,9 +120,7 @@ Protagonista.prototype.update = function (){
           setTimeout(function(){prota.orinando = false;}, 2000);
         }
         
-    if(daVida.isDown)
-   		 this.vidas = 10;    
-
+      this.invencible = true;
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
