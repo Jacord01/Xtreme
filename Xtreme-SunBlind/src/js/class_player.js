@@ -120,7 +120,7 @@ Protagonista.prototype.update = function (){
           setTimeout(function(){prota.orinando = false;}, 2000);
         }
         
-      this.invencible = true;
+      //this.invencible = true;
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
