@@ -105,15 +105,17 @@ module.exports = HUD;
 "use strict";
 
 var enemy = require('./class_enemy');
+var escena = require('./play_scene');
 
 var agarrador =  function(game, entradax, entraday, entradasprite, jugador){
   enemy.call(this, game, entradax, entraday, entradasprite, 0, 0);
+
   this.agarrando = false;
   this.medAgarro = 50;
   this.jug = jugador;
   this.juego = game;
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-  this.reescala_imagen(0.075,0.075);
+  this.reescala_imagen(0.05,0.05);
   this.aleatorio = 0;
 
 }
@@ -123,13 +125,16 @@ agarrador.prototype.constructor = agarrador;
 
 agarrador.prototype.update = function(){
 	if(this.golpeado) this.stunt = true;
+	//this.juego.debug.body(this);
+	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, 500 , 70);
+	//this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
+	//this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
 
-	this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
-	this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
-
-	if(this.jug.agarrado == true && this.espacio.isDown && this.espacio.downDuration(50))
+	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;
 
+	}
+	
 	if(this.medAgarro >= 100){
 		this.aleatorio = this.juego.rnd.integerInRange(0,1);
 		if(this.aleatorio === 0)
@@ -141,7 +146,12 @@ agarrador.prototype.update = function(){
 		this.medAgarro = 50;
 	}
 
-
+	else if (this.medAgarro < 0 && this.jug.agarrado === true){
+		this.jug.agarrado = false;
+		this.agarrando = false;
+		this.medAgarro = 50;
+		escena.estadosJugador.jugadorMuerte();
+	}
 }
 
 agarrador.prototype.agarra = function(jug){
@@ -155,21 +165,21 @@ agarrador.prototype.agarra = function(jug){
 
 agarrador.prototype.cambiaAgarre = function(ag, jug){
 
-	ag.medAgarro = ag.medAgarro - 10;
-	if(jug.agarrado)
+	ag.medAgarro -= 10;
+	if(ag.jug.agarrado)
 		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);
 
 }
 
 
 module.exports = agarrador;
-},{"./class_enemy":7}],3:[function(require,module,exports){
+},{"./class_enemy":7,"./play_scene":25}],3:[function(require,module,exports){
 var PU = require('./class_powerUp');
 var HUD = require('./HUD');	
 
 var alcohol = function(game, entradasprite){
 
-	this.orina = 3;
+	this.orina = 5;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.025,0.025);
 	
@@ -190,7 +200,7 @@ var PU = require('./class_powerUp');
 
 var batidoDeProteinas = function(game, entradasprite){
 
-	this.orina = 2;
+	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.07,0.07);	
 }
@@ -211,7 +221,7 @@ var PU = require('./class_powerUp');
 
 var bebidaEnergetica = function(game, entradasprite){
 
-	this.orina = 2;
+	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.07,0.07);
 	
@@ -553,7 +563,6 @@ Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    daVida = this.juego.input.keyboard.addKey(Phaser.Keyboard.P);	
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
     this.reescala_imagen(1.45,0.85);
@@ -581,15 +590,17 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
-    escudo.visible = true;
+    if(!this.orinando) 
+      escudo.visible = true;
     escudo.x = this.x - 65;
     escudo.y = this.y - 40;
   }
    else 
     escudo.visible = false;
 
-   if(this.orinando || this.agarrado)
+   if(this.orinando || this.agarrado){
     this.vel = 0;
+  }
 
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
@@ -615,7 +626,7 @@ Protagonista.prototype.update = function (){
            this.animations.play('walk', 6, true);
     }
 
-    this.vel = this.origVel - (this.orina * 20);
+    this.vel = this.origVel - (this.orina * 10);
     if (jumpButton.isDown && !this.agarrado && (this.body.onFloor() 
       || this.body.touching.down))
 
@@ -639,9 +650,7 @@ Protagonista.prototype.update = function (){
           setTimeout(function(){prota.orinando = false;}, 2000);
         }
         
-    if(daVida.isDown)
-   		 this.vidas = 10;    
-
+      this.invencible = true;
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
@@ -745,7 +754,7 @@ var PU = require('./class_powerUp');
 
 var agua = function(game, entradasprite){
 
-	this.orina = 1;
+	this.orina = 2;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.1,0.1);
 	
@@ -766,12 +775,12 @@ module.exports = agua;
 var tort = require('./class_turtle');
 var crab = require('./class_crab');
 var fly = require('./class_fly');
-var ag = require('./class_agarrador');
+var agarra = require('./class_agarrador');
+var escena = require('./play_scene');
 
 	
 var enemigoRandom = {};
 var enemies;
-var ag;
 
 enemigoRandom.creaGrupo = function(juego){
 
@@ -780,63 +789,91 @@ enemigoRandom.creaGrupo = function(juego){
 
 enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugador) {
 
-    
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
     setTimeout(function(){
 
-      var p = 0;
-    if(nivel <= 2)
-      aleatorioEnem = 0;
-    else
-      if(nivel == 3)
-        p = 1;
-      else if(nivel > 3)
-        p = 2;
+    var aleatorioEnem = juego.rnd.integerInRange(0,3);
 
-    var aleatorioEnem = juego.rnd.integerInRange(0,p);
+    if(nivel < 3) aleatorioEnem = 0;
+    else if(nivel >= 3 && nivel < 5) aleatorioEnem = 1;
+    else if(nivel === 5) aleatorioEnem = 2;
+    else if(nivel === 6)
+    {
+      var p = juego.rnd.integerInRange(0,1);
+      if(p === 0)
+        aleatorioEnem = 0;
+      else
+        aleatorioEnem = 2; 
+    }
+
+    else if(nivel >= 7) aleatorioEnem = juego.rnd.integerInRange(0,3);
       
     var x = 0;
     var y = 0;
+    var xFly;
+    var yFly;
+    var xAG;
+    var yAG;
+
     y = juego.rnd.integerInRange(0, 600);
+    var ctrl = juego.rnd.integerInRange(0,2);
+
+    if(ctrl === 0){
+      yFly = 0;
+      yAG = 300;
+      
+    }
+    else if( ctrl === 1){
+      yFly = 300;
+      yAG = 300;
+      
+    }
+    else{
+      yFly = 500;
+      yAG = 473;
+    
+    }
+
     if(!auxRn){
       auxRn = true;
       x = juego.rnd.integerInRange(100,250);
+      xFly = 100;
+      xAG = 50;
     }
     else {
       auxRn = false;
       x = juego.rnd.integerInRange(950,1100);
+      xFly = 1100;
+      xAG = 1000;
     }
 
-   
-    if (nivel <= 4 && aleatorioEnem === 0){
-      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
+    if (aleatorioEnem === 0){
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150);
     }
 
     else if (aleatorioEnem === 1){
-      var enemigo = new fly(juego, x, 90, 'fly', 1, 200);
+      var enemigo = new fly(juego, xFly, yFly, 'fly', 1, 100);
       
     }
     else if (aleatorioEnem === 2){
-      var enemigo = new crab(juego, x, 0, 'crabby', 1, 300);
+      var enemigo = new crab(juego, x, 0, 'crabby', 1, 150);
     }
 
-    else if(nivel > 4 && aleatorioEnem === 0 && !agarrador){
-      var enemigo = new ag(juego, x, y - 200, 'enemigo', jugador);
-      agarrador = true;
+    else if(aleatorioEnem === 3 && !agarrador){
+      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador);
+      escena.agarrador.cambia();
+      console.log('creado');
     }
 
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
-      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 300);
-
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150);
 
     enemies.add(enemigo);
-    
-    ag = agarrador;
 
     if (x >= 950)
       enemigo.cambia_dir();
 
-    enemigo.velocidad = nivel * 7 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
+    enemigo.velocidad = nivel * 3 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
 
      }, 1000);         
 } 
@@ -846,13 +883,9 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
     return enemies;
   }
 
-  enemigoRandom.devuelveAgarre = function(){
-  	return ag;
-  }
-  
 
 module.exports = enemigoRandom;
-},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17}],20:[function(require,module,exports){
+},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":25}],20:[function(require,module,exports){
 'use strict'
 
 var plat = require('./class_platform');
@@ -936,7 +969,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
       var aleatorio = juego.rnd.integerInRange(0,100);
     
 
-        if (aleatorio <= 95 - (level - level / 10) ){
+        if (aleatorio <= 95){
 
            var sprite = 'plat2';}
 
@@ -1013,14 +1046,13 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 }
 
 colisiones.collisionHandlerEnem = function(jug, enem){
-
 	if(!enem.stunt){
 		if(!jug.invencible){
 
-			if(enem.agarra != undefined)
+			if(enem.agarra != undefined && !jug.agarrado)
 				  enem.agarra(jug);
 
-			else escena.estadosJugador.jugadorMuerte();
+			else if(!jug.agarrado) escena.estadosJugador.jugadorMuerte();
 
   		}
   			else if (jug.invencible) {
@@ -1030,14 +1062,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   				jug.invencible = false;
   			}
 
-}
+      }
   else {
+    if(enem.agarra != undefined)
+      //Aqui es donde peta el agarrador
+      escena.agarrador.cambia();
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
-    if(enem.agarra != undefined)
-    	//Va a llegar un momento en el que aquí va a petar, sólo hay que hacer que agarrador pase al MAIN, pero HAY QUE HACERLO Y ES MUY TARDE YA
-      escena.agarrador = false;
   }
   }
 
@@ -1047,7 +1079,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
    		plat.jump();
   	}
 
-  	if(plat.fuego &&  jug.body.touching.up === false){
+  	if(plat.fuego &&  jug.body.touching.up === false && !jug.invencible){
       escena.estadosJugador.jugadorMuerte();
   		
     }
@@ -1398,8 +1430,8 @@ var juego;
 var perder;
 var powerUps; 
 var auxRn;
-var agarrador;
-
+var agarrador = {};
+var agarro;
 var PlayScene = {
 
   create: function () {
@@ -1427,7 +1459,7 @@ var PlayScene = {
   //Creamos enemigos
   enem.creaGrupo(juego);
   auxRn = false;
-  agarrador = false;
+  agarro = false;
 
 
   //Creamos las deadzones 
@@ -1439,7 +1471,7 @@ var PlayScene = {
   fireballs = juego.add.physicsGroup();
 
   //Creamos al jugador
-  jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+  jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
@@ -1459,7 +1491,7 @@ var PlayScene = {
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado){
+    if(!jugador.agarrado || !jugador.orinando){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -1471,9 +1503,8 @@ var PlayScene = {
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
 
-    	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
-    		agarrador = enem.devuelveAgarre();
+    	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
@@ -1483,23 +1514,23 @@ var PlayScene = {
     		nuevoNivel();
     	}
 
-    	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
+    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada)
     		creaFireballs();
       
-    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos === 4)
+    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4)
     		creaGreenFireballs();
 
   },
 
   render: function(){
     //juego.debug.body(jugador);
-  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
   }
 };
 
@@ -1512,12 +1543,13 @@ function nuevoNivel(){
   enemigosEnPantalla = 0;
   bolaCreada = false;
   bolaGreenCreada = false;
+  agarro = false;
 
 
-  if(nivel != 1)
-	 numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+  if(nivel >= 7)
+	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
   else
-	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
+	numeroEnemigos = nivel;
 
   jugador.borracho = false;
   HUD.noBorracho();
@@ -1541,18 +1573,12 @@ function nuevoNivel(){
   platformsIni = plat.devuelveIni();
 
 
-
-	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
-	//entra en rango del número del nivel * 7 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
-	//entonces creamos el número base de enemigos con otra probabilidad de que salgan más enemigos, si esto no ocurre, es decir, estamos en los 3
-	//primeros niveles, entonces simplemente creamos dos enemigos 
-
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 3 && porcentaje < nivel * 7)
-		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 1));
-	else
+	if(nivel > 2)
 		enemigosPorNivel = 2;
+	else
+		enemigosPorNivel = 1;
 
 
   if(nivel != 1){
@@ -1562,11 +1588,22 @@ function nuevoNivel(){
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
 
-	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
+	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
 	auxRn = !auxRn;
-	enemigosEnPantalla++;
+	enemigosEnPantalla++;*/
 }
+
+agarrador.devuelve= function (){
+
+  return agarro;
+}
+
+agarrador.cambia = function(){
+
+  agarro = !agarro;
+}
+module.exports.agarrador = agarrador;
 
 
 var enemigos = {}
@@ -1663,13 +1700,13 @@ var estadosJugador = {};
   	var x; var y; var r; var time;
   	bolaCreada = true;
   	x = 1210; y = 320;
-  	var fb = new fireball (juego, x, y, 'fireball', 1, 500);
+  	var fb = new fireball (juego, x, y, 'fireball', 1, 400);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 290;
-  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 500);
+  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 400);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
@@ -1679,13 +1716,13 @@ var estadosJugador = {};
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
   	x = 1210; y = 450;
-  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 400);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 450;
-  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 400);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
@@ -1715,4 +1752,5 @@ var estadosJugador = {};
 
 
 module.exports = PlayScene;
+
 },{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Plataformas":20,"./handleCollisions":21}]},{},[22]);

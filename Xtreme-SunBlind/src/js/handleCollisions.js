@@ -29,14 +29,13 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 }
 
 colisiones.collisionHandlerEnem = function(jug, enem){
-
 	if(!enem.stunt){
 		if(!jug.invencible){
 
-			if(enem.agarra != undefined)
+			if(enem.agarra != undefined && !jug.agarrado)
 				  enem.agarra(jug);
 
-			else escena.estadosJugador.jugadorMuerte();
+			else if(!jug.agarrado) escena.estadosJugador.jugadorMuerte();
 
   		}
   			else if (jug.invencible) {
@@ -46,14 +45,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   				jug.invencible = false;
   			}
 
-}
+      }
   else {
+    if(enem.agarra != undefined)
+      //Aqui es donde peta el agarrador
+      escena.agarrador.cambia();
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
-    if(enem.agarra != undefined)
-    	//Va a llegar un momento en el que aquí va a petar, sólo hay que hacer que agarrador pase al MAIN, pero HAY QUE HACERLO Y ES MUY TARDE YA
-      escena.agarrador = false;
   }
   }
 
@@ -63,7 +62,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
    		plat.jump();
   	}
 
-  	if(plat.fuego &&  jug.body.touching.up === false){
+  	if(plat.fuego &&  jug.body.touching.up === false && !jug.invencible){
       escena.estadosJugador.jugadorMuerte();
   		
     }

@@ -23,8 +23,8 @@ var juego;
 var perder;
 var powerUps; 
 var auxRn;
-var agarrador;
-
+var agarrador = {};
+var agarro;
 var PlayScene = {
 
   create: function () {
@@ -52,7 +52,7 @@ var PlayScene = {
   //Creamos enemigos
   enem.creaGrupo(juego);
   auxRn = false;
-  agarrador = false;
+  agarro = false;
 
 
   //Creamos las deadzones 
@@ -64,7 +64,7 @@ var PlayScene = {
   fireballs = juego.add.physicsGroup();
 
   //Creamos al jugador
-  jugador = new player(juego, 200, 600, 'player', 1, 500 , 3);
+  jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
@@ -84,7 +84,7 @@ var PlayScene = {
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado){
+    if(!jugador.agarrado || !jugador.orinando){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -96,9 +96,8 @@ var PlayScene = {
     juego.physics.arcade.collide(powerUps, platforms);
     juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
 
-    	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 1){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
-    		agarrador = enem.devuelveAgarre();
+    	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
@@ -108,23 +107,23 @@ var PlayScene = {
     		nuevoNivel();
     	}
 
-    	if (numeroEnemigos === enemigosEnPantalla && !bolaCreada)
+    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada)
     		creaFireballs();
       
-    	if (!bolaGreenCreada && nivel != 1 && numeroEnemigos === 4)
+    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4)
     		creaGreenFireballs();
 
   },
 
   render: function(){
     //juego.debug.body(jugador);
-  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
   }
 };
 
@@ -137,12 +136,13 @@ function nuevoNivel(){
   enemigosEnPantalla = 0;
   bolaCreada = false;
   bolaGreenCreada = false;
+  agarro = false;
 
 
-  if(nivel != 1)
-	 numeroEnemigos = nivel + 3 + juego.rnd.integerInRange(0,1);
+  if(nivel >= 7)
+	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
   else
-	numeroEnemigos = nivel + juego.rnd.integerInRange(2,3);
+	numeroEnemigos = nivel;
 
   jugador.borracho = false;
   HUD.noBorracho();
@@ -166,18 +166,12 @@ function nuevoNivel(){
   platformsIni = plat.devuelveIni();
 
 
-
-	//Sacamos un porcentaje entre 0 y 100. Si el nivel es mayor que 3 (Para hacer los primeros niveles fáciles) y el porcentaje seleccionado antes
-	//entra en rango del número del nivel * 7 (progresivamente iremos teniendo más probabilidad de que haya mayor número de enemigos por pantalla),
-	//entonces creamos el número base de enemigos con otra probabilidad de que salgan más enemigos, si esto no ocurre, es decir, estamos en los 3
-	//primeros niveles, entonces simplemente creamos dos enemigos 
-
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 3 && porcentaje < nivel * 7)
-		enemigosPorNivel = 2 + (juego.rnd.integerInRange(0, 1));
-	else
+	if(nivel > 2)
 		enemigosPorNivel = 2;
+	else
+		enemigosPorNivel = 1;
 
 
   if(nivel != 1){
@@ -187,11 +181,22 @@ function nuevoNivel(){
   setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
 
-	enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
+	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
 	auxRn = !auxRn;
-	enemigosEnPantalla++;
+	enemigosEnPantalla++;*/
 }
+
+agarrador.devuelve= function (){
+
+  return agarro;
+}
+
+agarrador.cambia = function(){
+
+  agarro = !agarro;
+}
+module.exports.agarrador = agarrador;
 
 
 var enemigos = {}
@@ -288,13 +293,13 @@ var estadosJugador = {};
   	var x; var y; var r; var time;
   	bolaCreada = true;
   	x = 1210; y = 320;
-  	var fb = new fireball (juego, x, y, 'fireball', 1, 500);
+  	var fb = new fireball (juego, x, y, 'fireball', 1, 400);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 290;
-  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 500);
+  	var fb2 = new fireball (juego, x, y, 'fireball', 1, 400);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
@@ -304,13 +309,13 @@ var estadosJugador = {};
   	var x; var y; var r; var time;
   	bolaGreenCreada = true;
   	x = 1210; y = 450;
-  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	var fb = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 400);
   	if (x >= 550)
   		fb.cambia_dir();
   	fireballs.add(fb);
 
   	x = 20; y = 450;
-  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 500);
+  	var fb2 = new greenfireball (juego, x, y, 'greenfireball', 1, 200, 400);
   	if (x >= 550)
   		fb2.cambia_dir();
   	fireballs.add(fb2);
