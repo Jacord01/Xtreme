@@ -13,10 +13,12 @@ var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
 var HUD = require('./HUD');
+var coins = require('./crea_Monedas');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
+var monedas;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
@@ -25,6 +27,7 @@ var powerUps;
 var auxRn;
 var agarrador = {};
 var agarro;
+var course = false; var endCourse = false; var numMonedas = 0;
 var PlayScene = {
 
   create: function () {
@@ -54,6 +57,9 @@ var PlayScene = {
   auxRn = false;
   agarro = false;
 
+  //Creamos monedas
+  var numMonedas = 0;
+  monedas = coins.creaGrupo(juego);
 
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
@@ -102,16 +108,28 @@ var PlayScene = {
     		enemigosEnPantalla++;
     	}
 
-    	if(numeroEnemigos <= 0){
+    	if(numeroEnemigos <= 0 && !course){
     		jugador.kill();
     		nuevoNivel();
     	}
 
-    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada)
+    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada && !course)
     		creaFireballs();
       
-    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4)
+    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4 && !course)
     		creaGreenFireballs();
+
+    	if (numMonedas <= 0)
+    		course = false;
+
+    	if (endCourse)
+    		course = false;
+
+    	if (!course)
+    	{
+    		for (var i = 0 ; i < monedas.children.length; i++){
+  				monedas.children[i].kill();}
+    	}
 
   },
 
@@ -129,7 +147,7 @@ var PlayScene = {
 
 function nuevoNivel(){
 
-	nivel++;
+  nivel++;
 
   HUD.nivel(nivel);
 
@@ -178,8 +196,19 @@ function nuevoNivel(){
 	jugador.reset(640,0);
 	jugador.revive = true;
 	platformsIni.visible = true;
-  setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+    setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
+
+  if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
+  {
+  	course = true;
+  	endCourse = false;
+  	numeroEnemigos = 0;
+  	enemigosEnPantalla = 0;
+  	numMonedas = 10;
+  	setTimeout(function() {endCourse = true;}, 2000);
+  	monedas = coins.devuelveGrupo(juego, numMonedas);
+  }
 
 	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();

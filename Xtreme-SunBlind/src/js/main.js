@@ -30,10 +30,7 @@ var PreloaderScene = {
     this.game.stage.backgroundColor = '#220A29';
     this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.image('escudo', 'images/Escudo.png');
-	this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
-
-
-
+	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
@@ -50,9 +47,6 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
-    
-    
-    
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -67,7 +61,6 @@ var PreloaderScene = {
     this.game.load.image('agua', 'images/agua.png');
     this.game.load.image('alcohol', 'images/alcohol.png');
     this.game.load.image('proteinas', 'images/proteinas.png');
-
 
     //Imagenes de fondo  de menu
     this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
