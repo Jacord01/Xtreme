@@ -100,7 +100,8 @@ var PlayScene = {
     juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone2, cols.DeadZone2);
     juego.physics.arcade.overlap(fireballs, deadZones, cols.DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
-    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
+    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower); 
+    juego.physics.arcade.overlap(monedas, jugador, cols.collisionHandlerMonedas);   
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
     		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
@@ -119,8 +120,11 @@ var PlayScene = {
     	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4 && !course)
     		creaGreenFireballs();
 
-    	if (numMonedas <= 0)
+    	if (numMonedas <= 0 && course){
     		course = false;
+    		jugador.vidas++;
+    		endCourse = false;
+    	}
 
     	if (endCourse)
     		course = false;
@@ -206,7 +210,7 @@ function nuevoNivel(){
   	numeroEnemigos = 0;
   	enemigosEnPantalla = 0;
   	numMonedas = 10;
-  	setTimeout(function() {endCourse = true;}, 2000);
+  	setTimeout(function() {endCourse = true;}, 10000);
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 
@@ -371,6 +375,12 @@ var estadosJugador = {};
   deadZone4.visible = false;
   deadZones.add(deadZone4);
   }
+
+  var stateMoneda = {};
+  stateMoneda.reduceMoneda = function(){
+  	numMonedas--;
+  }
+  module.exports.stateMoneda = stateMoneda;
 
 
 module.exports = PlayScene;

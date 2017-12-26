@@ -28,6 +28,12 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 }
 
+colisiones.collisionHandlerMonedas = function(jug, mon){
+  mon.kill();
+  escena.stateMoneda.reduceMoneda();
+
+}
+
 colisiones.collisionHandlerEnem = function(jug, enem){
 	if(!enem.stunt){
 		if(!jug.invencible){
