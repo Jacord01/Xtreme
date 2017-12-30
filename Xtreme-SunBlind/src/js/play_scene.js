@@ -27,7 +27,7 @@ var powerUps;
 var auxRn;
 var agarrador = {};
 var agarro;
-var course = false; var endCourse = false; var numMonedas = 0;
+var course = false; var endCourse = false; var numMonedas = 0; var timer;
 var PlayScene = {
 
   create: function () {
@@ -141,11 +141,13 @@ var PlayScene = {
     //juego.debug.body(jugador);
   	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
-  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
+  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
-  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
+  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + juego.time.events.duration.toFixed(0)/1000, 500, 70);
   }
 };
 
@@ -205,12 +207,15 @@ function nuevoNivel(){
 
   if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
+  	var time = 17000;
+  	timer = juego.time.create(true);
+  	juego.time.events.loop(time, endedCourse, this);
+  	timer.start();
   	course = true;
   	endCourse = false;
   	numeroEnemigos = 0;
   	enemigosEnPantalla = 0;
   	numMonedas = 10;
-  	setTimeout(function() {endCourse = true;}, 17000);
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 
@@ -381,6 +386,10 @@ var estadosJugador = {};
   	numMonedas--;
   }
   module.exports.stateMoneda = stateMoneda;
+
+  function endedCourse(){
+  	endCourse=true;
+  }
 
 
 module.exports = PlayScene;
