@@ -210,7 +210,7 @@ function nuevoNivel(){
   	numeroEnemigos = 0;
   	enemigosEnPantalla = 0;
   	numMonedas = 10;
-  	setTimeout(function() {endCourse = true;}, 10000);
+  	setTimeout(function() {endCourse = true;}, 17000);
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 

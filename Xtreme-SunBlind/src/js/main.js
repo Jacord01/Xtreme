@@ -62,6 +62,9 @@ var PreloaderScene = {
     this.game.load.image('alcohol', 'images/alcohol.png');
     this.game.load.image('proteinas', 'images/proteinas.png');
 
+    //Monedas
+    this.game.load.image('coin', 'images/coin.png');
+
     //Imagenes de fondo  de menu
     this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
     this.game.load.image('Enemigos', 'images/Menus/Enemigos.png');
