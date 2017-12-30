@@ -27,7 +27,7 @@ var powerUps;
 var auxRn;
 var agarrador = {};
 var agarro;
-var course = false; var endCourse = false; var numMonedas = 0; var timer;
+var course = false; var endCourse = false; var numMonedas = 0; 
 var PlayScene = {
 
   create: function () {
@@ -205,11 +205,12 @@ function nuevoNivel(){
     setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
 
+   var myloop;
   if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
   	var time = 17000;
-  	timer = juego.time.create(true);
-  	juego.time.events.loop(time, endedCourse, this);
+  	var timer = juego.time.create(true);
+  	myloop = juego.time.events.loop(time, endedCourse, this);
   	timer.start();
   	course = true;
   	endCourse = false;
@@ -218,6 +219,8 @@ function nuevoNivel(){
   	numMonedas = 10;
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
+  else 
+  	juego.time.events.remove(myloop);
 
 	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
