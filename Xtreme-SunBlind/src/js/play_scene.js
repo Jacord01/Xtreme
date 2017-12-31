@@ -28,6 +28,7 @@ var auxRn;
 var agarrador = {};
 var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
+var time = 0;
 var PlayScene = {
 
   create: function () {
@@ -124,9 +125,18 @@ var PlayScene = {
     		course = false;
     		jugador.vidas++;
     		endCourse = false;
+        console.log('aqui pasa algo');
+        console.log(time);
     	}
 
-    	if (endCourse)
+      if (time <= 0 && course){
+        course = false;
+        endCourse = false;
+        console.log('aqui pasa algo');
+        console.log(time);
+      }
+
+      if (endCourse)
     		course = false;
 
     	if (!course)
@@ -146,8 +156,8 @@ var PlayScene = {
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
-  	if(nivel % 5 === 0)
-  		juego.debug.text('TIME: ' + juego.time.events.duration.toFixed(0)/1000, 500, 70);
+  	/*if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);*/
   }
 };
 
@@ -192,7 +202,9 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 2)
+  if(nivel > 10)
+    enemigosPorNivel = 3
+	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else
 		enemigosPorNivel = 1;
@@ -205,13 +217,14 @@ function nuevoNivel(){
     setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
 
-   var myloop;
-  if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
+if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-  	var time = 17000;
-  	var timer = juego.time.create(true);
+  	time = 17;
+  	/*var timer = juego.time.create(true);
   	myloop = juego.time.events.loop(time, endedCourse, this);
-  	timer.start();
+  	timer.start();*/
+    HUD.muestraTempLevel();
+    actualizaCont(time);
   	course = true;
   	endCourse = false;
   	numeroEnemigos = 0;
@@ -219,8 +232,9 @@ function nuevoNivel(){
   	numMonedas = 10;
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
+
   else 
-  	juego.time.events.remove(myloop);
+    HUD.ocultaTempLevel();
 
 	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
@@ -262,6 +276,16 @@ perd.Perder = function(){
       powerUps.children[i].kill();
               }
     setTimeout(function(){juego.state.start('menu');}, 3000);
+}
+
+function actualizaCont(tiempo){
+
+    time = tiempo;
+     HUD.tempLevel(tiempo); 
+     tiempo--;
+     if(time >= 0 && !endCourse) {
+      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+    }
 }
 
 module.exports.perd = perd;

@@ -57,7 +57,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
       
     }
     else{
-      yFly = 500;
+      yFly = 450;
       yAG = 473;
     
     }
