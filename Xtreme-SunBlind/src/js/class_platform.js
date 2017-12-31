@@ -6,7 +6,7 @@ var entorno = require('./class_environment');
 
 var plataforma = function(game, entradax, entraday, entradasprite, fuego, hielo){
 	entorno.call(this, game, entradax, entraday, entradasprite);
-	this.reescala_imagen(1, 0.5);
+	this.reescala_imagen(1, 0.3);
 	this.tocada = false;
 	this.arriba = false;
 	this.iniPointY = entraday;

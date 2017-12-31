@@ -52,7 +52,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
     this.game.load.image('enemigo', 'images/juen.png');
     this.game.load.image('crabby', 'images/crab.png');
-    this.game.load.image('fly', 'images/fly.png');
+    this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.image('fireball', 'images/fireball.png');
     this.game.load.image('greenfireball', 'images/greenfireball.png');
 

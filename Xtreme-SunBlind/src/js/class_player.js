@@ -35,7 +35,7 @@ Protagonista.prototype.create = function (){
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
-    this.reescala_imagen(1.1,0.85);
+    this.reescala_imagen(1.6, 1.2);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
