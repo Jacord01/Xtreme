@@ -28,7 +28,7 @@ var PreloaderScene = {
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
     this.game.stage.backgroundColor = '#220A29';
-    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
+    this.game.load.spritesheet('player', 'images/alientotal2.png', 60, 57, 15);
     this.game.load.image('escudo', 'images/Escudo.png');
 	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 

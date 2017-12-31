@@ -139,13 +139,13 @@ var PlayScene = {
 
   render: function(){
     //juego.debug.body(jugador);
-  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
   	if(nivel % 5 === 0)
   		juego.debug.text('TIME: ' + juego.time.events.duration.toFixed(0)/1000, 500, 70);
   }

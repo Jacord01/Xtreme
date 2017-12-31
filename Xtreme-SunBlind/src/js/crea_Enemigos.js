@@ -72,7 +72,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
       auxRn = false;
       x = juego.rnd.integerInRange(950,1100);
       xFly = 1100;
-      xAG = 1000;
+      xAG = 1100;
     }
 
     if (aleatorioEnem === 0){
@@ -88,7 +88,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
     }
 
     else if(aleatorioEnem === 3 && !agarrador){
-      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador);
+      var enemigo = new agarra(juego, 1100, 300, 'enemigo', jugador);
       escena.agarrador.cambia();
       console.log('creado');
     }

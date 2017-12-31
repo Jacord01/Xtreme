@@ -5,7 +5,7 @@ var enemigo = require('./class_enemy');
 var fly =  function(game, entradax, entraday, entradasprite, dir, velx){
   enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
   this.body.gravity.y = 1000;
-  this.reescala_imagen(0.08,0.08);
+  this.reescala_imagen(0.12,0.12);
 }
 fly.prototype = Object.create(enemigo.prototype);
 fly.prototype.constructor = fly;

@@ -35,7 +35,7 @@ Protagonista.prototype.create = function (){
     jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
-    this.reescala_imagen(1.45,0.85);
+    this.reescala_imagen(1.45,1.1);
     this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
@@ -120,7 +120,7 @@ Protagonista.prototype.update = function (){
           setTimeout(function(){prota.orinando = false;}, 2000);
         }
         
-      this.invencible = true;
+      //this.invencible = true;
 
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
