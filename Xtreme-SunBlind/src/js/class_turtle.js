@@ -2,8 +2,8 @@
 
 var enemigo = require('./class_enemy');
 
-var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
+var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
   
   this.create();
 }

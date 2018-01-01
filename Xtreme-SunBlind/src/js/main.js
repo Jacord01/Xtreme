@@ -25,20 +25,20 @@ var PreloaderScene = {
 
 	//Carga de imagenes para el juego
 
+  //Fondo
+    this.game.stage.backgroundColor = '#220A29';  
+    this.game.load.image('fond', 'images/space.png');
+
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
-    this.game.stage.backgroundColor = '#220A29';
-    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.image('escudo', 'images/Escudo.png');
+    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
 	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
-
-    //Fondo
-    this.game.load.image('fond', 'images/space.png');
 
     //HUD
     this.game.load.image('perder', 'images/lose.png');

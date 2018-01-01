@@ -45,6 +45,11 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   		}
   			else if (jug.invencible) {
+
+          if(enem.grabber){
+            //Aqui es donde peta el agarrador
+          escena.agarrador.False();      
+        }
   				enem.kill();
   				escena.enemigos.reducePantalla();
   				escena.enemigos.reduceNumero();
@@ -53,9 +58,11 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
       }
   else {
-    if(enem.agarra != undefined)
+    if(enem.grabber){
       //Aqui es donde peta el agarrador
-      escena.agarrador.cambia();
+      escena.agarrador.False();      
+    }
+
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
@@ -74,8 +81,9 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     }
 
     else if (plat.hielo){
-      jug.corriendo = true;
-      setTimeout(function(){jug.corriendo = false;}, 500);
+      if(!jug.corriendo)
+        jug.corriendo = true;
+      setTimeout(function(){jug.corriendo = false;}, 250);
     }
 
     if(plat.fuego && jug.orinando){

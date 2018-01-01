@@ -5,7 +5,8 @@ var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
 var pisDentro; var pisFuera;
 var ebrio;
-var Temp1; var Temp2;
+var Temp1; var Temp2; 
+var AG;
 
 HUD.create = function(game){
 
@@ -17,6 +18,10 @@ HUD.create = function(game){
 
 	//Nivel
 
+ 	nivel = game.add.sprite(200,100, 'nivel');
+ 	nivel.width = 100;
+ 	nivel.height = 50;
+
 	punct1 = game.add.sprite(300, 80, 'numeros');
  	punct1.width = 50;
  	punct1.height = 80;
@@ -25,6 +30,7 @@ HUD.create = function(game){
  	punct2.width = 50;
  	punct2.height = 80;
 
+ 	//temporizador para los niveles extra
  	Temp1 = game.add.sprite(300, 80, 'numeros');
  	Temp1.width = 50;
  	Temp1.height = 80;
@@ -37,9 +43,6 @@ HUD.create = function(game){
  	Temp2.visible = false;
 	Temp2.x = 645; Temp2.y = 20;
 
- 	nivel = game.add.sprite(200,100, 'nivel');
- 	nivel.width = 100;
- 	nivel.height = 50;
 
  	//Medidor de Pis
 
@@ -57,6 +60,13 @@ HUD.create = function(game){
 
  	 ebrio.animations.add('drunk', [0,1,2,3], 6, true);
  	 ebrio.play('drunk');
+
+ 	 //Medidor de agarre
+ 	 AG = game.add.sprite(950, 100, 'interiorPis');
+ 	 AG.height = 20;
+ 	 AG.width = 0;
+ 	 AG.visible = false;
+
 }
 
 HUD.restaVida = function(jug){
@@ -130,6 +140,24 @@ HUD.borracho = function(){
 HUD.noBorracho = function(){
 
 	ebrio.visible = false;
+}
+
+HUD.cambiaGrabber = function(llega){
+
+	AG.width = llega * 1.5;
+
+}
+
+HUD.GrabberVisible = function(x,y){
+
+	AG.visible = true;
+	AG.x = x - 20;
+	AG.y = y + 70;
+}
+
+HUD.GrabberInvisible = function(){
+
+	AG.visible = false;
 }
 
 module.exports = HUD;

@@ -2,8 +2,8 @@
 
 var enemy = require('./class_enemy');
 
-var crab =  function(game, entradax, entraday, entradasprite, dir, velx){
-  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx);
+var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
   this.enfado = false;
   this.origVel = velx;
   this.reescala_imagen(0.1,0.1);

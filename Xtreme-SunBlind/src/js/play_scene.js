@@ -78,7 +78,7 @@ var PlayScene = {
   HUD.create(juego);
 
   //Finalmente, creamos el nivel
-  nivel = 5; //Para el nivel 1
+  nivel = 0; //Para el nivel 1
   nuevoNivel();
   	
  },
@@ -105,7 +105,7 @@ var PlayScene = {
     juego.physics.arcade.overlap(monedas, jugador, cols.collisionHandlerMonedas);   
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, jugador);
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
@@ -125,15 +125,11 @@ var PlayScene = {
     		course = false;
     		jugador.vidas++;
     		endCourse = false;
-        console.log('aqui pasa algo');
-        console.log(time);
     	}
 
       if (time <= 0 && course){
         course = false;
         endCourse = false;
-        console.log('aqui pasa algo');
-        console.log(time);
       }
 
       if (endCourse)
@@ -148,7 +144,7 @@ var PlayScene = {
   },
 
   render: function(){
-    juego.debug.body(jugador);
+    //juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
@@ -158,6 +154,7 @@ var PlayScene = {
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
   	/*if(nivel % 5 === 0)
   		juego.debug.text('TIME: ' + time, 500, 70);*/
+      //juego.debug.text('agarro: ' + agarro, 500, 30);
   }
 };
 
@@ -186,7 +183,7 @@ function nuevoNivel(){
 	
 	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
 	//tendremos varios tipos de plataformas y hay que cambiarlas	
-	if(nivel != 6){
+	if(nivel != 1){
  			 for (var i = 0 ; i < platforms.children.length; i++){
   				platforms.children[i].kill();}
 
@@ -247,10 +244,16 @@ agarrador.devuelve= function (){
   return agarro;
 }
 
-agarrador.cambia = function(){
+agarrador.True = function(){
 
-  agarro = !agarro;
+  agarro = true;
 }
+
+agarrador.False = function(){
+
+agarro = false;
+}
+
 module.exports.agarrador = agarrador;
 
 

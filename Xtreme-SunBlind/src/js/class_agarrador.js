@@ -2,9 +2,10 @@
 
 var enemy = require('./class_enemy');
 var escena = require('./play_scene');
+var HUD = require('./HUD');
 
-var agarrador =  function(game, entradax, entraday, entradasprite, jugador){
-  enemy.call(this, game, entradax, entraday, entradasprite, 0, 0);
+var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grabber){
+  enemy.call(this, game, entradax, entraday, 'alcohol', 1, 1, grabber);
 
   this.agarrando = false;
   this.medAgarro = 50;
@@ -22,12 +23,13 @@ agarrador.prototype.constructor = agarrador;
 agarrador.prototype.update = function(){
 	if(this.golpeado) this.stunt = true;
 	//this.juego.debug.body(this);
-	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, 500 , 70);
+	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, this.x , this.y);
 	//this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
 	//this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
 
 	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;
+		HUD.cambiaGrabber(this.medAgarro);
 
 	}
 	
@@ -40,14 +42,18 @@ agarrador.prototype.update = function(){
 		this.jug.agarrado = false;
 		this.agarrando = false;
 		this.medAgarro = 50;
+		HUD.GrabberInvisible();
 	}
 
 	else if (this.medAgarro < 0 && this.jug.agarrado === true){
 		this.jug.agarrado = false;
 		this.agarrando = false;
 		this.medAgarro = 50;
+		HUD.GrabberInvisible();
 		escena.estadosJugador.jugadorMuerte();
 	}
+
+	
 }
 
 agarrador.prototype.agarra = function(jug){
@@ -55,12 +61,14 @@ agarrador.prototype.agarra = function(jug){
 	ag.medAgarro = 50;
 	ag.agarrando = true;
 	jug.agarrado = true;
+	HUD.GrabberVisible(this.x, this.y);
 	
 	agarrador.prototype.cambiaAgarre(ag, jug);
 }
 
 agarrador.prototype.cambiaAgarre = function(ag, jug){
 
+	HUD.cambiaGrabber(ag.medAgarro);
 	ag.medAgarro -= 10;
 	if(ag.jug.agarrado)
 		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);

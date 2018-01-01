@@ -13,7 +13,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	this.juego = game;
   this.revive = false;
   this.muerto = false;
-  this.orina = 10;
+  this.orina = 0;
   this.orinando = false;
   this.escala = 1.4;
   this.origVel = velx;
@@ -32,11 +32,11 @@ Protagonista.prototype.constructor = Protagonista;
 Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
-    jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.anchor.x = 0.5;
-    this.anchor.y = 0.5;
-    this.reescala_imagen(1.6, 1.2);
-    this.animations.add('walk', [0,1,2,3]);
+  jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  this.anchor.x = 0.5;
+  this.anchor.y = 0.5;
+  this.reescala_imagen(1.6, 1.2);
+  this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
   this.animations.play('stay');
@@ -86,7 +86,7 @@ Protagonista.prototype.update = function (){
   if(this.agarrado)
     this.vel = 0;
 
-this.orina = 10;
+  //this.orina = 10;
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
@@ -131,13 +131,12 @@ this.orina = 10;
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
+          this.invencible = true;
           var prota = this;
           
-          setTimeout(function(){prota.orinando = false;}, 2000);
+          setTimeout(function(){prota.orinando = false; prota.invencible = false;}, 2000);
         }
         
-      this.invencible = true;
-
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);

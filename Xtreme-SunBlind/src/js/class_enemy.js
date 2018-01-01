@@ -2,7 +2,7 @@
 
 var movible = require('./class_movibl');	
 
-var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
+var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.create();
@@ -10,6 +10,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
 	this.stunt = false;
 	this.golpeado = false;
 	this.cont = 1;
+	this.grabber = grabber;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
