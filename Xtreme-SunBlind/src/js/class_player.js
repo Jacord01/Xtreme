@@ -13,7 +13,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	this.juego = game;
   this.revive = false;
   this.muerto = false;
-  this.orina = 0;
+  this.orina = 10;
   this.orinando = false;
   this.escala = 1.4;
   this.origVel = velx;
@@ -68,10 +68,25 @@ Protagonista.prototype.update = function (){
    else 
     escudo.visible = false;
 
-   if(this.orinando || this.agarrado){
+   if(this.orinando){
     this.vel = 0;
+    //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
+    //Esto se puede dar si el jugador está en invencible encima de una plataforma
+    this.body.setSize(35,60, 0, 0);
+    //Después ya depende del movimiento del jugador apagar la de dercha o izda
+    this.body.setSize(10,60, 70, 0);
+
   }
 
+  else{
+   this.body.setSize(20,60, 15, 0);
+ }
+
+
+  if(this.agarrado)
+    this.vel = 0;
+
+this.orina = 10;
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
@@ -94,6 +109,7 @@ Protagonista.prototype.update = function (){
         else this.scale.x = -this.escala;
         if (this.body.touching.down)
            this.animations.play('walk', 6, true);
+
     }
 
     this.vel = this.origVel - (this.orina * 10);

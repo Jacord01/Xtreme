@@ -11,7 +11,7 @@ tortuguita.prototype = Object.create(enemigo.prototype);
 tortuguita.prototype.constructor = tortuguita;
 
 tortuguita.prototype.create = function () {
-	this.reescala_imagen(1,1);
+	this.reescala_imagen(1.2,1);
 	this.body.gravity.y = 2000;
 	this.animations.add('mueve',[0,1,2], 5, true);
 	this.animations.play('mueve');

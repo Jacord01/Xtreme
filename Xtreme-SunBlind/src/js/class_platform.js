@@ -47,6 +47,15 @@ plataforma.prototype.jump = function(){
 	
 }
 
+plataforma.prototype.cambiaSprite = function(){
+
+	this.loadTexture('plat2', 0);
+
+    this.animations.add('pla2');
+
+    this.animations.play('plat2', 4, true);
+}
+
 function vuelve(){
 	this.body.gravity.y = 0;
 	this.body.velocity.y = 0;

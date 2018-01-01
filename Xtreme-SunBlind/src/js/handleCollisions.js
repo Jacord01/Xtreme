@@ -63,15 +63,27 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){
-  	if(jug.body.touching.up === true){
+  	if(jug.body.touching.up){
    		plat.cambia_tocada();
    		plat.jump();
   	}
 
-  	if(plat.fuego &&  jug.body.touching.up === false && !jug.invencible){
+  	if(plat.fuego &&  !jug.body.touching.up && !jug.invencible){
       escena.estadosJugador.jugadorMuerte();
   		
     }
+
+    else if (plat.hielo){
+      jug.corriendo = true;
+      setTimeout(function(){jug.corriendo = false;}, 500);
+    }
+
+    if(plat.fuego && jug.orinando){
+      console.log('llega');
+      plat.fuego = false;
+      plat.cambiaSprite();
+    }
+
   }
 
   colisiones.collisionHandlerPlat = function(enem, plat){
