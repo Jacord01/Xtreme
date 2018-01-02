@@ -50,7 +50,7 @@ var PlayScene = {
   fondocourse = juego.add.sprite(0,0,'fondocourse');
   fondocourse.width = 1280;
   fondocourse.height = 720;
-  fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6,7], 9, true);
+  fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
   fondocourse.visible = false;
   //fondo.animations.play('runcourse');
 
@@ -238,7 +238,7 @@ function nuevoNivel(){
 
   jugador.borracho = false;
   HUD.noBorracho();
-  jugador.invencible = false;
+  jugador.invencible = true;
   jugador.corriendo = false;
 
 	

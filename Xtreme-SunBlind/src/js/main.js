@@ -28,7 +28,7 @@ var PreloaderScene = {
   //Fondo
     this.game.stage.backgroundColor = '#220A29'; 
     this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
-    this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 8);
+    this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
 
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
