@@ -3,13 +3,15 @@
 var PlayScene = require('./play_scene.js');
 var menuInformacion = require('./menuInformacion');
 
-var buttonJuego; var buttonInfo; 
+var buttonJuego; var buttonInfo; var pantalla;
 var juego;
 
 var menu = {
 
   create: function () {
     juego = this.game;
+
+    juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
     juego.state.add('info', menuInformacion);
 
@@ -30,6 +32,13 @@ var menu = {
     buttonInfo.animations.play('plat0', 4, true );
     buttonInfo.width = 150;
     buttonInfo.height = 60;
+
+    //Boton para fullscreen
+    pantalla = juego.add.button(juego.world.centerX - 600, 600, 'PCompleta', fullscreen, this, 2,1,0);
+    pantalla.animations.add('PCompleta');
+    pantalla.animations.play('PCompleta', 4, true );
+    pantalla.width = 150;
+    pantalla.height = 80;
  },
 };
 
@@ -46,6 +55,17 @@ function actionOnClickInfo(){
 	juego.state.start('info');
 }
 
+function fullscreen(){
+
+    if (this.game.scale.isFullScreen)
+    {
+        this.game.scale.stopFullScreen();
+    }
+    else
+    {
+        this.game.scale.startFullScreen(false);
+    }
+}
 
 
 

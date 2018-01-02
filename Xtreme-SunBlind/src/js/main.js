@@ -27,7 +27,7 @@ var PreloaderScene = {
 
   //Fondo
     this.game.stage.backgroundColor = '#220A29';  
-    this.game.load.image('fond', 'images/space.png');
+    this.game.load.image('fond', 'images/fondo.png');
 
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
@@ -39,6 +39,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
+    this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
     this.game.load.image('perder', 'images/lose.png');
@@ -47,6 +48,7 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
+    this.game.load.image('Pausa', 'images/Menus/Pausa.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);

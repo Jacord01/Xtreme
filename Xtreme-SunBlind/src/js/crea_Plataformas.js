@@ -113,6 +113,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
     platforms.add(p);
     else
     platformsIni.add(p);
+
   }
 
   plataforma.devuelvePlat = function(){

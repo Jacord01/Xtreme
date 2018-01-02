@@ -6,10 +6,14 @@ var punct1; var punct2; var nivel;
 var pisDentro; var pisFuera;
 var ebrio;
 var Temp1; var Temp2; 
-var AG;
+var AG; 
+var PA;
+var juego;
+var fullscreen;
 
 HUD.create = function(game){
 
+	juego = game;
 	//VidasPlayer
 	
 	vida1 =  game.add.sprite(10,10,'vidas');
@@ -66,6 +70,10 @@ HUD.create = function(game){
  	 AG.height = 20;
  	 AG.width = 0;
  	 AG.visible = false;
+
+ 	 //Pausa
+ 	 PA = game.add.sprite(0,0, 'Pausa');
+ 	 PA.visible = false;
 
 }
 
@@ -158,6 +166,30 @@ HUD.GrabberVisible = function(x,y){
 HUD.GrabberInvisible = function(){
 
 	AG.visible = false;
+}
+
+HUD.Pausa = function(){
+
+juego.world.bringToTop(PA);
+PA.visible = true;
+
+}
+
+HUD.quitaPausa = function(){
+
+	PA.visible = false;
+}
+
+HUD.fullscreen = function(){
+
+    if (juego.scale.isFullScreen)
+    {
+        juego.scale.stopFullScreen();
+    }
+    else
+    {
+        juego.scale.startFullScreen(false);
+    }
 }
 
 module.exports = HUD;

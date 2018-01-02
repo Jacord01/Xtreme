@@ -29,12 +29,13 @@ var agarrador = {};
 var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
 var time = 0;
+var pausa; var menu; var fullS;
+
 var PlayScene = {
 
   create: function () {
 
   juego = this.game;
-
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -80,10 +81,51 @@ var PlayScene = {
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
   nuevoNivel();
+
+  pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
+
+  pausa.onDown.add(function () {
+    if(juego.paused){juego.paused = false
+      HUD.quitaPausa();
+      PU.creaPower();
+    };
+  },this);
+
+  menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
+
+  menu.onDown.add(function () {
+
+    if(juego.paused){
+      juego.paused = false;
+      juego.state.start('menu');
+    }
+  },this);
+
+  juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+
+  fullS = juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  fullS.onDown.add(function () {
+
+    if(juego.paused){
+        HUD.fullscreen()}
+      
+  },this);
   	
  },
 
   update: function (){
+
+    //Para el menú de pausa
+    if(pausa.isDown && !juego.paused){
+          for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+      juego.paused = true;
+      HUD.Pausa();
+    }
+
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
     if(jugador.revive)
@@ -157,6 +199,12 @@ var PlayScene = {
       //juego.debug.text('agarro: ' + agarro, 500, 30);
   }
 };
+
+function vuelvePausa(event){
+
+  if(game.paused)
+   game.paused = false;
+}
 
 function nuevoNivel(){
 
@@ -420,6 +468,5 @@ var estadosJugador = {};
   function endedCourse(){
   	endCourse=true;
   }
-
 
 module.exports = PlayScene;
