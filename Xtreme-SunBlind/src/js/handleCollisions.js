@@ -83,11 +83,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     else if (plat.hielo){
       if(!jug.corriendo)
         jug.corriendo = true;
-      setTimeout(function(){jug.corriendo = false;}, 250);
+      setTimeout(function(){jug.corriendo = false;}, 300);
     }
 
     if(plat.fuego && jug.orinando){
-      console.log('llega');
       plat.fuego = false;
       plat.cambiaSprite();
     }

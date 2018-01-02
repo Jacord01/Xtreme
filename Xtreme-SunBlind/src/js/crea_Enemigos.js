@@ -72,7 +72,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
       auxRn = false;
       x = juego.rnd.integerInRange(950,1100);
       xFly = 1100;
-      xAG = 1100;
+      xAG = 1150;
     }
 
     if (aleatorioEnem === 0){
@@ -90,7 +90,6 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
     else if(aleatorioEnem === 3 && escena.agarrador.devuelve() === false){
       var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador, true);
       escena.agarrador.True();
-      console.log('creado');
     }
 
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen

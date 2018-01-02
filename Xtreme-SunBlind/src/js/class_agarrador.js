@@ -5,15 +5,17 @@ var escena = require('./play_scene');
 var HUD = require('./HUD');
 
 var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grabber){
-  enemy.call(this, game, entradax, entraday, 'alcohol', 1, 1, grabber);
+  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber);
 
   this.agarrando = false;
   this.medAgarro = 50;
   this.jug = jugador;
   this.juego = game;
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-  this.reescala_imagen(0.05,0.05);
+  this.reescala_imagen(1.5,1.5);
   this.aleatorio = 0;
+    this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.play('mueve');
 
 }
 

@@ -44,7 +44,7 @@ var PlayScene = {
   fondo = juego.add.sprite(0,0,'fondo');
   fondo.width = 1280;
   fondo.height = 720;
-  fondo.animations.add('run', [0,1,2,3,4,5,6,7,8], 5, true);
+  fondo.animations.add('run', [0,1,2,3,4,5,6,7,8], 2, true);
   fondo.animations.play('run');
 
   fondocourse = juego.add.sprite(0,0,'fondocourse');
@@ -97,6 +97,7 @@ var PlayScene = {
   pausa.onDown.add(function () {
     if(juego.paused){juego.paused = false
       HUD.quitaPausa();
+      //Quitar de aquí el PU si se viene desde el menú, si el nivel es 1+
       PU.creaPower();
     };
   },this);
@@ -108,6 +109,11 @@ var PlayScene = {
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();
+                for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+               
       juego.state.start('menu');
     }
   },this);
@@ -119,6 +125,7 @@ var PlayScene = {
   fullS.onDown.add(function () {
 
     if(juego.paused){
+
         HUD.fullscreen()}
       
   },this);
@@ -239,7 +246,7 @@ function nuevoNivel(){
 
   jugador.borracho = false;
   HUD.noBorracho();
-  jugador.invencible = true;
+  jugador.invencible = false;
   jugador.corriendo = false;
 
 	
@@ -280,7 +287,7 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
-  	time = 17;
+  	time = 15;
   	/*var timer = juego.time.create(true);
   	myloop = juego.time.events.loop(time, endedCourse, this);
   	timer.start();*/
@@ -455,21 +462,21 @@ var estadosJugador = {};
 
   function creaDeadZone(){
       //Para los enemigos
-  deadZone1 = new env(juego, -50, 640, 'fond');
+  deadZone1 = new env(juego, -50, 640, 'fondo');
   deadZone1.reescala_imagen(0.05,0.08);
   deadZone1.visible = false;
 
-  deadZone2 = new env(juego, 1260, 640, 'fond');
+  deadZone2 = new env(juego, 1260, 640, 'fondo');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
 
   //Para las fireballs
-  var deadZone3 = new env(juego, -40, 0, 'fond');
+  var deadZone3 = new env(juego, -40, 0, 'fondo');
   deadZone3.reescala_imagen(0.03,1);
   deadZone3.visible = false;
   deadZones.add(deadZone3);
 
-  var deadZone4 = new env(juego, 1260, 0, 'fond');
+  var deadZone4 = new env(juego, 1260, 0, 'fondo');
   deadZone4.reescala_imagen(0.03,1);
   deadZone4.visible = false;
   deadZones.add(deadZone4);

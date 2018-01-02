@@ -42,8 +42,8 @@ Protagonista.prototype.create = function (){
   this.animations.play('stay');
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
-  escudo.width = 120;
-  escudo.height = 90;
+  escudo.width = 250;
+  escudo.height = 250;
 
 }
 
@@ -62,8 +62,8 @@ Protagonista.prototype.update = function (){
    if(this.invencible){
     if(!this.orinando) 
       escudo.visible = true;
-    escudo.x = this.x - 65;
-    escudo.y = this.y - 40;
+    escudo.x = this.x - 125;
+    escudo.y = this.y - 120;
   }
    else 
     escudo.visible = false;
@@ -91,7 +91,7 @@ Protagonista.prototype.update = function (){
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
-   
+   this.invencible = true;
     if (cursors.left.isDown)
     {
         this.body.velocity.x = -this.vel;
