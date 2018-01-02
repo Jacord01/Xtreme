@@ -97,11 +97,6 @@ var PlayScene = {
 
     if(juego.paused){
       juego.paused = false;
-        for (var i = 0 ; i < powerUps.children.length; i++){
-            powerUps.children[i].limpia();
-            powerUps.children[i].kill();
-              }
-      juego.paused = true;
       HUD.Pausa();
       juego.state.start('menu');
     }
