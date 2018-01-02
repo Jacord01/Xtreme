@@ -30,6 +30,7 @@ var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
 var time = 0;
 var pausa; var menu; var fullS;
+var fondo; var fondocourse;
 
 var PlayScene = {
 
@@ -40,9 +41,18 @@ var PlayScene = {
   juego.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  var fondo = juego.add.sprite(0,0,'fond');
+  fondo = juego.add.sprite(0,0,'fondo');
   fondo.width = 1280;
   fondo.height = 720;
+  fondo.animations.add('run', [0,1,2,3,4,5,6,7,8], 5, true);
+  fondo.animations.play('run');
+
+  fondocourse = juego.add.sprite(0,0,'fondocourse');
+  fondocourse.width = 1280;
+  fondocourse.height = 720;
+  fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6,7], 9, true);
+  fondocourse.visible = false;
+  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -180,6 +190,8 @@ var PlayScene = {
 
     	if (!course)
     	{
+    		fondocourse.animations.stop(null,true);
+    		fondocourse.visible = false;
     		for (var i = 0 ; i < monedas.children.length; i++){
   				monedas.children[i].kill();}
     	}
@@ -265,6 +277,8 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
+  	fondocourse.animations.play('runcourse');
+  	fondocourse.visible = true;
   	time = 17;
   	/*var timer = juego.time.create(true);
   	myloop = juego.time.events.loop(time, endedCourse, this);
