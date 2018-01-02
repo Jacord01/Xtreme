@@ -77,7 +77,7 @@ HUD.create = function(game){
 
 }
 
-HUD.restaVida = function(jug){
+HUD.actualizaVida = function(jug){
 
 	if(jug.vidas >= 3){
 		vida1.visible = true;

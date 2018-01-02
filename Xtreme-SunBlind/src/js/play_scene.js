@@ -177,6 +177,7 @@ var PlayScene = {
     	if (numMonedas <= 0 && course){
     		course = false;
     		jugador.vidas++;
+    		HUD.actualizaVida(jugador);
     		endCourse = false;
     	}
 
@@ -395,7 +396,7 @@ var estadosJugador = {};
 
         jugador.kill();
         jugador.vidas--;
-        HUD.restaVida(jugador);
+        HUD.actualizaVida(jugador);
         jugador.vel = jugador.origVel;
         jugador.borracho = false;
         jugador.invencible = false;
