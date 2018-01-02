@@ -69,19 +69,23 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
+
     this.vel = 0;
+    this.body.gravity.y = 0;
+    this.body.touching.down = true;
     //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
     //Esto se puede dar si el jugador está en invencible encima de una plataforma
     this.body.setSize(35,60, 0, 0);
     //Después ya depende del movimiento del jugador apagar la de dercha o izda
     this.body.setSize(10,60, 70, 0);
 
-  }
+  } 
+  
 
   else{
    this.body.setSize(20,60, 15, 0);
+   this.body.gravity.y = 2000;
  }
-
 
   if(this.agarrado)
     this.vel = 0;

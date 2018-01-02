@@ -97,8 +97,7 @@ var PlayScene = {
   pausa.onDown.add(function () {
     if(juego.paused){juego.paused = false
       HUD.quitaPausa();
-      //Quitar de aquí el PU si se viene desde el menú, si el nivel es 1+
-      PU.creaPower();
+      
     };
   },this);
 
@@ -136,10 +135,6 @@ var PlayScene = {
 
     //Para el menú de pausa
     if(pausa.isDown && !juego.paused){
-          for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
       juego.paused = true;
       HUD.Pausa();
     }
@@ -285,6 +280,12 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
+    for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+               
+
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;

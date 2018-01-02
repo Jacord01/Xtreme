@@ -4,7 +4,7 @@ var batidoDeProteinas = function(game, entradasprite){
 
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.07,0.07);	
+	this.reescala_imagen(0.9,0.9);	
 }
 
 batidoDeProteinas.prototype = Object.create(PU.prototype);
