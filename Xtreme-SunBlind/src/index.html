@@ -48,7 +48,7 @@
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta');
         var mydata = JSON.parse(data);
-        for(int i = 0; i < 2; i++)
+        for(var i = 0; i < 2; i++)
         	console.log(mydata[i].name);
       } else {
         alert('There was a problem with the request.');
