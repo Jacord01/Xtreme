@@ -83,7 +83,7 @@ Protagonista.prototype.update = function (){
     this.vel = 0;
 
   //this.orina = 10;
-  this.juego.debug.body(this.pis);
+  //this.juego.debug.body(this.pis);
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
