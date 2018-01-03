@@ -39,6 +39,7 @@ Protagonista.prototype.create = function (){
   this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
+  this.animations.add('peeing', [15,16,17,18,19,20,21,22,23,24,25]);
   this.animations.play('stay');
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
@@ -69,7 +70,7 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
-
+    this.animations.play('peeing', 6, false);
     this.vel = 0;
     this.body.gravity.y = 0;
     this.body.touching.down = true;
@@ -131,7 +132,6 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
-
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
@@ -149,7 +149,7 @@ Protagonista.prototype.update = function (){
        if (!this.body.touching.down)
         this.animations.play('jump', 10 , true);
 
-       else if (this.body.velocity.x === 0)
+       else if (this.body.velocity.x === 0 && !this.orinando)
        	this.animations.play('stay');
 }
 
