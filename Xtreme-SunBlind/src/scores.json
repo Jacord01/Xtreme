@@ -1,9 +1,9 @@
 {
-    "name": "Juan",
-    "age": 30,
-    "address": {
-        "streetAddress": "88 8nd Street",
-        "city": "New York"
+    "Juego": "Xtreme-SunBlind!",
+    "Desarrollador": "JUVI",
+    "Componentes": {
+        "Primero": "Juan Ruiz Jimenez",
+        "Segundo": "Javier Cordero Calvo"
     },
     "score": [
         {

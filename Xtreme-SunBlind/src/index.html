@@ -21,15 +21,11 @@
     <iframe id="game" src="raw.html"></iframe>
   </main>
 
-<button id="ajaxButton" type="button">Make a request</button>
-
-
-
 <script>
   //Script sacado de la recopelación de varios sitios web. Con varios es MUCHISIMO.
 (function() {
   var httpRequest;
-  document.getElementById("ajaxButton").addEventListener('click', makeRequest);
+  makeRequest();
 
   function makeRequest() {
   	console.log('Mensaje Enviado');
