@@ -734,7 +734,6 @@ Protagonista.prototype.update = function (){
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    //this.invencible = true;
-   this.orina = 10;
     if (cursors.left.isDown)
     {
         facingRight = false;
