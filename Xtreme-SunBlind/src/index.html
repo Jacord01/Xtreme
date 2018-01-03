@@ -51,7 +51,7 @@
       if (httpRequest.status === 200) {
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta.');
-        var respuesta =httpRequest.response;
+         var respuesta = JSON.parse(httpRequest.response);
         console.log(respuesta[0]);
        
       } else {
