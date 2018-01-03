@@ -36,8 +36,9 @@
       alert('Giving up :( Cannot create an XMLHTTP instance');
       return false;
     }
+    var url = 'https://github.com/Jacord01/Xtreme/tree/gh-pages/Xtreme-SunBlind/src/scores.json';
     httpRequest.onreadystatechange = alertContents;
-    httpRequest.open('GET', 'scores.json');
+    httpRequest.open('GET', url);
 
     httpRequest.send();
   }
