@@ -87,6 +87,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     }
 
     if(plat.fuego && jug.orinando){
+      console.log('llega');
       plat.fuego = false;
       plat.cambiaSprite();
     }

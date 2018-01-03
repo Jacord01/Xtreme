@@ -6,6 +6,7 @@ var cursors;
 var jumpButton;
 var escudo;
 var daVida;
+var auxPosY;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -52,7 +53,7 @@ Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
-
+   auxPosY = this.y;
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
 
@@ -70,10 +71,11 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
+    this.y = auxPosY;
     this.animations.play('peeing', 6, false);
     this.vel = 0;
-    this.body.gravity.y = 0;
-    this.body.touching.down = true;
+    //this.body.gravity.y = 0;
+    //this.body.touching.down = true;
     //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
     //Esto se puede dar si el jugador está en invencible encima de una plataforma
     this.body.setSize(35,60, 0, 0);
@@ -97,13 +99,14 @@ Protagonista.prototype.update = function (){
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    this.invencible = true;
+   this.orina = 10;
     if (cursors.left.isDown)
     {
         this.body.velocity.x = -this.vel;
         if(!this.borracho)
           this.scale.x = -this.escala;
         else this.scale.x = this.escala;
-        if (this.body.touching.down)
+        if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
     }
     else if (cursors.right.isDown)
@@ -112,7 +115,7 @@ Protagonista.prototype.update = function (){
         if(!this.borracho)
         this.scale.x = this.escala;
         else this.scale.x = -this.escala;
-        if (this.body.touching.down)
+        if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
 
     }

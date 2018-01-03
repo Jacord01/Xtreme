@@ -89,7 +89,7 @@ var PlayScene = {
   HUD.create(juego);
 
   //Finalmente, creamos el nivel
-  nivel = 0; //Para el nivel 1
+  nivel = 6; //Para el nivel 1
   nuevoNivel();
 
   pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
@@ -202,7 +202,7 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
+    juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
@@ -247,7 +247,7 @@ function nuevoNivel(){
 	
 	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
 	//tendremos varios tipos de plataformas y hay que cambiarlas	
-	if(nivel != 1){
+	if(nivel != 7){
  			 for (var i = 0 ; i < platforms.children.length; i++){
   				platforms.children[i].kill();}
 
