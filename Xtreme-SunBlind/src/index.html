@@ -49,7 +49,8 @@
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta');
         //var response = JSON.parse(httpRequest.response);
-        console.log(httpRequest.response.data[0].name);
+        var mydata = JSON.parse(httpRequest.response);
+        console.log(mydata.data[0].name);
        
       } else {
         alert('There was a problem with the request.');
