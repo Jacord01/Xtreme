@@ -52,8 +52,21 @@
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta.');
         var respuesta = JSON.parse(httpRequest.response);
-        console.log(respuesta.name);
-       
+/*
+  alert(json["name"]); 
+  alert(json.name); 
+
+  alert(json.address.streetAddress); 
+  alert(json["address"].city); 
+
+  alert(json.phoneNumber[0].number);
+  alert(json.phoneNumber[1].type); */
+
+        console.log(respuesta.score[0].nombre);
+        console.log(respuesta.score[0].punct);
+        console.log(respuesta.score[1].nombre);
+        console.log(respuesta.score[1].punct);
+
       } else {
         alert('Problema con la petición.');
       }

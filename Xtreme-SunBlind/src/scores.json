@@ -1,18 +1,12 @@
 {
-    "name": "mkyong",
-    "age": 30,
-    "address": {
-        "streetAddress": "88 8nd Street",
-        "city": "New York"
-    },
-    "phoneNumber": [
+    "score": [
         {
-            "type": "home",
-            "number": "111 111-1111"
+            "nombre": "Juan",
+            "punct": "8"
         },
         {
-            "type": "fax",
-            "number": "222 222-2222"
+            "nombre": "Javi",
+            "punct": "10"
         }
     ]
 }
