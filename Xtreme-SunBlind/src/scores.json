@@ -1,4 +1,10 @@
 {
+    "name": "Juan",
+    "age": 30,
+    "address": {
+        "streetAddress": "88 8nd Street",
+        "city": "New York"
+    },
     "score": [
         {
             "nombre": "Juan",
