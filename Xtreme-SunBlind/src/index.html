@@ -23,7 +23,10 @@
 
 <button id="ajaxButton" type="button">Make a request</button>
 
+
+
 <script>
+  //Script sacado de la recopelación de varios sitios web. Con varios es MUCHISIMO.
 (function() {
   var httpRequest;
   document.getElementById("ajaxButton").addEventListener('click', makeRequest);
@@ -33,7 +36,7 @@
     httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
-      alert('Giving up :( Cannot create an XMLHTTP instance');
+      alert('No se puede crear la instancia.');
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
@@ -47,12 +50,12 @@
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
         //alert(httpRequest.responseText);
-        console.log('Ha llegado la respuesta');
+        console.log('Ha llegado la respuesta.');
         //var response = JSON.parse(httpRequest.response);
-        console.log(httpRequest.response);
+        console.log(httpRequest.response.data);
        
       } else {
-        alert('There was a problem with the request.');
+        alert('Problema con la petición.');
       }
     }
   }

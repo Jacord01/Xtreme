@@ -1,17 +1,6 @@
-{
-    "data": [
-        {
-            "name": "Destroyer",
-            "score": 23
-        },
-        {
-            "name": "yo momma",
-            "score": 5
-        },
-        {
-            "name": "Joe",
-            "score": 1
-        },
+data = {
+        
+        "nombre":"Juanillo",
+        "puntuacion":"10"
         // And so on...
-    ]
-}
+    }
