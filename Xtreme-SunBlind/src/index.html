@@ -20,6 +20,38 @@
   <main>
     <iframe id="game" src="raw.html"></iframe>
   </main>
+
+  <button id="ajaxButton" type="button">Make a request</button>
+
+<script>
+(function() {
+  var httpRequest;
+  makeRequest();
+
+  function makeRequest() {
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      alert('Giving up :( Cannot create an XMLHTTP instance');
+      return false;
+    }
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open('GET', './scores.json');
+    httpRequest.send('./scores.json');
+  }
+
+  function alertContents() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        alert(httpRequest.responseText);
+      } else {
+        alert('There was a problem with the request.');
+      }
+    }
+  }
+})();
+
+</script>
   
   <footer>
     <p ><font size="6" color = "white"><strong>XtremeSunblind!<br>
