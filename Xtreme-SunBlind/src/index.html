@@ -38,14 +38,18 @@
     }
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('GET', './scores.json');
-    httpRequest.send('./scores.json');
+
+    httpRequest.send();
   }
 
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
-        alert(httpRequest.responseText);
+        //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta');
+        var mydata = JSON.parse(data);
+        for(int i = 0; i < 2; i++)
+        	console.log(mydata[i].name);
       } else {
         alert('There was a problem with the request.');
       }
