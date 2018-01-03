@@ -44,6 +44,7 @@
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
         alert(httpRequest.responseText);
+        console.log('Ha llegado la respuesta');
       } else {
         alert('There was a problem with the request.');
       }
