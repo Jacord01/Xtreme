@@ -47,10 +47,9 @@
       if (httpRequest.status === 200) {
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta');
-        console.log(scores.json);
-        var mydata = JSON.parse(data);
-        for(var i = 0; i < 2; i++)
-        	console.log(mydata[i].name);
+        var response = JSON.parse(httpRequest.responseText);
+        console.log(response);
+       
       } else {
         alert('There was a problem with the request.');
       }
