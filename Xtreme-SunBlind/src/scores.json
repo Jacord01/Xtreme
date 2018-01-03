@@ -1,3 +1,17 @@
-data = 
-'[{"name" : "Ashwin", "age" : "20"},
-    {"name" : "Abhinandan", "age" : "20"}]';
+{
+    "data": [
+        {
+            "name": "Destroyer",
+            "score": 23
+        },
+        {
+            "name": "yo momma",
+            "score": 5
+        },
+        {
+            "name": "Joe",
+            "score": 1
+        },
+        // And so on...
+    ]
+}
