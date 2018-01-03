@@ -1745,7 +1745,7 @@ var PlayScene = {
   cols.create(juego);
 
   //Finalmente, creamos el nivel
-  nivel = 6; //Para el nivel 1
+  nivel = 0; //Para el nivel 1
   nuevoNivel();
 
   pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
@@ -1909,7 +1909,7 @@ function nuevoNivel(){
 	
 	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
 	//tendremos varios tipos de plataformas y hay que cambiarlas	
-	if(nivel != 7){
+	if(nivel != 1){
  			 for (var i = 0 ; i < platforms.children.length; i++){
   				platforms.children[i].kill();}
 
