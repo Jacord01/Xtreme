@@ -5,6 +5,13 @@ var plat = require('./crea_Plataformas');
 var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
+var juego ;
+
+colisiones.create = function(game){
+
+  juego = game;
+
+}
 
 colisiones.collisionHandlerPower = function(jug, pw){
 
@@ -28,6 +35,24 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 }
 
+colisiones.collisionHandlerMonedas = function(jug, mon){
+  mon.kill();
+  escena.stateMoneda.reduceMoneda();
+
+}
+
+colisiones.collisionHandlerEnemPis = function(jug, enem){
+
+    if(enem.grabber){
+      //Aqui es donde peta el agarrador
+      escena.agarrador.False();      
+    }
+
+    enem.kill();
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
+}
+
 colisiones.collisionHandlerEnem = function(jug, enem){
 	if(!enem.stunt){
 		if(!jug.invencible){
@@ -39,6 +64,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   		}
   			else if (jug.invencible) {
+
+          if(enem.grabber){
+            escena.agarrador.False();      
+        }
   				enem.kill();
   				escena.enemigos.reducePantalla();
   				escena.enemigos.reduceNumero();
@@ -47,9 +76,11 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
       }
   else {
-    if(enem.agarra != undefined)
+    if(enem.grabber){
       //Aqui es donde peta el agarrador
-      escena.agarrador.cambia();
+      escena.agarrador.False();      
+    }
+
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
@@ -57,15 +88,27 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){
-  	if(jug.body.touching.up === true){
+  	if(jug.body.touching.up){
    		plat.cambia_tocada();
    		plat.jump();
   	}
 
-  	if(plat.fuego &&  jug.body.touching.up === false && !jug.invencible){
+  	if(plat.fuego &&  !jug.body.touching.up && !jug.invencible){
       escena.estadosJugador.jugadorMuerte();
   		
     }
+
+    else if (plat.hielo){
+      if(!jug.corriendo)
+        jug.corriendo = true;
+      setTimeout(function(){jug.corriendo = false;}, 300);
+    }
+
+    if(jug.orinando && plat.fuego){
+       plat.fuego = false;
+           plat.cambiaSprite();
+    }
+
   }
 
   colisiones.collisionHandlerPlat = function(enem, plat){
@@ -104,6 +147,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   colisiones.DeadZoneF = function(dead, fb){
   	fb.kill();
+  }
+
+  colisiones.collisionHandlerPis = function(jug, plat){
+
+       if(plat.fuego){
+           plat.fuego = false;
+           plat.cambiaSprite();
+       }
   }
 
   module.exports = colisiones;

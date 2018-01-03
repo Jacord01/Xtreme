@@ -6,9 +6,15 @@ var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
 var pisDentro; var pisFuera;
 var ebrio;
+var Temp1; var Temp2; 
+var AG; 
+var PA;
+var juego;
+var fullscreen;
 
 HUD.create = function(game){
 
+	juego = game;
 	//VidasPlayer
 	
 	vida1 =  game.add.sprite(10,10,'vidas');
@@ -16,6 +22,10 @@ HUD.create = function(game){
 	vida3 = game.add.sprite(138, 10, 'vidas');
 
 	//Nivel
+
+ 	nivel = game.add.sprite(200,100, 'nivel');
+ 	nivel.width = 100;
+ 	nivel.height = 50;
 
 	punct1 = game.add.sprite(300, 80, 'numeros');
  	punct1.width = 50;
@@ -25,9 +35,19 @@ HUD.create = function(game){
  	punct2.width = 50;
  	punct2.height = 80;
 
- 	nivel = game.add.sprite(200,100, 'nivel');
- 	nivel.width = 100;
- 	nivel.height = 50;
+ 	//temporizador para los niveles extra
+ 	Temp1 = game.add.sprite(300, 80, 'numeros');
+ 	Temp1.width = 50;
+ 	Temp1.height = 80;
+ 	Temp1.visible = false;
+ 	Temp1.x = 600; Temp1.y = 20;
+
+ 	Temp2 = game.add.sprite(350,80, 'numeros');
+ 	Temp2.width = 50;
+ 	Temp2.height = 80;
+ 	Temp2.visible = false;
+	Temp2.x = 645; Temp2.y = 20;
+
 
  	//Medidor de Pis
 
@@ -45,9 +65,20 @@ HUD.create = function(game){
 
  	 ebrio.animations.add('drunk', [0,1,2,3], 6, true);
  	 ebrio.play('drunk');
+
+ 	 //Medidor de agarre
+ 	 AG = game.add.sprite(950, 100, 'interiorPis');
+ 	 AG.height = 20;
+ 	 AG.width = 0;
+ 	 AG.visible = false;
+
+ 	 //Pausa
+ 	 PA = game.add.sprite(0,0, 'Pausa');
+ 	 PA.visible = false;
+
 }
 
-HUD.restaVida = function(jug){
+HUD.actualizaVida = function(jug){
 
 	if(jug.vidas >= 3){
 		vida1.visible = true;
@@ -85,6 +116,26 @@ HUD.nivel = function(lvl){
   setTimeout(function(){punct1.visible = false; punct2.visible = false; nivel.visible = false;}, 3000);
 }
 
+HUD.tempLevel = function(temp){
+
+
+ Temp1.frame = Math.floor(temp / 10);
+
+ Temp2.frame = temp % 10;
+
+}
+
+HUD.ocultaTempLevel = function(){
+
+	 Temp1.visible = false; Temp2.visible = false;
+
+}
+
+HUD.muestraTempLevel = function(){
+
+	Temp1.visible = true; Temp2.visible = true;
+}
+
 HUD.cambiaPis = function(pis){
 
 	 	pisDentro.width = pis * 30;
@@ -100,23 +151,68 @@ HUD.noBorracho = function(){
 	ebrio.visible = false;
 }
 
+HUD.cambiaGrabber = function(llega){
+
+	AG.width = llega * 1.5;
+
+}
+
+HUD.GrabberVisible = function(x,y){
+
+	AG.visible = true;
+	AG.x = x - 20;
+	AG.y = y + 70;
+}
+
+HUD.GrabberInvisible = function(){
+
+	AG.visible = false;
+}
+
+HUD.Pausa = function(){
+
+juego.world.bringToTop(PA);
+PA.visible = true;
+
+}
+
+HUD.quitaPausa = function(){
+
+	PA.visible = false;
+}
+
+HUD.fullscreen = function(){
+
+    if (juego.scale.isFullScreen)
+    {
+        juego.scale.stopFullScreen();
+    }
+    else
+    {
+        juego.scale.startFullScreen(false);
+    }
+}
+
 module.exports = HUD;
 },{}],2:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
 var escena = require('./play_scene');
+var HUD = require('./HUD');
 
-var agarrador =  function(game, entradax, entraday, entradasprite, jugador){
-  enemy.call(this, game, entradax, entraday, entradasprite, 0, 0);
+var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grabber){
+  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber);
 
   this.agarrando = false;
   this.medAgarro = 50;
   this.jug = jugador;
   this.juego = game;
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-  this.reescala_imagen(0.05,0.05);
+  this.reescala_imagen(1.5,1.5);
   this.aleatorio = 0;
+    this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.play('mueve');
 
 }
 
@@ -126,12 +222,13 @@ agarrador.prototype.constructor = agarrador;
 agarrador.prototype.update = function(){
 	if(this.golpeado) this.stunt = true;
 	//this.juego.debug.body(this);
-	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, 500 , 70);
+	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, this.x , this.y);
 	//this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
 	//this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
 
 	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;
+		HUD.cambiaGrabber(this.medAgarro);
 
 	}
 	
@@ -144,14 +241,18 @@ agarrador.prototype.update = function(){
 		this.jug.agarrado = false;
 		this.agarrando = false;
 		this.medAgarro = 50;
+		HUD.GrabberInvisible();
 	}
 
 	else if (this.medAgarro < 0 && this.jug.agarrado === true){
 		this.jug.agarrado = false;
 		this.agarrando = false;
 		this.medAgarro = 50;
+		HUD.GrabberInvisible();
 		escena.estadosJugador.jugadorMuerte();
 	}
+
+	
 }
 
 agarrador.prototype.agarra = function(jug){
@@ -159,12 +260,14 @@ agarrador.prototype.agarra = function(jug){
 	ag.medAgarro = 50;
 	ag.agarrando = true;
 	jug.agarrado = true;
+	HUD.GrabberVisible(this.x, this.y);
 	
 	agarrador.prototype.cambiaAgarre(ag, jug);
 }
 
 agarrador.prototype.cambiaAgarre = function(ag, jug){
 
+	HUD.cambiaGrabber(ag.medAgarro);
 	ag.medAgarro -= 10;
 	if(ag.jug.agarrado)
 		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);
@@ -173,7 +276,7 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 
 
 module.exports = agarrador;
-},{"./class_enemy":7,"./play_scene":25}],3:[function(require,module,exports){
+},{"./HUD":1,"./class_enemy":7,"./play_scene":26}],3:[function(require,module,exports){
 var PU = require('./class_powerUp');
 var HUD = require('./HUD');	
 
@@ -181,7 +284,7 @@ var alcohol = function(game, entradasprite){
 
 	this.orina = 5;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.025,0.025);
+	this.reescala_imagen(0.9,0.9);
 	
 }
 
@@ -202,7 +305,7 @@ var batidoDeProteinas = function(game, entradasprite){
 
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.07,0.07);	
+	this.reescala_imagen(0.9,0.9);	
 }
 
 batidoDeProteinas.prototype = Object.create(PU.prototype);
@@ -242,8 +345,8 @@ module.exports = bebidaEnergetica;
 
 var enemy = require('./class_enemy');
 
-var crab =  function(game, entradax, entraday, entradasprite, dir, velx){
-  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx);
+var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
   this.enfado = false;
   this.origVel = velx;
   this.reescala_imagen(0.1,0.1);
@@ -281,7 +384,7 @@ module.exports = crab;
 
 var movible = require('./class_movibl');	
 
-var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
+var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.create();
@@ -289,6 +392,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx){
 	this.stunt = false;
 	this.golpeado = false;
 	this.cont = 1;
+	this.grabber = grabber;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
@@ -356,10 +460,12 @@ module.exports = fireball;
 
 var enemigo = require('./class_enemy');
 
-var fly =  function(game, entradax, entraday, entradasprite, dir, velx){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
+var fly =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
   this.body.gravity.y = 1000;
-  this.reescala_imagen(0.08,0.08);
+  this.reescala_imagen(0.9,0.9);
+  this.animations.add('mueve',[0,1,2,3, 4, 5], 5, true);
+  this.animations.play('mueve');
 }
 fly.prototype = Object.create(enemigo.prototype);
 fly.prototype.constructor = fly;
@@ -473,7 +579,7 @@ var entorno = require('./class_environment');
 
 var plataforma = function(game, entradax, entraday, entradasprite, fuego, hielo){
 	entorno.call(this, game, entradax, entraday, entradasprite);
-	this.reescala_imagen(1, 0.5);
+	this.reescala_imagen(1, 0.3);
 	this.tocada = false;
 	this.arriba = false;
 	this.iniPointY = entraday;
@@ -514,6 +620,15 @@ plataforma.prototype.jump = function(){
 	
 }
 
+plataforma.prototype.cambiaSprite = function(){
+
+	this.loadTexture('plat2', 0);
+
+    this.animations.add('pla2');
+
+    this.animations.play('plat2', 4, true);
+}
+
 function vuelve(){
 	this.body.gravity.y = 0;
 	this.body.velocity.y = 0;
@@ -536,6 +651,7 @@ var cursors;
 var jumpButton;
 var escudo;
 var daVida;
+var facingRight;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -553,6 +669,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.invencible = false;
   this.saltando = false;
   this.agarrado = false;
+  this.pis;
   this.create();
 }
 
@@ -562,26 +679,30 @@ Protagonista.prototype.constructor = Protagonista;
 Protagonista.prototype.create = function (){
  	this.body.gravity.y = 2000;
  	cursors = this.juego.input.keyboard.createCursorKeys();
-    jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.anchor.x = 0.5;
-    this.anchor.y = 0.5;
-    this.reescala_imagen(1.45,0.85);
-    this.animations.add('walk', [0,1,2,3]);
+  jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  this.anchor.x = 0.5;
+  this.anchor.y = 0.5;
+  this.reescala_imagen(1.6, 1.2);
+  this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
+  this.animations.add('peeing', [15,16,17,18,19,20,21,22,23,24,25]);
   this.animations.play('stay');
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
-  escudo.width = 120;
-  escudo.height = 90;
-
+  escudo.width = 250;
+  escudo.height = 250;
+  this.body.setSize(20,60, 20, 0);
+  this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
+  this.juego.physics.arcade.enable(this.pis);
+  this.pis.visible = false;
 }
 
 Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
-
+   
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
 
@@ -590,44 +711,58 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
-    if(!this.orinando) 
-      escudo.visible = true;
-    escudo.x = this.x - 65;
-    escudo.y = this.y - 40;
+    escudo.visible = true;
+    escudo.x = this.x - 125;
+    escudo.y = this.y - 120;
   }
    else 
     escudo.visible = false;
 
-   if(this.orinando || this.agarrado){
+   if(this.orinando){
     this.vel = 0;
-  }
+    this.body.touching.down = true;
+  } 
 
+
+  if(this.agarrado)
+    this.vel = 0;
+
+  //this.orina = 10;
+  this.juego.debug.body(this.pis);
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
-   
+   //this.invencible = true;
+   this.orina = 10;
     if (cursors.left.isDown)
     {
+        facingRight = false;
         this.body.velocity.x = -this.vel;
         if(!this.borracho)
           this.scale.x = -this.escala;
         else this.scale.x = this.escala;
-        if (this.body.touching.down)
+        if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
+         if(this.orinando)
+           this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
     else if (cursors.right.isDown)
     {
+        facingRight = true;
         this.body.velocity.x = this.vel;
         if(!this.borracho)
         this.scale.x = this.escala;
         else this.scale.x = -this.escala;
-        if (this.body.touching.down)
+        if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
+         if(this.orinando)
+           this.pis.body.setSize(10,60, this.x - 150, this. y -620);
+
     }
 
     this.vel = this.origVel - (this.orina * 10);
-    if (jumpButton.isDown && !this.agarrado && (this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando && (this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -641,17 +776,25 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
-
+          this.animations.play('peeing', 6, false);
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
+
+          //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
+          //Esto se puede dar si el jugador está en invencible encima de una plataforma
+          this.pis.body.setSize(10,60, this.x - 200, this.y - 620);
+          //Después ya depende del movimiento del jugador apagar la de dercha o izda
+          if(facingRight)
+           this.pis.body.setSize(10,60, this.x - 150, this. y -620);
+         else 
+           this.pis.body.setSize(10,60, this.x - 270, this. y -620);
           var prota = this;
           
-          setTimeout(function(){prota.orinando = false;}, 2000);
+          setTimeout(function(){prota.orinando = false; prota.invencible = false;}, 
+              2000);
         }
         
-      //this.invencible = true;
-
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
       if( this.body.velocity.x != 0 ||  this.body.velocity.y != 0){
          this.cambia_pos(this.x, this.y);
@@ -660,7 +803,7 @@ Protagonista.prototype.update = function (){
        if (!this.body.touching.down)
         this.animations.play('jump', 10 , true);
 
-       else if (this.body.velocity.x === 0)
+       else if (this.body.velocity.x === 0 && !this.orinando)
        	this.animations.play('stay');
 }
 
@@ -711,13 +854,13 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":13,"./play_scene":25}],17:[function(require,module,exports){
+},{"./class_object":13,"./play_scene":26}],17:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
 
-var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx);
+var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
   
   this.create();
 }
@@ -725,7 +868,7 @@ tortuguita.prototype = Object.create(enemigo.prototype);
 tortuguita.prototype.constructor = tortuguita;
 
 tortuguita.prototype.create = function () {
-	this.reescala_imagen(1,0.8);
+	this.reescala_imagen(1.2,1);
 	this.body.gravity.y = 2000;
 	this.animations.add('mueve',[0,1,2], 5, true);
 	this.animations.play('mueve');
@@ -787,7 +930,7 @@ enemigoRandom.creaGrupo = function(juego){
   enemies = juego.add.physicsGroup();
 }
 
-enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugador) {
+enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
 
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
     setTimeout(function(){
@@ -825,12 +968,12 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
     }
     else if( ctrl === 1){
       yFly = 300;
-      yAG = 300;
+      yAG = 350;
       
     }
     else{
-      yFly = 500;
-      yAG = 473;
+      yFly = 450;
+      yAG = 350;
     
     }
 
@@ -844,25 +987,24 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
       auxRn = false;
       x = juego.rnd.integerInRange(950,1100);
       xFly = 1100;
-      xAG = 1000;
+      xAG = 1150;
     }
 
     if (aleatorioEnem === 0){
-      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150);
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150, false);
     }
 
     else if (aleatorioEnem === 1){
-      var enemigo = new fly(juego, xFly, yFly, 'fly', 1, 100);
+      var enemigo = new fly(juego, xFly, yFly, 'fly', 1, 100, false);
       
     }
     else if (aleatorioEnem === 2){
-      var enemigo = new crab(juego, x, 0, 'crabby', 1, 150);
+      var enemigo = new crab(juego, x, 0, 'crabby', 1, 150, false);
     }
 
-    else if(aleatorioEnem === 3 && !agarrador){
-      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador);
-      escena.agarrador.cambia();
-      console.log('creado');
+    else if(aleatorioEnem === 3 && escena.agarrador.devuelve() === false){
+      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador, true);
+      escena.agarrador.True();
     }
 
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
@@ -885,7 +1027,40 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
 
 
 module.exports = enemigoRandom;
-},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":25}],20:[function(require,module,exports){
+},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":26}],20:[function(require,module,exports){
+'use strict'
+	
+var creaMonedas = {};
+var monedas;
+var object = require('./class_object');
+
+creaMonedas.creaGrupo = function(juego){
+  monedas = juego.add.physicsGroup();
+  return monedas;
+}
+
+creaMonedas.devuelveGrupo = function(juego, numMonedas){
+  var n = numMonedas;
+
+  while (n > 0){
+    var aux = new object(juego, 0, 0, 'coin');
+    aux.reescala_imagen(0.4, 0.4);
+    if(n>=7)
+      aux.cambia_pos(250*((numMonedas+1)-n),600);
+    else if(n>=3)
+      aux.cambia_pos(250*((numMonedas-3)-n),250);
+    else
+      aux.cambia_pos(400*(n),50);
+    monedas.add(aux);
+
+    n--;
+  }
+
+  return monedas;
+}
+
+module.exports = creaMonedas;
+},{"./class_object":13}],21:[function(require,module,exports){
 'use strict'
 
 var plat = require('./class_platform');
@@ -1001,6 +1176,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
     platforms.add(p);
     else
     platformsIni.add(p);
+
   }
 
   plataforma.devuelvePlat = function(){
@@ -1014,7 +1190,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
   
 
 module.exports = plataforma;
-},{"./class_platform":14}],21:[function(require,module,exports){
+},{"./class_platform":14}],22:[function(require,module,exports){
 'use strict'
 
 var escena = require('./play_scene');
@@ -1022,6 +1198,13 @@ var plat = require('./crea_Plataformas');
 var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
+var juego ;
+
+colisiones.create = function(game){
+
+  juego = game;
+
+}
 
 colisiones.collisionHandlerPower = function(jug, pw){
 
@@ -1045,6 +1228,24 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 }
 
+colisiones.collisionHandlerMonedas = function(jug, mon){
+  mon.kill();
+  escena.stateMoneda.reduceMoneda();
+
+}
+
+colisiones.collisionHandlerEnemPis = function(jug, enem){
+
+    if(enem.grabber){
+      //Aqui es donde peta el agarrador
+      escena.agarrador.False();      
+    }
+
+    enem.kill();
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
+}
+
 colisiones.collisionHandlerEnem = function(jug, enem){
 	if(!enem.stunt){
 		if(!jug.invencible){
@@ -1056,6 +1257,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   		}
   			else if (jug.invencible) {
+
+          if(enem.grabber){
+            escena.agarrador.False();      
+        }
   				enem.kill();
   				escena.enemigos.reducePantalla();
   				escena.enemigos.reduceNumero();
@@ -1064,9 +1269,11 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
       }
   else {
-    if(enem.agarra != undefined)
+    if(enem.grabber){
       //Aqui es donde peta el agarrador
-      escena.agarrador.cambia();
+      escena.agarrador.False();      
+    }
+
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
@@ -1074,15 +1281,27 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){
-  	if(jug.body.touching.up === true){
+  	if(jug.body.touching.up){
    		plat.cambia_tocada();
    		plat.jump();
   	}
 
-  	if(plat.fuego &&  jug.body.touching.up === false && !jug.invencible){
+  	if(plat.fuego &&  !jug.body.touching.up && !jug.invencible){
       escena.estadosJugador.jugadorMuerte();
   		
     }
+
+    else if (plat.hielo){
+      if(!jug.corriendo)
+        jug.corriendo = true;
+      setTimeout(function(){jug.corriendo = false;}, 300);
+    }
+
+    if(jug.orinando && plat.fuego){
+       plat.fuego = false;
+           plat.cambiaSprite();
+    }
+
   }
 
   colisiones.collisionHandlerPlat = function(enem, plat){
@@ -1123,8 +1342,17 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   	fb.kill();
   }
 
+  colisiones.collisionHandlerPis = function(jug, plat){
+
+       if(plat.fuego){
+           plat.fuego = false;
+           plat.cambiaSprite();
+       }
+  }
+
   module.exports = colisiones;
-},{"./HUD":1,"./crea_Plataformas":20,"./play_scene":25}],22:[function(require,module,exports){
+
+},{"./HUD":1,"./crea_Plataformas":21,"./play_scene":26}],23:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -1152,23 +1380,23 @@ var PreloaderScene = {
 
 	//Carga de imagenes para el juego
 
+  //Fondo
+    this.game.stage.backgroundColor = '#220A29'; 
+    this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
+    this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
+
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
-    this.game.stage.backgroundColor = '#220A29';
-    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.image('escudo', 'images/Escudo.png');
-	this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
-
-
-
+    this.game.load.spritesheet('play', 'images/alientotal.png', 60, 57, 15);
+    this.game.load.spritesheet('player', 'images/alientotal3.png', 64, 57, 26);
+	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
-
-    //Fondo
-    this.game.load.image('fond', 'images/space.png');
+    this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
     this.game.load.image('perder', 'images/lose.png');
@@ -1177,15 +1405,13 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
-    
-    
-    
+    this.game.load.image('Pausa', 'images/Menus/Pausa.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
-    this.game.load.image('enemigo', 'images/juen.png');
+    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
     this.game.load.image('crabby', 'images/crab.png');
-    this.game.load.image('fly', 'images/fly.png');
+    this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.image('fireball', 'images/fireball.png');
     this.game.load.image('greenfireball', 'images/greenfireball.png');
 
@@ -1195,6 +1421,8 @@ var PreloaderScene = {
     this.game.load.image('alcohol', 'images/alcohol.png');
     this.game.load.image('proteinas', 'images/proteinas.png');
 
+    //Monedas
+    this.game.load.image('coin', 'images/coin.png');
 
     //Imagenes de fondo  de menu
     this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
@@ -1223,19 +1451,21 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./menu.js":23}],23:[function(require,module,exports){
+},{"./menu.js":24}],24:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
 var menuInformacion = require('./menuInformacion');
 
-var buttonJuego; var buttonInfo; 
+var buttonJuego; var buttonInfo; var pantalla;
 var juego;
 
 var menu = {
 
   create: function () {
     juego = this.game;
+
+    juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
     juego.state.add('info', menuInformacion);
 
@@ -1256,6 +1486,13 @@ var menu = {
     buttonInfo.animations.play('plat0', 4, true );
     buttonInfo.width = 150;
     buttonInfo.height = 60;
+
+    //Boton para fullscreen
+    pantalla = juego.add.button(juego.world.centerX - 600, 600, 'PCompleta', fullscreen, this, 2,1,0);
+    pantalla.animations.add('PCompleta');
+    pantalla.animations.play('PCompleta', 4, true );
+    pantalla.width = 150;
+    pantalla.height = 80;
  },
 };
 
@@ -1272,11 +1509,22 @@ function actionOnClickInfo(){
 	juego.state.start('info');
 }
 
+function fullscreen(){
+
+    if (this.game.scale.isFullScreen)
+    {
+        this.game.scale.stopFullScreen();
+    }
+    else
+    {
+        this.game.scale.startFullScreen(false);
+    }
+}
 
 
 
 module.exports = menu; 
-},{"./menuInformacion":24,"./play_scene.js":25}],24:[function(require,module,exports){
+},{"./menuInformacion":25,"./play_scene.js":26}],25:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
@@ -1404,7 +1652,7 @@ function cambiaImagenes(){
 }
 
 module.exports = menuInformacion;
-},{"./menu.js":23}],25:[function(require,module,exports){
+},{"./menu.js":24}],26:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -1420,10 +1668,12 @@ var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
 var HUD = require('./HUD');
+var coins = require('./crea_Monedas');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
+var monedas;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
@@ -1432,19 +1682,32 @@ var powerUps;
 var auxRn;
 var agarrador = {};
 var agarro;
+var course = false; var endCourse = false; var numMonedas = 0; 
+var time = 0;
+var pausa; var menu; var fullS;
+var fondo; var fondocourse;
+
 var PlayScene = {
 
   create: function () {
 
   juego = this.game;
-
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  var fondo = juego.add.sprite(0,0,'fond');
+  fondo = juego.add.sprite(0,0,'fondo');
   fondo.width = 1280;
   fondo.height = 720;
+  fondo.animations.add('run', [0,1,2,3,4,5,6,7,8], 2, true);
+  fondo.animations.play('run');
+
+  fondocourse = juego.add.sprite(0,0,'fondocourse');
+  fondocourse.width = 1280;
+  fondocourse.height = 720;
+  fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
+  fondocourse.visible = false;
+  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -1461,6 +1724,9 @@ var PlayScene = {
   auxRn = false;
   agarro = false;
 
+  //Creamos monedas
+  var numMonedas = 0;
+  monedas = coins.creaGrupo(juego);
 
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
@@ -1476,22 +1742,73 @@ var PlayScene = {
 
   //Creamos el hud
   HUD.create(juego);
+  cols.create(juego);
 
   //Finalmente, creamos el nivel
-  nivel = 0; //Para el nivel 1
+  nivel = 6; //Para el nivel 1
   nuevoNivel();
+
+  pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
+
+  pausa.onDown.add(function () {
+    if(juego.paused){juego.paused = false
+      HUD.quitaPausa();
+      
+    };
+  },this);
+
+  menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
+
+  menu.onDown.add(function () {
+
+    if(juego.paused){
+      juego.paused = false;
+      HUD.Pausa();
+                for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+               
+      juego.state.start('menu');
+    }
+  },this);
+
+  juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+
+  fullS = juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  fullS.onDown.add(function () {
+
+    if(juego.paused){
+
+        HUD.fullscreen()}
+      
+  },this);
   	
  },
 
   update: function (){
+
+    //Para el menú de pausa
+    if(pausa.isDown && !juego.paused){
+      juego.paused = true;
+      HUD.Pausa();
+    }
+
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
+
+    if(jugador.orinando){
+      juego.physics.arcade.collide(jugador.pis, platforms, cols.collisionHandlerPis);
+      juego.physics.arcade.collide(enem.devuelveGrupo(), jugador.pis, cols.collisionHandlerEnemPis);
+    }
+
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado || !jugador.orinando){
+    if(!jugador.agarrado){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -1501,42 +1818,75 @@ var PlayScene = {
     juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone2, cols.DeadZone2);
     juego.physics.arcade.overlap(fireballs, deadZones, cols.DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
-    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
+    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower); 
+    juego.physics.arcade.overlap(monedas, jugador, cols.collisionHandlerMonedas);   
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, jugador);
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
 
-    	if(numeroEnemigos <= 0){
+    	if(numeroEnemigos <= 0 && !course){
     		jugador.kill();
     		nuevoNivel();
     	}
 
-    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada)
+    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada && !course)
     		creaFireballs();
       
-    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4)
+    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4 && !course)
     		creaGreenFireballs();
+
+    	if (numMonedas <= 0 && course){
+    		course = false;
+    		jugador.vidas++;
+    		HUD.actualizaVida(jugador);
+    		endCourse = false;
+    	}
+
+      if (time <= 0 && course){
+        course = false;
+        endCourse = false;
+      }
+
+      if (endCourse)
+    		course = false;
+
+    	if (!course)
+    	{
+    		fondocourse.animations.stop(null,true);
+    		fondocourse.visible = false;
+    		for (var i = 0 ; i < monedas.children.length; i++){
+  				monedas.children[i].kill();}
+    	}
 
   },
 
   render: function(){
-    //juego.debug.body(jugador);
+    juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
-  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
+  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
-  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
+  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
+  	/*if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);*/
+      //juego.debug.text('agarro: ' + agarro, 500, 30);
   }
 };
 
+function vuelvePausa(event){
+
+  if(game.paused)
+   game.paused = false;
+}
+
 function nuevoNivel(){
 
-	nivel++;
+  nivel++;
 
   HUD.nivel(nivel);
 
@@ -1559,7 +1909,7 @@ function nuevoNivel(){
 	
 	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
 	//tendremos varios tipos de plataformas y hay que cambiarlas	
-	if(nivel != 1){
+	if(nivel != 7){
  			 for (var i = 0 ; i < platforms.children.length; i++){
   				platforms.children[i].kill();}
 
@@ -1575,7 +1925,9 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 2)
+  if(nivel > 10)
+    enemigosPorNivel = 3
+	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else
 		enemigosPorNivel = 1;
@@ -1585,8 +1937,35 @@ function nuevoNivel(){
 	jugador.reset(640,0);
 	jugador.revive = true;
 	platformsIni.visible = true;
-  setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+    setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
+
+if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
+  {
+    /*for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }*/
+               
+
+  	fondocourse.animations.play('runcourse');
+  	fondocourse.visible = true;
+  	time = 15;
+  	/*var timer = juego.time.create(true);
+  	myloop = juego.time.events.loop(time, endedCourse, this);
+  	timer.start();*/
+    HUD.muestraTempLevel();
+    actualizaCont(time);
+  	course = true;
+  	endCourse = false;
+  	numeroEnemigos = 0;
+  	enemigosEnPantalla = 0;
+  	numMonedas = 10;
+  	monedas = coins.devuelveGrupo(juego, numMonedas);
+  }
+
+  else 
+    HUD.ocultaTempLevel();
 
 	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
@@ -1599,10 +1978,16 @@ agarrador.devuelve= function (){
   return agarro;
 }
 
-agarrador.cambia = function(){
+agarrador.True = function(){
 
-  agarro = !agarro;
+  agarro = true;
 }
+
+agarrador.False = function(){
+
+agarro = false;
+}
+
 module.exports.agarrador = agarrador;
 
 
@@ -1628,6 +2013,16 @@ perd.Perder = function(){
       powerUps.children[i].kill();
               }
     setTimeout(function(){juego.state.start('menu');}, 3000);
+}
+
+function actualizaCont(tiempo){
+
+    time = tiempo;
+     HUD.tempLevel(tiempo); 
+     tiempo--;
+     if(time >= 0 && !endCourse) {
+      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+    }
 }
 
 module.exports.perd = perd;
@@ -1671,7 +2066,7 @@ var estadosJugador = {};
 
         jugador.kill();
         jugador.vidas--;
-        HUD.restaVida(jugador);
+        HUD.actualizaVida(jugador);
         jugador.vel = jugador.origVel;
         jugador.borracho = false;
         jugador.invencible = false;
@@ -1730,27 +2125,36 @@ var estadosJugador = {};
 
   function creaDeadZone(){
       //Para los enemigos
-  deadZone1 = new env(juego, -50, 640, 'fond');
+  deadZone1 = new env(juego, -50, 640, 'fondo');
   deadZone1.reescala_imagen(0.05,0.08);
   deadZone1.visible = false;
 
-  deadZone2 = new env(juego, 1260, 640, 'fond');
+  deadZone2 = new env(juego, 1260, 640, 'fondo');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
 
   //Para las fireballs
-  var deadZone3 = new env(juego, -40, 0, 'fond');
+  var deadZone3 = new env(juego, -40, 0, 'fondo');
   deadZone3.reescala_imagen(0.03,1);
   deadZone3.visible = false;
   deadZones.add(deadZone3);
 
-  var deadZone4 = new env(juego, 1260, 0, 'fond');
+  var deadZone4 = new env(juego, 1260, 0, 'fondo');
   deadZone4.reescala_imagen(0.03,1);
   deadZone4.visible = false;
   deadZones.add(deadZone4);
   }
 
+  var stateMoneda = {};
+  stateMoneda.reduceMoneda = function(){
+  	numMonedas--;
+  }
+  module.exports.stateMoneda = stateMoneda;
+
+  function endedCourse(){
+  	endCourse=true;
+  }
 
 module.exports = PlayScene;
 
-},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Plataformas":20,"./handleCollisions":21}]},{},[22]);
+},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22}]},{},[23]);

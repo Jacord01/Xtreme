@@ -25,23 +25,23 @@ var PreloaderScene = {
 
 	//Carga de imagenes para el juego
 
+  //Fondo
+    this.game.stage.backgroundColor = '#220A29'; 
+    this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
+    this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
+
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
-    this.game.stage.backgroundColor = '#220A29';
-    this.game.load.spritesheet('player', 'images/alientotal.png', 60, 57, 15);
     this.game.load.image('escudo', 'images/Escudo.png');
-	this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
-
-
-
+    this.game.load.spritesheet('play', 'images/alientotal.png', 60, 57, 15);
+    this.game.load.spritesheet('player', 'images/alientotal3.png', 64, 57, 26);
+	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
-
-    //Fondo
-    this.game.load.image('fond', 'images/space.png');
+    this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
     this.game.load.image('perder', 'images/lose.png');
@@ -50,15 +50,13 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
-    
-    
-    
+    this.game.load.image('Pausa', 'images/Menus/Pausa.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
-    this.game.load.image('enemigo', 'images/juen.png');
+    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
     this.game.load.image('crabby', 'images/crab.png');
-    this.game.load.image('fly', 'images/fly.png');
+    this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.image('fireball', 'images/fireball.png');
     this.game.load.image('greenfireball', 'images/greenfireball.png');
 
@@ -68,6 +66,8 @@ var PreloaderScene = {
     this.game.load.image('alcohol', 'images/alcohol.png');
     this.game.load.image('proteinas', 'images/proteinas.png');
 
+    //Monedas
+    this.game.load.image('coin', 'images/coin.png');
 
     //Imagenes de fondo  de menu
     this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');

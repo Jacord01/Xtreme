@@ -13,10 +13,12 @@ var fireball = require('./class_fireball');
 var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
 var HUD = require('./HUD');
+var coins = require('./crea_Monedas');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
+var monedas;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
@@ -25,19 +27,32 @@ var powerUps;
 var auxRn;
 var agarrador = {};
 var agarro;
+var course = false; var endCourse = false; var numMonedas = 0; 
+var time = 0;
+var pausa; var menu; var fullS;
+var fondo; var fondocourse;
+
 var PlayScene = {
 
   create: function () {
 
   juego = this.game;
-
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
 
   //Imagen de fondo
-  var fondo = juego.add.sprite(0,0,'fond');
+  fondo = juego.add.sprite(0,0,'fondo');
   fondo.width = 1280;
   fondo.height = 720;
+  fondo.animations.add('run', [0,1,2,3,4,5,6,7,8], 2, true);
+  fondo.animations.play('run');
+
+  fondocourse = juego.add.sprite(0,0,'fondocourse');
+  fondocourse.width = 1280;
+  fondocourse.height = 720;
+  fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
+  fondocourse.visible = false;
+  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -54,6 +69,9 @@ var PlayScene = {
   auxRn = false;
   agarro = false;
 
+  //Creamos monedas
+  var numMonedas = 0;
+  monedas = coins.creaGrupo(juego);
 
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
@@ -69,22 +87,73 @@ var PlayScene = {
 
   //Creamos el hud
   HUD.create(juego);
+  cols.create(juego);
 
   //Finalmente, creamos el nivel
-  nivel = 0; //Para el nivel 1
+  nivel = 6; //Para el nivel 1
   nuevoNivel();
+
+  pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
+
+  pausa.onDown.add(function () {
+    if(juego.paused){juego.paused = false
+      HUD.quitaPausa();
+      
+    };
+  },this);
+
+  menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
+
+  menu.onDown.add(function () {
+
+    if(juego.paused){
+      juego.paused = false;
+      HUD.Pausa();
+                for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }
+               
+      juego.state.start('menu');
+    }
+  },this);
+
+  juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+
+  fullS = juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  fullS.onDown.add(function () {
+
+    if(juego.paused){
+
+        HUD.fullscreen()}
+      
+  },this);
   	
  },
 
   update: function (){
+
+    //Para el menú de pausa
+    if(pausa.isDown && !juego.paused){
+      juego.paused = true;
+      HUD.Pausa();
+    }
+
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
+
+    if(jugador.orinando){
+      juego.physics.arcade.collide(jugador.pis, platforms, cols.collisionHandlerPis);
+      juego.physics.arcade.collide(enem.devuelveGrupo(), jugador.pis, cols.collisionHandlerEnemPis);
+    }
+
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado || !jugador.orinando){
+    if(!jugador.agarrado){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -94,42 +163,75 @@ var PlayScene = {
     juego.physics.arcade.overlap(enem.devuelveGrupo(), deadZone2, cols.DeadZone2);
     juego.physics.arcade.overlap(fireballs, deadZones, cols.DeadZoneF);
     juego.physics.arcade.collide(powerUps, platforms);
-    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower);    
+    juego.physics.arcade.overlap(powerUps, jugador, cols.collisionHandlerPower); 
+    juego.physics.arcade.overlap(monedas, jugador, cols.collisionHandlerMonedas);   
 
     	if(enemigosEnPantalla < enemigosPorNivel && numeroEnemigos > 0 && enemigosEnPantalla != numeroEnemigos){
-    		enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador.devuelve(), jugador);
+    		enem.creaEnemigoRandom(juego, nivel, auxRn, jugador);
     		auxRn = !auxRn;
     		enemigosEnPantalla++;
     	}
 
-    	if(numeroEnemigos <= 0){
+    	if(numeroEnemigos <= 0 && !course){
     		jugador.kill();
     		nuevoNivel();
     	}
 
-    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada)
+    	if (nivel >= 7 && numeroEnemigos === 2 && !bolaCreada && !course)
     		creaFireballs();
       
-    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4)
+    	if (nivel >= 7 && !bolaGreenCreada && numeroEnemigos === 4 && !course)
     		creaGreenFireballs();
+
+    	if (numMonedas <= 0 && course){
+    		course = false;
+    		jugador.vidas++;
+    		HUD.actualizaVida(jugador);
+    		endCourse = false;
+    	}
+
+      if (time <= 0 && course){
+        course = false;
+        endCourse = false;
+      }
+
+      if (endCourse)
+    		course = false;
+
+    	if (!course)
+    	{
+    		fondocourse.animations.stop(null,true);
+    		fondocourse.visible = false;
+    		for (var i = 0 ; i < monedas.children.length; i++){
+  				monedas.children[i].kill();}
+    	}
 
   },
 
   render: function(){
-    //juego.debug.body(jugador);
+    juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
-  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 90);
+  	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
-  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 90);
+  	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
   	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
+  	/*if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);*/
+      //juego.debug.text('agarro: ' + agarro, 500, 30);
   }
 };
 
+function vuelvePausa(event){
+
+  if(game.paused)
+   game.paused = false;
+}
+
 function nuevoNivel(){
 
-	nivel++;
+  nivel++;
 
   HUD.nivel(nivel);
 
@@ -152,7 +254,7 @@ function nuevoNivel(){
 	
 	//Cada vez que pasamos de nivel, tenemos que eliminar las plataformas y después volver a crearlas, ya que a partir de x nivel
 	//tendremos varios tipos de plataformas y hay que cambiarlas	
-	if(nivel != 1){
+	if(nivel != 7){
  			 for (var i = 0 ; i < platforms.children.length; i++){
   				platforms.children[i].kill();}
 
@@ -168,7 +270,9 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-	if(nivel > 2)
+  if(nivel > 10)
+    enemigosPorNivel = 3
+	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else
 		enemigosPorNivel = 1;
@@ -178,8 +282,35 @@ function nuevoNivel(){
 	jugador.reset(640,0);
 	jugador.revive = true;
 	platformsIni.visible = true;
-  setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
+    setTimeout(function(){ platformsIni.visible = false; jugador.revive = false;}, 3000);
 }
+
+if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
+  {
+    /*for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+              }*/
+               
+
+  	fondocourse.animations.play('runcourse');
+  	fondocourse.visible = true;
+  	time = 15;
+  	/*var timer = juego.time.create(true);
+  	myloop = juego.time.events.loop(time, endedCourse, this);
+  	timer.start();*/
+    HUD.muestraTempLevel();
+    actualizaCont(time);
+  	course = true;
+  	endCourse = false;
+  	numeroEnemigos = 0;
+  	enemigosEnPantalla = 0;
+  	numMonedas = 10;
+  	monedas = coins.devuelveGrupo(juego, numMonedas);
+  }
+
+  else 
+    HUD.ocultaTempLevel();
 
 	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
 	agarrador = enem.devuelveAgarre();
@@ -192,10 +323,16 @@ agarrador.devuelve= function (){
   return agarro;
 }
 
-agarrador.cambia = function(){
+agarrador.True = function(){
 
-  agarro = !agarro;
+  agarro = true;
 }
+
+agarrador.False = function(){
+
+agarro = false;
+}
+
 module.exports.agarrador = agarrador;
 
 
@@ -221,6 +358,16 @@ perd.Perder = function(){
       powerUps.children[i].kill();
               }
     setTimeout(function(){juego.state.start('menu');}, 3000);
+}
+
+function actualizaCont(tiempo){
+
+    time = tiempo;
+     HUD.tempLevel(tiempo); 
+     tiempo--;
+     if(time >= 0 && !endCourse) {
+      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+    }
 }
 
 module.exports.perd = perd;
@@ -264,7 +411,7 @@ var estadosJugador = {};
 
         jugador.kill();
         jugador.vidas--;
-        HUD.restaVida(jugador);
+        HUD.actualizaVida(jugador);
         jugador.vel = jugador.origVel;
         jugador.borracho = false;
         jugador.invencible = false;
@@ -323,25 +470,34 @@ var estadosJugador = {};
 
   function creaDeadZone(){
       //Para los enemigos
-  deadZone1 = new env(juego, -50, 640, 'fond');
+  deadZone1 = new env(juego, -50, 640, 'fondo');
   deadZone1.reescala_imagen(0.05,0.08);
   deadZone1.visible = false;
 
-  deadZone2 = new env(juego, 1260, 640, 'fond');
+  deadZone2 = new env(juego, 1260, 640, 'fondo');
   deadZone2.reescala_imagen(0.05,0.08);
   deadZone2.visible = false;
 
   //Para las fireballs
-  var deadZone3 = new env(juego, -40, 0, 'fond');
+  var deadZone3 = new env(juego, -40, 0, 'fondo');
   deadZone3.reescala_imagen(0.03,1);
   deadZone3.visible = false;
   deadZones.add(deadZone3);
 
-  var deadZone4 = new env(juego, 1260, 0, 'fond');
+  var deadZone4 = new env(juego, 1260, 0, 'fondo');
   deadZone4.reescala_imagen(0.03,1);
   deadZone4.visible = false;
   deadZones.add(deadZone4);
   }
 
+  var stateMoneda = {};
+  stateMoneda.reduceMoneda = function(){
+  	numMonedas--;
+  }
+  module.exports.stateMoneda = stateMoneda;
+
+  function endedCourse(){
+  	endCourse=true;
+  }
 
 module.exports = PlayScene;

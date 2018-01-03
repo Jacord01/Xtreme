@@ -15,7 +15,7 @@ enemigoRandom.creaGrupo = function(juego){
   enemies = juego.add.physicsGroup();
 }
 
-enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugador) {
+enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
 
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
     setTimeout(function(){
@@ -53,12 +53,12 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
     }
     else if( ctrl === 1){
       yFly = 300;
-      yAG = 300;
+      yAG = 350;
       
     }
     else{
-      yFly = 500;
-      yAG = 473;
+      yFly = 450;
+      yAG = 350;
     
     }
 
@@ -72,25 +72,24 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, agarrador, jugad
       auxRn = false;
       x = juego.rnd.integerInRange(950,1100);
       xFly = 1100;
-      xAG = 1000;
+      xAG = 1150;
     }
 
     if (aleatorioEnem === 0){
-      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150);
+      var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150, false);
     }
 
     else if (aleatorioEnem === 1){
-      var enemigo = new fly(juego, xFly, yFly, 'fly', 1, 100);
+      var enemigo = new fly(juego, xFly, yFly, 'fly', 1, 100, false);
       
     }
     else if (aleatorioEnem === 2){
-      var enemigo = new crab(juego, x, 0, 'crabby', 1, 150);
+      var enemigo = new crab(juego, x, 0, 'crabby', 1, 150, false);
     }
 
-    else if(aleatorioEnem === 3 && !agarrador){
-      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador);
-      escena.agarrador.cambia();
-      console.log('creado');
+    else if(aleatorioEnem === 3 && escena.agarrador.devuelve() === false){
+      var enemigo = new agarra(juego, xAG, yAG, 'enemigo', jugador, true);
+      escena.agarrador.True();
     }
 
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
