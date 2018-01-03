@@ -5,6 +5,13 @@ var plat = require('./crea_Plataformas');
 var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
+var juego ;
+
+colisiones.create = function(game){
+
+  juego = game;
+
+}
 
 colisiones.collisionHandlerPower = function(jug, pw){
 
@@ -34,6 +41,18 @@ colisiones.collisionHandlerMonedas = function(jug, mon){
 
 }
 
+colisiones.collisionHandlerEnemPis = function(jug, enem){
+
+    if(enem.grabber){
+      //Aqui es donde peta el agarrador
+      escena.agarrador.False();      
+    }
+
+    enem.kill();
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
+}
+
 colisiones.collisionHandlerEnem = function(jug, enem){
 	if(!enem.stunt){
 		if(!jug.invencible){
@@ -47,8 +66,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   			else if (jug.invencible) {
 
           if(enem.grabber){
-            //Aqui es donde peta el agarrador
-          escena.agarrador.False();      
+            escena.agarrador.False();      
         }
   				enem.kill();
   				escena.enemigos.reducePantalla();
@@ -86,10 +104,9 @@ colisiones.collisionHandlerEnem = function(jug, enem){
       setTimeout(function(){jug.corriendo = false;}, 300);
     }
 
-    if(plat.fuego && jug.orinando){
-      console.log('llega');
-      plat.fuego = false;
-      plat.cambiaSprite();
+    if(jug.orinando && plat.fuego){
+       plat.fuego = false;
+           plat.cambiaSprite();
     }
 
   }
@@ -130,6 +147,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   colisiones.DeadZoneF = function(dead, fb){
   	fb.kill();
+  }
+
+  colisiones.collisionHandlerPis = function(jug, plat){
+
+       if(plat.fuego){
+           plat.fuego = false;
+           plat.cambiaSprite();
+       }
   }
 
   module.exports = colisiones;

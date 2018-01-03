@@ -87,6 +87,7 @@ var PlayScene = {
 
   //Creamos el hud
   HUD.create(juego);
+  cols.create(juego);
 
   //Finalmente, creamos el nivel
   nivel = 6; //Para el nivel 1
@@ -141,12 +142,18 @@ var PlayScene = {
 
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
+
+    if(jugador.orinando){
+      juego.physics.arcade.collide(jugador.pis, platforms, cols.collisionHandlerPis);
+      juego.physics.arcade.collide(enem.devuelveGrupo(), jugador.pis, cols.collisionHandlerEnemPis);
+    }
+
     if(jugador.revive)
     	juego.physics.arcade.collide(jugador, platformsIni);
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado || !jugador.orinando){
+    if(!jugador.agarrado){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 

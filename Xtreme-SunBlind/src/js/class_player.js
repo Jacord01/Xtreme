@@ -6,7 +6,7 @@ var cursors;
 var jumpButton;
 var escudo;
 var daVida;
-var auxPosY;
+var facingRight;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -24,6 +24,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.invencible = false;
   this.saltando = false;
   this.agarrado = false;
+  this.pis;
   this.create();
 }
 
@@ -46,14 +47,17 @@ Protagonista.prototype.create = function (){
   escudo.visible = false;
   escudo.width = 250;
   escudo.height = 250;
-
+  this.body.setSize(20,60, 20, 0);
+  this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
+  this.juego.physics.arcade.enable(this.pis);
+  this.pis.visible = false;
 }
 
 Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
-   auxPosY = this.y;
+   
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
 
@@ -62,8 +66,7 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
-    if(!this.orinando) 
-      escudo.visible = true;
+    escudo.visible = true;
     escudo.x = this.x - 125;
     escudo.y = this.y - 120;
   }
@@ -71,57 +74,50 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
-    this.y = auxPosY;
-    this.animations.play('peeing', 6, false);
     this.vel = 0;
-    //this.body.gravity.y = 0;
-    //this.body.touching.down = true;
-    //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
-    //Esto se puede dar si el jugador está en invencible encima de una plataforma
-    this.body.setSize(35,60, 0, 0);
-    //Después ya depende del movimiento del jugador apagar la de dercha o izda
-    this.body.setSize(10,60, 70, 0);
-
+    this.body.touching.down = true;
   } 
-  
 
-  else{
-   this.body.setSize(20,60, 15, 0);
-   this.body.gravity.y = 2000;
- }
 
   if(this.agarrado)
     this.vel = 0;
 
   //this.orina = 10;
+  this.juego.debug.body(this.pis);
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
-   this.invencible = true;
+   //this.invencible = true;
    this.orina = 10;
     if (cursors.left.isDown)
     {
+        facingRight = false;
         this.body.velocity.x = -this.vel;
         if(!this.borracho)
           this.scale.x = -this.escala;
         else this.scale.x = this.escala;
         if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
+         if(this.orinando)
+           this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
     else if (cursors.right.isDown)
     {
+        facingRight = true;
         this.body.velocity.x = this.vel;
         if(!this.borracho)
         this.scale.x = this.escala;
         else this.scale.x = -this.escala;
         if (this.body.touching.down && !this.orinando)
            this.animations.play('walk', 6, true);
+         if(this.orinando)
+           this.pis.body.setSize(10,60, this.x - 150, this. y -620);
 
     }
 
     this.vel = this.origVel - (this.orina * 10);
-    if (jumpButton.isDown && !this.agarrado && (this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando && (this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -135,13 +131,23 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
+          this.animations.play('peeing', 6, false);
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
-          this.invencible = true;
+
+          //Primero apagamos la plataforma en la que estamos por si acaso estuviesemos en una
+          //Esto se puede dar si el jugador está en invencible encima de una plataforma
+          this.pis.body.setSize(10,60, this.x - 200, this.y - 620);
+          //Después ya depende del movimiento del jugador apagar la de dercha o izda
+          if(facingRight)
+           this.pis.body.setSize(10,60, this.x - 150, this. y -620);
+         else 
+           this.pis.body.setSize(10,60, this.x - 270, this. y -620);
           var prota = this;
           
-          setTimeout(function(){prota.orinando = false; prota.invencible = false;}, 2000);
+          setTimeout(function(){prota.orinando = false; prota.invencible = false;}, 
+              2000);
         }
         
      //Aquí actualizamos la posición del objeto jugador en su clase si es que se ha movido
