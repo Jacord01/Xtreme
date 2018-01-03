@@ -21,12 +21,12 @@
     <iframe id="game" src="raw.html"></iframe>
   </main>
 
-  <button id="ajaxButton" type="button">Make a request</button>
+<button id="ajaxButton" type="button">Make a request</button>
 
 <script>
 (function() {
   var httpRequest;
-  makeRequest();
+  document.getElementById("ajaxButton").addEventListener('click', makeRequest);
 
   function makeRequest() {
     httpRequest = new XMLHttpRequest();
