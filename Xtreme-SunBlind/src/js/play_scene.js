@@ -280,10 +280,10 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-    for (var i = 0 ; i < powerUps.children.length; i++){
+    /*for (var i = 0 ; i < powerUps.children.length; i++){
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
-              }
+              }*/
                
 
   	fondocourse.animations.play('runcourse');
