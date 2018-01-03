@@ -47,7 +47,7 @@
       if (httpRequest.status === 200) {
         //alert(httpRequest.responseText);
         console.log('Ha llegado la respuesta');
-        var response = JSON.parse(httpRequest.responseText);
+        var response = JSON.parse(httpRequest);
         console.log(response);
        
       } else {
