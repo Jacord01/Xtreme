@@ -1360,13 +1360,13 @@ var handleRequest = {};
 handleRequest.Peticion = function(juego, pinta, mandaDatos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
-  var httpRequest2;
-  if(!mandaDatos)
-  makeRequest1();
-  else if(mandaDatos)
-    makeRequest2();
+  //var httpRequest2;
+ // if(!mandaDatos)
+  makeRequest();
+ // else if(mandaDatos)
+   // makeRequest2();
 
-  function makeRequest1() {
+  function makeRequest() {
   	//console.log('Mensaje Enviado');
     httpRequest = new XMLHttpRequest();
 
@@ -1382,7 +1382,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
 
   }
 
-   function makeRequest2() {
+  /* function makeRequest2() {
     //console.log('Mensaje Enviado');
     httpRequest2 = new XMLHttpRequest();
 
@@ -1395,9 +1395,9 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     httpRequest2.setRequestHeader("Content-type", "application/json");
     httpRequest2.onreadystatechange = alertContents2;
     httpRequest2.send();
-  }
+  }*/
 
-  function alertContents1() {
+  function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
 
@@ -1423,7 +1423,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     }
   }
 
-    function alertContents2() {
+   /* function alertContents2() {
       console.log('Aqui llegamos');
     if (httpRequest2.readyState === XMLHttpRequest.DONE) {
       if (httpRequest2.status === 200) {
@@ -1440,7 +1440,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
         alert('Problema con la petición.');
       }
     }
-  }
+  }*/
 }
 
 
