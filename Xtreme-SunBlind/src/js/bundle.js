@@ -1383,8 +1383,7 @@ handleRequest.Peticion = function(juego){
         //console.log('Ha llegado la respuesta.');
         var respuesta = JSON.parse(httpRequest.response);
         puntuaciones.recibeDatos(respuesta);
-  	
-}
+		}
 
   		/*console.log("Visitas a la pagina: " + respuesta.Visitas)*/
 
