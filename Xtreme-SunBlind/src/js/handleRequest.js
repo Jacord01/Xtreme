@@ -37,27 +37,10 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest2.open('GET', url);
+    httpRequest2.open('POST', url);
     httpRequest2.setRequestHeader("Content-type", "application/json");
-    httpRequest2.onreadystatechange = 
-    function () {
-    if (httpRequest2.readyState === XMLHttpRequest.DONE) {
-      if (httpRequest2.status === 200) {
-
-        //console.log('Ha llegado la respuesta.');
-      var respuesta = JSON.parse(httpRequest2.response);
-      respuesta.score[2].nombre = "PEPITO";
-
-      console.log("llega2");
-      httpRequest2.send( JSON.stringify(respuesta));
-    
-
-      } else {
-        alert('Problema con la petición.');
-      }
-    }
-  }
-    //httpRequest.send();
+    httpRequest2.onreadystatechange = alertContents2;
+    httpRequest.send();
   }
 
   function alertContents1() {
@@ -86,6 +69,24 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     }
   }
 
+    function alertContents2() {
+      console.log('Aqui llegamos');
+    if (httpRequest2.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest2.status === 200) {
+
+        //console.log('Ha llegado la respuesta.');
+      var respuesta = JSON.parse(httpRequest2.response);
+      respuesta.score[2].nombre = "PEPITO";
+
+      console.log("llega2");
+      httpRequest2.send( JSON.stringify(respuesta));
+    
+
+      } else {
+        alert('Problema con la petición.');
+      }
+    }
+  }
 }
 
 
