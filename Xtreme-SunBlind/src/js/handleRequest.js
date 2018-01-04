@@ -6,6 +6,7 @@ var handleRequest = {};
 handleRequest.Peticion = function(juego, pinta, mandaDatos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
+  var httpRequest2;
   if(!mandaDatos)
   makeRequest1();
   else if(mandaDatos)
@@ -29,16 +30,16 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
 
    function makeRequest2() {
     //console.log('Mensaje Enviado');
-    httpRequest = new XMLHttpRequest();
+    httpRequest2 = new XMLHttpRequest();
 
-    if (!httpRequest) {
+    if (!httpRequest2) {
       alert('No se puede crear la instancia.');
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest.open('POST', url);
-    httpRequest.setRequestHeader("Content-type", "application/json");
-    httpRequest.onreadystatechange = alertContents2;
+    httpRequest2.open('POST', url);
+    httpRequest2.setRequestHeader("Content-type", "application/json");
+    httpRequest2.onreadystatechange = alertContents2;
     //httpRequest.send();
   }
 
@@ -69,15 +70,15 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
   }
 
     function alertContents2() {
-    if (httpRequest.readyState === 4) {
-      if (httpRequest.status === 200) {
+    if (httpRequest2.readyState === 4) {
+      if (httpRequest2.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
-      var respuesta = JSON.parse(httpRequest.response);
+      var respuesta = JSON.parse(httpRequest2.response);
       respuesta.score[2].nombre = "PEPITO";
 
       console.log("llega2");
-      httpRequest.send( JSON.stringify(respuesta));
+      httpRequest2.send( JSON.stringify(respuesta));
     
 
       } else {
