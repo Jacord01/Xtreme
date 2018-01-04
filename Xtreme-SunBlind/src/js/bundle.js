@@ -1357,12 +1357,15 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
 var handleRequest = {};
 	
-handleRequest.Peticion = function(juego, pinta){
+handleRequest.Peticion = function(juego, pinta, mandaDatos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
-  makeRequest();
+  if(!mandaDatos)
+  makeRequest1();
+  else if(mandaDatos)
+    makeRequest2();
 
-  function makeRequest() {
+  function makeRequest1() {
   	//console.log('Mensaje Enviado');
     httpRequest = new XMLHttpRequest();
 
@@ -1375,6 +1378,28 @@ handleRequest.Peticion = function(juego, pinta){
     httpRequest.open('GET', url);
 
     httpRequest.send();
+
+  }
+
+   function makeRequest2() {
+    //console.log('Mensaje Enviado');
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      alert('No se puede crear la instancia.');
+      return false;
+    }
+    var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open('POST', url);
+
+    cambiaJSON();
+    httpRequest.send(respuesta);
+
+  }
+
+  function cambiaJSON(){
+    respuesta.score[2].nombre = "PEPITO";
   }
 
   function alertContents() {
