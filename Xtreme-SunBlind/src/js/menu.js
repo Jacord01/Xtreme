@@ -4,7 +4,7 @@ var PlayScene = require('./play_scene.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla;
+var buttonJuego; var buttonInfo; var pantalla; var punt;
 var juego;
 
 var menu = {
