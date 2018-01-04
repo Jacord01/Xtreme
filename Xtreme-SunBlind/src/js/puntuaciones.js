@@ -21,33 +21,16 @@ var puntuaciones = {
     buttonInfoM.height = 50;
 
     puntuaciones.ActualizaTabla();
-
-    puntuaciones.creaTabla();
 	}
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion(juego);
+	handle.Peticion(juego, true);
 }
 
 puntuaciones.vuelveAMenu = function(){
 
 	juego.state.start('menu');
-}
-
-puntuaciones.creaTabla = function(){
-
-var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-    for(var i = 0; i < 10; i++){
-    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
-    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
-
-		}
-}
-
-puntuaciones.prototype.recibeDatos = function(answer){
-	respuesta = answer;
 }
 
 module.exports = puntuaciones;

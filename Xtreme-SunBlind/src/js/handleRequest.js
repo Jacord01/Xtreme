@@ -1,10 +1,9 @@
 'use strict';
 
-var puntuaciones = require('./puntuaciones.js');
 
 var handleRequest = {};
 	
-handleRequest.Peticion = function(juego){
+handleRequest.Peticion = function(juego, pinta){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
   makeRequest();
@@ -29,10 +28,18 @@ handleRequest.Peticion = function(juego){
       if (httpRequest.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
-        var respuesta = JSON.parse(httpRequest.response);
+    var respuesta = JSON.parse(httpRequest.response);
 
-        puntuaciones.recibeDatos(respuesta);
+    if(pinta){
+  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
+    //  The Text is positioned at 0, 100
+
+    for(var i = 0; i < 10; i++){
+    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
+    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
+			}
+		}
   		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
         console.log(respuesta.score[1].nombre);
         console.log(respuesta.score[1].punct);*/

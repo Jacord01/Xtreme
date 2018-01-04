@@ -1354,11 +1354,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 },{"./HUD":1,"./crea_Plataformas":21,"./play_scene":27}],23:[function(require,module,exports){
 'use strict';
 
-var puntuaciones = require('./puntuaciones.js');
 
 var handleRequest = {};
 	
-handleRequest.Peticion = function(juego){
+handleRequest.Peticion = function(juego, pinta){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
   makeRequest();
@@ -1383,10 +1382,18 @@ handleRequest.Peticion = function(juego){
       if (httpRequest.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
-        var respuesta = JSON.parse(httpRequest.response);
+    var respuesta = JSON.parse(httpRequest.response);
 
-        puntuaciones.recibeDatos(respuesta);
+    if(pinta){
+  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
+    //  The Text is positioned at 0, 100
+
+    for(var i = 0; i < 10; i++){
+    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
+    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
+			}
+		}
   		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
         console.log(respuesta.score[1].nombre);
         console.log(respuesta.score[1].punct);*/
@@ -1400,7 +1407,7 @@ handleRequest.Peticion = function(juego){
 
 
 module.exports = handleRequest;
-},{"./puntuaciones.js":28}],24:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -2243,33 +2250,16 @@ var puntuaciones = {
     buttonInfoM.height = 50;
 
     puntuaciones.ActualizaTabla();
-
-    puntuaciones.creaTabla();
 	}
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion(juego);
+	handle.Peticion(juego, true);
 }
 
 puntuaciones.vuelveAMenu = function(){
 
 	juego.state.start('menu');
-}
-
-puntuaciones.creaTabla = function(){
-
-var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-    for(var i = 0; i < 10; i++){
-    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
-    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
-
-		}
-}
-
-puntuaciones.prototype.recibeDatos = function(answer){
-	respuesta = answer;
 }
 
 module.exports = puntuaciones;
