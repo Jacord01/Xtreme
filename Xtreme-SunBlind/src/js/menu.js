@@ -2,6 +2,7 @@
 
 var PlayScene = require('./play_scene.js');
 var menuInformacion = require('./menuInformacion');
+var Puntuation = require('./puntuaciones');
 
 var buttonJuego; var buttonInfo; var pantalla;
 var juego;
@@ -16,6 +17,8 @@ var menu = {
     juego.state.add('info', menuInformacion);
 
     juego.state.add('play', PlayScene); 
+    
+    juego.state.add('puntuacion', Puntuacion);
 
    juego.add.sprite(0,0,'Menu');
 
@@ -39,10 +42,19 @@ var menu = {
     pantalla.animations.play('PCompleta', 4, true );
     pantalla.width = 150;
     pantalla.height = 80;
+
+    //Boton para puntuaciones
+    punt = juego.add.button(juego.world.centerX - 600, 300, 'plat0', puntuaciones, this, 2,1,0);
+    punt.animations.add('plat0');
+    punt.animations.play('plat0', 4, true );
+    punt.width = 150;
+    punt.height = 60;
  },
 };
 
-
+function actionOnClickPunt (){
+    juego.state.start('puntuation');
+}
 
 function actionOnClickJuego () {
 
