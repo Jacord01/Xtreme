@@ -39,13 +39,14 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('POST', url);
 
-    cambiaJSON(httpRequest.response);
+    var cambio = JSON.parse(httpRequest.response);
+    cambio = cambiaJSON(cambio);
 
-    httpRequest.send(httpRequest.response);
+    httpRequest.send(cambio);
   }
 
   function cambiaJSON(){
-    return httpRequest.response.score[2].nombre = "PEPITO";
+    return cambio.score[2].nombre = "PEPITO";
   }
 
   function alertContents() {
