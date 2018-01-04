@@ -2246,21 +2246,20 @@ var puntuaciones = {
 
     puntuaciones.creaTabla();
 	}
-
 }
 
-puntuaciones.prototype.ActualizaTabla = function () {
+puntuaciones.ActualizaTabla = function () {
 	handle.Peticion(juego);
 }
 
-puntuaciones.prototype.vuelveAMenu = function(){
+puntuaciones.vuelveAMenu = function(){
 
 	juego.state.start('menu');
 }
 
-puntuaciones.prototype.creaTabla = function(){
+puntuaciones.creaTabla = function(){
 
-	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
     for(var i = 0; i < 10; i++){
     	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
