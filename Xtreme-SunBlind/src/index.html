@@ -40,8 +40,8 @@ xhr.onreadystatechange = function () {
 };
 console.log('llega3');
 console.log(json);
-//var data = JSON.stringify(json);
-xhr.send(json);
+var data = JSON.stringify(json);
+xhr.send(xhr.response);
 
 </script>
   
