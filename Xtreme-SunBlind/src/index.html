@@ -32,15 +32,13 @@ xhr.setRequestHeader("Content-type", "application/json");
 xhr.onreadystatechange = 
 
   console.log('llega2');
-    if (xhr.readyState === 4 && xhr.status === 200) {
+
         json = JSON.parse(xhr.response);
         console.log(json.score[0].nombre);
         json.score[0].nombre = "PEDRO";
         console.log(json.score[0].nombre);
         send_server(json);
-    }
-
-    else console.log('nada');
+    
 
 console.log('llega3');
 
