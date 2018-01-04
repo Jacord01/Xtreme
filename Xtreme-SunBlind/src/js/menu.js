@@ -53,6 +53,7 @@ var menu = {
 };
 
 function actionOnClickPunt (){
+
     juego.state.start('puntuation');
 }
 

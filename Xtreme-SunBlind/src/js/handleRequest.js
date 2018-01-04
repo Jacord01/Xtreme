@@ -1,6 +1,6 @@
 'use strict';
 
-
+var puntuaciones = require('./puntuaciones.js');
 var handleRequest = {};
 	
 handleRequest.Peticion = function(juego){
@@ -9,7 +9,7 @@ handleRequest.Peticion = function(juego){
   makeRequest();
 
   function makeRequest() {
-  	console.log('Mensaje Enviado');
+  	//console.log('Mensaje Enviado');
     httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
@@ -26,38 +26,19 @@ handleRequest.Peticion = function(juego){
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
-        //alert(httpRequest.responseText);
-        console.log('Ha llegado la respuesta.');
+        //console.log('Ha llegado la respuesta.');
         var respuesta = JSON.parse(httpRequest.response);
-/*
-  alert(json["name"]); 
-  alert(json.name); 
-
-  alert(json.address.streetAddress); 
-  alert(json["address"].city); 
-
-  alert(json.phoneNumber[0].number);
-  alert(json.phoneNumber[1].type); */
-
-  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-    //  The Text is positioned at 0, 100
-
-    for(var i = 0; i < 10; i++){
-    	juego.add.text(300, 100 + i * 30, "NOMBRE:  " + respuesta.score[i].nombre, style);
-    	juego.add.text(700, 100 + i * 30, "PUNTUACION:  " + respuesta.score[i].punct, style);
+        puntuaciones.recibeDatos(respuesta);
+  	
 }
 
-  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
-        console.log(respuesta.score[1].nombre);
-        console.log(respuesta.score[1].punct);*/
+  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)*/
 
       } else {
         alert('Problema con la petición.');
       }
     }
   }
-}
 
 
 module.exports = handleRequest;

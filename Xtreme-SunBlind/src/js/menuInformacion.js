@@ -2,7 +2,7 @@
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI;
+var buttonInfoD; var buttonInfoI; var bottonInfoM;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
@@ -44,11 +44,11 @@ var menuInformacion = {
     buttonInfoI.height = 50;
 
     //Boton para volver atrás desde la info
-    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
-    buttonInfoI.animations.add('plat2');
-    buttonInfoI.animations.play('plat2', 4, true );
-    buttonInfoI.width = 100;
-    buttonInfoI.height = 50;
+    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
+    buttonInfoM.animations.add('plat2');
+    buttonInfoM.animations.play('plat2', 4, true );
+    buttonInfoM.width = 100;
+    buttonInfoM.height = 50;
 
 	}
 };

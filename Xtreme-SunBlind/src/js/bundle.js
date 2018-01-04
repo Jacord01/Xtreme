@@ -1354,7 +1354,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 },{"./HUD":1,"./crea_Plataformas":21,"./play_scene":27}],23:[function(require,module,exports){
 'use strict';
 
-
+var puntuaciones = require('./puntuaciones.js');
 var handleRequest = {};
 	
 handleRequest.Peticion = function(juego){
@@ -1363,7 +1363,7 @@ handleRequest.Peticion = function(juego){
   makeRequest();
 
   function makeRequest() {
-  	console.log('Mensaje Enviado');
+  	//console.log('Mensaje Enviado');
     httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
@@ -1380,42 +1380,23 @@ handleRequest.Peticion = function(juego){
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
-        //alert(httpRequest.responseText);
-        console.log('Ha llegado la respuesta.');
+        //console.log('Ha llegado la respuesta.');
         var respuesta = JSON.parse(httpRequest.response);
-/*
-  alert(json["name"]); 
-  alert(json.name); 
-
-  alert(json.address.streetAddress); 
-  alert(json["address"].city); 
-
-  alert(json.phoneNumber[0].number);
-  alert(json.phoneNumber[1].type); */
-
-  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-    //  The Text is positioned at 0, 100
-
-    for(var i = 0; i < 10; i++){
-    	juego.add.text(300, 100 + i * 30, "NOMBRE:  " + respuesta.score[i].nombre, style);
-    	juego.add.text(700, 100 + i * 30, "PUNTUACION:  " + respuesta.score[i].punct, style);
+        puntuaciones.recibeDatos(respuesta);
+  	
 }
 
-  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
-        console.log(respuesta.score[1].nombre);
-        console.log(respuesta.score[1].punct);*/
+  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)*/
 
       } else {
         alert('Problema con la petición.');
       }
     }
   }
-}
 
 
 module.exports = handleRequest;
-},{}],24:[function(require,module,exports){
+},{"./puntuaciones.js":28}],24:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -1571,6 +1552,7 @@ var menu = {
 };
 
 function actionOnClickPunt (){
+
     juego.state.start('puntuation');
 }
 
@@ -1605,7 +1587,7 @@ module.exports = menu;
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI;
+var buttonInfoD; var buttonInfoI; var bottonInfoM;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
@@ -1647,11 +1629,11 @@ var menuInformacion = {
     buttonInfoI.height = 50;
 
     //Boton para volver atrás desde la info
-    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
-    buttonInfoI.animations.add('plat2');
-    buttonInfoI.animations.play('plat2', 4, true );
-    buttonInfoI.width = 100;
-    buttonInfoI.height = 50;
+    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
+    buttonInfoM.animations.add('plat2');
+    buttonInfoM.animations.play('plat2', 4, true );
+    buttonInfoM.width = 100;
+    buttonInfoM.height = 50;
 
 	}
 };
@@ -2240,18 +2222,52 @@ var men = require('./menu.js');
 var handle = require('./handleRequest.js');
 
 var juego;
+var respuesta;
+var buttonInfoM;
 
 var puntuaciones = {
 
 	create: function(){
 	 juego = this.game;
   	 juego.add.sprite(0,0,'Punct');
-  	 puntuaciones.ActualizaTabla();
+
+  	//Boton para volver atrás desde la puntuaciones
+    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', puntuaciones.vuelveAMenu, this, 2,1,0);
+    buttonInfoM.animations.add('plat2');
+    buttonInfoM.animations.play('plat2', 4, true );
+    buttonInfoM.width = 100;
+    buttonInfoM.height = 50;
+
+    puntuaciones.ActualizaTabla();
+
+    puntuaciones.creaTabla();
 	}
+
+
 }
 
 puntuaciones.ActualizaTabla = function () {
 	handle.Peticion(juego);
+}
+
+puntuaciones.vuelveAMenu = function(){
+
+	juego.state.start('menu');
+}
+
+puntuaciones.creaTabla = function(){
+
+	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+    for(var i = 0; i < 10; i++){
+    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
+    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
+
+		}
+}
+
+puntuaciones.recibeDatos = function(answer){
+	respuesta = answer;
 }
 
 module.exports = puntuaciones;
