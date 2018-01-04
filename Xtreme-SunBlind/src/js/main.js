@@ -50,7 +50,7 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
-    this.game.load.image('Pausa', 'images/Menus/Pausa.png');
+    this.game.load.image('Pausa', 'images/Menus/pause.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
