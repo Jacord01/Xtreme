@@ -38,9 +38,16 @@ handleRequest.Peticion = function(){
 
   alert(json.phoneNumber[0].number);
   alert(json.phoneNumber[1].type); */
+
+  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+    //  The Text is positioned at 0, 100
+
+    for(var i = 0; i < 10; i++){
+    text = game.add.text(250, 100 + i * 10, "nombre" + respuesta.score[i].nombre + "Puntuacion: " + respuesta.score[i].punct, style);
+}
+
   		console.log("Visitas a la pagina: " + respuesta.Visitas)
-        console.log(respuesta.score[0].nombre);
-        console.log(respuesta.score[0].punct);
         console.log(respuesta.score[1].nombre);
         console.log(respuesta.score[1].punct);
 

@@ -9,11 +9,48 @@
     "score": [
         {
             "nombre": "Juan",
-            "punct": "8"
+            "punct": 100,
+            "nivel": 50
         },
         {
-            "nombre": "Javi",
-            "punct": "10"
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
+        },
+        {
+            "nombre": "",
+            "punct": 0,
+            "nivel": 0
         }
     ]
 }

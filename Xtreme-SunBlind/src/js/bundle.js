@@ -1392,9 +1392,16 @@ handleRequest.Peticion = function(){
 
   alert(json.phoneNumber[0].number);
   alert(json.phoneNumber[1].type); */
+
+  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+    //  The Text is positioned at 0, 100
+
+    for(var i = 0; i < 10; i++){
+    text = game.add.text(250, 100 + i * 10, "nombre" + respuesta.score[i].nombre + "Puntuacion: " + respuesta.score[i].punct, style);
+}
+
   		console.log("Visitas a la pagina: " + respuesta.Visitas)
-        console.log(respuesta.score[0].nombre);
-        console.log(respuesta.score[0].punct);
         console.log(respuesta.score[1].nombre);
         console.log(respuesta.score[1].punct);
 
@@ -1439,6 +1446,7 @@ var PreloaderScene = {
     this.game.stage.backgroundColor = '#220A29'; 
     this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
     this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
+    this.game.load.image('Punct', 'images/Menus/fondoPuntuaciones.png');
 
 	//Logo y jugador
     this.game.load.image('logo', 'images/phaser.png');
@@ -2236,7 +2244,7 @@ var puntuaciones = {
 
 	create: function(){
 	 juego = this.game;
-  	 juego.add.sprite(0,0,'Menu');
+  	 juego.add.sprite(0,0,'Punct');
   	 puntuaciones.ActualizaTabla();
 	}
 }
