@@ -1393,14 +1393,17 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('POST', url);
 
-    var cambio = JSON.parse(httpRequest.response);
-    cambio = cambiaJSON(cambio);
+   
+    var mando = cambiaJSON(httpRequest);
 
-    httpRequest.send(cambio);
+    httpRequest.send(mando);
   }
 
   function cambiaJSON(){
-    return cambio.score[2].nombre = "PEPITO";
+    console.log("llega");
+    var cambio = JSON.parse(httpRequest.response);
+    cambio.score[2].nombre = "PEPITO";
+    return cambio;
   }
 
   function alertContents() {
