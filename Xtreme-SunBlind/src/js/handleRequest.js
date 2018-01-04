@@ -1,6 +1,7 @@
 'use strict';
 
 var puntuaciones = require('./puntuaciones.js');
+
 var handleRequest = {};
 	
 handleRequest.Peticion = function(juego){
@@ -26,18 +27,22 @@ handleRequest.Peticion = function(juego){
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
+
         //console.log('Ha llegado la respuesta.');
         var respuesta = JSON.parse(httpRequest.response);
-        puntuaciones.recibeDatos(respuesta);
-		}
 
-  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)*/
+        puntuaciones.recibeDatos(respuesta);
+
+  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
+        console.log(respuesta.score[1].nombre);
+        console.log(respuesta.score[1].punct);*/
 
       } else {
         alert('Problema con la petición.');
       }
     }
   }
+}
 
 
 module.exports = handleRequest;

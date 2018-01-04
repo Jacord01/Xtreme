@@ -2,7 +2,7 @@
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI; var bottonInfoM;
+var buttonInfoD; var buttonInfoI; var buttonInfoM;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
