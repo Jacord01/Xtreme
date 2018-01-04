@@ -15,7 +15,7 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion();
+	handle.Peticion(juego);
 }
 
 module.exports = puntuaciones;

@@ -2,9 +2,8 @@
 
 
 var handleRequest = {};
-var juego = this.game;
 	
-handleRequest.Peticion = function(){
+handleRequest.Peticion = function(juego){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
   makeRequest();
