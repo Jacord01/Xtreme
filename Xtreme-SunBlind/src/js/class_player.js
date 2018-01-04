@@ -37,7 +37,7 @@ Protagonista.prototype.create = function (){
   jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   this.anchor.x = 0.5;
   this.anchor.y = 0.5;
-  this.reescala_imagen(1.6, 1.2);
+  this.reescala_imagen(1.4, 1.2);
   this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
@@ -47,7 +47,7 @@ Protagonista.prototype.create = function (){
   escudo.visible = false;
   escudo.width = 250;
   escudo.height = 250;
-  this.body.setSize(20,60, 20, 0);
+  //this.body.setSize(20,60, 20, 0);
   this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
   this.juego.physics.arcade.enable(this.pis);
   this.pis.visible = false;

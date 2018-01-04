@@ -76,6 +76,8 @@ var PreloaderScene = {
     this.game.load.image('Menu', 'images/Menus/MenuPrincipal.png');
     this.game.load.image('Pis', 'images/Menus/Pis.png');
     this.game.load.image('Controles', 'images/Menus/Controles.png');
+    this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
+    this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
 
   },
 
