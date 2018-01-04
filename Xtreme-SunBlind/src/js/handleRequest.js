@@ -40,7 +40,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     httpRequest2.open('POST', url);
     httpRequest2.setRequestHeader("Content-type", "application/json");
     httpRequest2.onreadystatechange = alertContents2;
-    httpRequest.send();
+    httpRequest2.send();
   }
 
   function alertContents1() {
