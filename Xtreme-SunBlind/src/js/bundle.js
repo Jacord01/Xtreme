@@ -1398,12 +1398,13 @@ handleRequest.Peticion = function(juego){
     //  The Text is positioned at 0, 100
 
     for(var i = 0; i < 10; i++){
-    	juego.add.text(400, 100 + i * 10, "NOMBRE:  " + respuesta.score[i].nombre + "    PUNTUACION:  " + respuesta.score[i].punct, style);
+    	juego.add.text(300, 100 + i * 30, "NOMBRE:  " + respuesta.score[i].nombre, style);
+    	juego.add.text(700, 100 + i * 30, "PUNTUACION:  " + respuesta.score[i].punct, style);
 }
 
-  		console.log("Visitas a la pagina: " + respuesta.Visitas)
+  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
         console.log(respuesta.score[1].nombre);
-        console.log(respuesta.score[1].punct);
+        console.log(respuesta.score[1].punct);*/
 
       } else {
         alert('Problema con la petición.');
