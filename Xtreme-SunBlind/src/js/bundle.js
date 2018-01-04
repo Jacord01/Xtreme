@@ -2247,19 +2247,18 @@ var puntuaciones = {
     puntuaciones.creaTabla();
 	}
 
-
 }
 
-puntuaciones.ActualizaTabla = function () {
+puntuaciones.prototype.ActualizaTabla = function () {
 	handle.Peticion(juego);
 }
 
-puntuaciones.vuelveAMenu = function(){
+puntuaciones.prototype.vuelveAMenu = function(){
 
 	juego.state.start('menu');
 }
 
-puntuaciones.creaTabla = function(){
+puntuaciones.prototype.creaTabla = function(){
 
 	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
@@ -2270,7 +2269,7 @@ puntuaciones.creaTabla = function(){
 		}
 }
 
-puntuaciones.recibeDatos = function(answer){
+puntuaciones.prototype.recibeDatos = function(answer){
 	respuesta = answer;
 }
 
