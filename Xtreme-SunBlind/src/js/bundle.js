@@ -1356,6 +1356,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
 
 var handleRequest = {};
+var juego = this.game;
 	
 handleRequest.Peticion = function(){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
@@ -1398,7 +1399,7 @@ handleRequest.Peticion = function(){
     //  The Text is positioned at 0, 100
 
     for(var i = 0; i < 10; i++){
-    text = game.add.text(250, 100 + i * 10, "nombre" + respuesta.score[i].nombre + "Puntuacion: " + respuesta.score[i].punct, style);
+    text = juego.add.text(250, 100 + i * 10, "nombre" + respuesta.score[i].nombre + "Puntuacion: " + respuesta.score[i].punct, style);
 }
 
   		console.log("Visitas a la pagina: " + respuesta.Visitas)
