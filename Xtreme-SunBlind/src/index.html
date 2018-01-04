@@ -39,6 +39,8 @@ xhr.onreadystatechange = function () {
     }
 };
   console.log('llega3');
+  console.log( json.score[0].nombre);
+  console.log(json);
   var data = JSON.stringify(json);
   xhr.send(data);
 
