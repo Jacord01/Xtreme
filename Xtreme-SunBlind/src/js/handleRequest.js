@@ -40,16 +40,15 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     httpRequest.open('POST', url);
 
    
-    var mando = cambiaJSON(httpRequest);
+    
 
-    httpRequest.send(mando);
+    //httpRequest.send(mando);
   }
 
-  function cambiaJSON(){
+  function cambiaJSON(respuesta){
     console.log("llega");
-    var cambio = JSON.parse(httpRequest.response);
-    cambio.score[2].nombre = "PEPITO";
-    return cambio;
+    respuesta.score[2].nombre = "PEPITO";
+    return respuesta;
   }
 
   function alertContents() {
@@ -59,6 +58,12 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
         //console.log('Ha llegado la respuesta.');
     var respuesta = JSON.parse(httpRequest.response);
 
+    if(mandaDatos)
+    {
+      var mando = cambiaJSON(respuesta);
+      console.log("llega2");
+      httpRequest.send(mando);
+    }
     if(pinta){
   	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
