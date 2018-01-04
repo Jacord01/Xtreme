@@ -276,7 +276,7 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 
 
 module.exports = agarrador;
-},{"./HUD":1,"./class_enemy":7,"./play_scene":26}],3:[function(require,module,exports){
+},{"./HUD":1,"./class_enemy":7,"./play_scene":27}],3:[function(require,module,exports){
 var PU = require('./class_powerUp');
 var HUD = require('./HUD');	
 
@@ -853,7 +853,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":13,"./play_scene":26}],17:[function(require,module,exports){
+},{"./class_object":13,"./play_scene":27}],17:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -1026,7 +1026,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
 
 
 module.exports = enemigoRandom;
-},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":26}],20:[function(require,module,exports){
+},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":27}],20:[function(require,module,exports){
 'use strict'
 	
 var creaMonedas = {};
@@ -1351,7 +1351,63 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   module.exports = colisiones;
 
-},{"./HUD":1,"./crea_Plataformas":21,"./play_scene":26}],23:[function(require,module,exports){
+},{"./HUD":1,"./crea_Plataformas":21,"./play_scene":27}],23:[function(require,module,exports){
+'use strict';
+
+
+var handleRequest = {};
+	
+handleRequest.Peticion = function(){
+ //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
+  var httpRequest;
+  makeRequest();
+
+  function makeRequest() {
+  	console.log('Mensaje Enviado');
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      alert('No se puede crear la instancia.');
+      return false;
+    }
+    var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open('GET', url);
+
+    httpRequest.send();
+  }
+
+  function alertContents() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        //alert(httpRequest.responseText);
+        console.log('Ha llegado la respuesta.');
+        var respuesta = JSON.parse(httpRequest.response);
+/*
+  alert(json["name"]); 
+  alert(json.name); 
+
+  alert(json.address.streetAddress); 
+  alert(json["address"].city); 
+
+  alert(json.phoneNumber[0].number);
+  alert(json.phoneNumber[1].type); */
+  		console.log("Visitas a la pagina: " + respuesta.Visitas)
+        console.log(respuesta.score[0].nombre);
+        console.log(respuesta.score[0].punct);
+        console.log(respuesta.score[1].nombre);
+        console.log(respuesta.score[1].punct);
+
+      } else {
+        alert('Problema con la petición.');
+      }
+    }
+  }
+}
+
+
+module.exports = handleRequest;
+},{}],24:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -1450,11 +1506,12 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./menu.js":24}],24:[function(require,module,exports){
+},{"./menu.js":25}],25:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
 var menuInformacion = require('./menuInformacion');
+var Puntuation = require('./puntuaciones');
 
 var buttonJuego; var buttonInfo; var pantalla;
 var juego;
@@ -1469,6 +1526,8 @@ var menu = {
     juego.state.add('info', menuInformacion);
 
     juego.state.add('play', PlayScene); 
+    
+    juego.state.add('puntuacion', Puntuacion);
 
    juego.add.sprite(0,0,'Menu');
 
@@ -1492,10 +1551,19 @@ var menu = {
     pantalla.animations.play('PCompleta', 4, true );
     pantalla.width = 150;
     pantalla.height = 80;
+
+    //Boton para puntuaciones
+    punt = juego.add.button(juego.world.centerX - 600, 300, 'plat0', puntuaciones, this, 2,1,0);
+    punt.animations.add('plat0');
+    punt.animations.play('plat0', 4, true );
+    punt.width = 150;
+    punt.height = 60;
  },
 };
 
-
+function actionOnClickPunt (){
+    juego.state.start('puntuation');
+}
 
 function actionOnClickJuego () {
 
@@ -1523,7 +1591,7 @@ function fullscreen(){
 
 
 module.exports = menu; 
-},{"./menuInformacion":25,"./play_scene.js":26}],25:[function(require,module,exports){
+},{"./menuInformacion":26,"./play_scene.js":27,"./puntuaciones":28}],26:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
@@ -1651,7 +1719,7 @@ function cambiaImagenes(){
 }
 
 module.exports = menuInformacion;
-},{"./menu.js":24}],26:[function(require,module,exports){
+},{"./menu.js":25}],27:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -2156,4 +2224,17 @@ var estadosJugador = {};
 
 module.exports = PlayScene;
 
-},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22}]},{},[23]);
+},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22}],28:[function(require,module,exports){
+'use strict';
+
+var men = require('./menu.js');
+var handle = require('./handleRequest.js');
+
+var puntuaciones = {}
+
+puntuaciones.ActualizaTabla = function () {
+	handle.Peticion();
+}
+
+module.exports = puntuaciones;
+},{"./handleRequest.js":23,"./menu.js":25}]},{},[24]);

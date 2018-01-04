@@ -3,7 +3,7 @@
 
 var handleRequest = {};
 	
-handleRequest.Peticion = function(){}
+handleRequest.Peticion = function(){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
   makeRequest();
@@ -49,8 +49,7 @@ handleRequest.Peticion = function(){}
       }
     }
   }
-}();
-
 }
+
 
 module.exports = handleRequest;
