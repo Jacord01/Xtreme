@@ -37,7 +37,7 @@ xhr.onreadystatechange = function () {
         json.score[0].nombre = "PEDRO";
         console.log(json.score[0].nombre);
         var data = JSON.stringify(json);
-        xhr.open("POST", url, true);
+        xhr.open("GET", url, true);
         xhr.send(data);
     }
 };
