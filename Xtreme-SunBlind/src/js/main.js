@@ -70,12 +70,12 @@ var PreloaderScene = {
     this.game.load.image('coin', 'images/coin.png');
 
     //Imagenes de fondo  de menu
-    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
-    this.game.load.image('Enemigos', 'images/Menus/Enemigos.png');
-    this.game.load.image('Plataformas', 'images/Menus/Plataformas.png');
-    this.game.load.image('Menu', 'images/Menus/MenuPrincipal.png');
-    this.game.load.image('Pis', 'images/Menus/Pis.png');
-    this.game.load.image('Controles', 'images/Menus/Controles.png');
+    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores2.png');
+    this.game.load.image('Enemigos', 'images/Menus/Enemigos2.png');
+    this.game.load.image('Plataformas', 'images/Menus/Plataformas2.png');
+    this.game.load.image('Menu', 'images/Menus/MenuPrincipal2.png');
+    this.game.load.image('Pis', 'images/Menus/Pis2.png');
+    this.game.load.image('Controles', 'images/Menus/Controles2.png');
     this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
 
