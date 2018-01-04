@@ -21,7 +21,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest.onreadystatechange = alertContents1;
+    httpRequest.onreadystatechange = alertContents;
     httpRequest.open('GET', url);
 
     httpRequest.send();
