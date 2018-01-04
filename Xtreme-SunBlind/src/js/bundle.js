@@ -1527,7 +1527,7 @@ var menu = {
 
     juego.state.add('play', PlayScene); 
 
-    juego.state.add('puntuacion', Put);
+    juego.state.add('puntuation', Put);
 
    juego.add.sprite(0,0,'Menu');
 
