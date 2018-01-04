@@ -28,9 +28,9 @@ var xhr = new XMLHttpRequest();
 var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
 xhr.open("POST", url, true);
 console.log('llega');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Accept');
+    xhr.setRequestHeader('Access-Control-Allow-Origin: *');
+    xhr.setRequestHeader('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    xhr.setRequestHeader('Access-Control-Allow-Headers: Content-Type, Accept');
 xhr.setRequestHeader("Content-type", "application/json");
 xhr.onreadystatechange = function () {
   console.log('llega2');
@@ -44,7 +44,7 @@ xhr.onreadystatechange = function () {
 console.log('llega3');
 console.log(json);
 //var data = JSON.stringify(json);
-xhr.send("parasintesis");
+xhr.send(json);
 
 </script>
   
