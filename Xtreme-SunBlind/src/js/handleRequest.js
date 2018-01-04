@@ -20,7 +20,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest.onreadystatechange = alertContents;
+    httpRequest.onreadystatechange = alertContents1;
     httpRequest.open('GET', url);
 
     httpRequest.send();
@@ -36,35 +36,18 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest.onreadystatechange = alertContents;
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-type", "application/json");
-
-   
-    
-
-    //httpRequest.send(mando);
+    httpRequest.onreadystatechange = alertContents2;
+    //httpRequest.send();
   }
 
-  function cambiaJSON(respuesta){
-    console.log("llega");
-    respuesta.score[2].nombre = "PEPITO";
-    return respuesta;
-  }
-
-  function alertContents() {
+  function alertContents1() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
     var respuesta = JSON.parse(httpRequest.response);
-
-    if(mandaDatos)
-    {
-      var mando = cambiaJSON(respuesta);
-      console.log("llega2");
-      httpRequest.send( JSON.stringify(mando));
-    }
     if(pinta){
   	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
@@ -78,6 +61,24 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
   		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
         console.log(respuesta.score[1].nombre);
         console.log(respuesta.score[1].punct);*/
+
+      } else {
+        alert('Problema con la petición.');
+      }
+    }
+  }
+
+    function alertContents2() {
+    if (httpRequest.readyState === 4) {
+      if (httpRequest.status === 200) {
+
+        //console.log('Ha llegado la respuesta.');
+      var respuesta = JSON.parse(httpRequest.response);
+      respuesta.score[2].nombre = "PEPITO";
+
+      console.log("llega2");
+      httpRequest.send( JSON.stringify(respuesta));
+    
 
       } else {
         alert('Problema con la petición.');
