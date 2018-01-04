@@ -1392,6 +1392,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-type", "application/json");
 
    
     
@@ -1416,7 +1417,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     {
       var mando = cambiaJSON(respuesta);
       console.log("llega2");
-      httpRequest.send(mando);
+      httpRequest.send( JSON.stringify(mando));
     }
     if(pinta){
   	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
@@ -2288,7 +2289,7 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion(juego, true, true);
+	handle.Peticion(juego, false, true);
 	handle.Peticion(juego, true, false);
 }
 

@@ -25,7 +25,7 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion(juego, true, true);
+	handle.Peticion(juego, false, true);
 	handle.Peticion(juego, true, false);
 }
 
