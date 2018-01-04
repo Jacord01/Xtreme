@@ -36,11 +36,12 @@ xhr.onreadystatechange = function () {
         console.log(json.score[0].nombre);
         json.score[0].nombre = "PEDRO";
         console.log(json.score[0].nombre);
+        var data = JSON.stringify(json);
+        xhr.send(data);
+        console.log('llega3');
     }
 };
-console.log('llega3');
-var data = JSON.stringify(json);
-xhr.send(data);
+
 
 </script>
   
