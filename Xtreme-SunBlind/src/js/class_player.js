@@ -83,13 +83,13 @@ Protagonista.prototype.update = function (){
     this.vel = 0;
 
   //this.orina = 10;
-  this.juego.debug.body(this.pis);
+  //this.juego.debug.body(this.pis);
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    //this.invencible = true;
-   this.orina = 10;
+  // this.orina = 10;
     if (cursors.left.isDown)
     {
         facingRight = false;
