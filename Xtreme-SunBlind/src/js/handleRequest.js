@@ -23,7 +23,6 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('GET', url, true);
-    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     httpRequest.send();
 
   }
