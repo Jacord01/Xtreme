@@ -47,8 +47,8 @@ function enviaRespuesta(recibe){
   console.log(aux.score[0].nombre);
   aux.score[0].nombre = "Pedro";
 
- xhr.open("GET", url + "?" + '"Juego"="PEDRO"', true);
- //xhr.setRequestHeader("Content-type", "application/json");
+ xhr.open("POST", url + "?" + '"Juego"="PEDRO"', true);
+ xhr.setRequestHeader("Content-type", "application/json");
 console.log('llega4');
 xhr.onreadystatechange = function () {
   console.log('llega6');
