@@ -46,7 +46,7 @@ function enviaRespuesta(recibe){
   aux = JSON.parse(recibe);
   console.log(aux.score[0].nombre);
 
- xhr.open("POST", url, true);
+ xhr.open("PUT", url, true);
  //xhr.setRequestHeader("Content-type", "application/json");
 console.log('llega4');
 xhr.onreadystatechange = function () {
