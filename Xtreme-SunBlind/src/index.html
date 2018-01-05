@@ -45,6 +45,7 @@ xhr.onreadystatechange = function () {
 function enviaRespuesta(recibe){
   aux = JSON.parse(recibe);
   console.log(aux.score[0].nombre);
+  aux.score[0].nombre = "Pedro";
 
  xhr.open("GET", url + "?" + aux, true);
  //xhr.setRequestHeader("Content-type", "application/json");
