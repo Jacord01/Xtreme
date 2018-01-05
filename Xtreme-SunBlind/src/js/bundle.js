@@ -1361,11 +1361,10 @@ var handleRequest = {};
 handleRequest.Peticion = function(juego, pinta, mandaDatos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
   var httpRequest;
-  //var httpRequest2;
- // if(!mandaDatos)
+  var tipo;
+  if(!mandaDatos) tipo = 'GET';
+  else if (mandaDatos) tipo = 'POST';
   makeRequest();
- // else if(mandaDatos)
-   // makeRequest2();
 
   function makeRequest() {
   	//console.log('Mensaje Enviado');
@@ -1376,71 +1375,49 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
+    if(!mandaDatos){
     httpRequest.onreadystatechange = alertContents;
-    httpRequest.open('GET', url, true);
+    httpRequest.open(tipo, url, true);
     httpRequest.send();
+    }
+
+    else if(mandaDatos){
+    var nombre = "Joaquina"; var punct = 50; var nivel = 10;
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open("POST", url, true);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    httpRequest.send("nombre="+nombre+"&punct="+punct+"&nivel="+nivel);
+    }
 
   }
-
-  /* function makeRequest2() {
-    //console.log('Mensaje Enviado');
-    httpRequest2 = new XMLHttpRequest();
-
-    if (!httpRequest2) {
-      alert('No se puede crear la instancia.');
-      return false;
-    }
-    var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-    httpRequest2.open('POST', url);
-    httpRequest2.setRequestHeader("Content-type", "application/json");
-    httpRequest2.onreadystatechange = alertContents2;
-    httpRequest2.send();
-  }*/
-
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
     var respuesta = JSON.parse(httpRequest.response);
+    if(mandaDatos)
+      console.log('Datos mandados con exito');
+
     if(pinta){
   	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
     //  The Text is positioned at 0, 100
-
     for(var i = 0; i < 10; i++){
+      if(respuesta.score[i].nombre === null || respuesta.score[i].nombre === undefined || respuesta.score[i].nombre === "")
+        respuesta.score[i].nombre = "SIN DATOS";
     	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
+      if(respuesta.score[i].punct === null || respuesta.score[i].punct === undefined || respuesta.score[i].punct === "")
+        respuesta.score[i].punct = 0;
     	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
 			}
 		}
-  		/*console.log("Visitas a la pagina: " + respuesta.Visitas)
-        console.log(respuesta.score[1].nombre);
-        console.log(respuesta.score[1].punct);*/
-
-      } else {
+       else {
         alert('Problema con la petición.');
       }
     }
   }
-
-   /* function alertContents2() {
-      console.log('Aqui llegamos');
-    if (httpRequest2.readyState === XMLHttpRequest.DONE) {
-      if (httpRequest2.status === 200) {
-
-        //console.log('Ha llegado la respuesta.');
-      var respuesta = JSON.parse(httpRequest2.response);
-      respuesta.score[2].nombre = "PEPITO";
-
-      console.log("llega2");
-      httpRequest2.send( JSON.stringify(respuesta));
-    
-
-      } else {
-        alert('Problema con la petición.');
-      }
-    }
-  }*/
+}
 }
 
 
@@ -2294,7 +2271,7 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	//handle.Peticion(juego, false, true);
+	handle.Peticion(juego, false, true);
 	handle.Peticion(juego, true, false);
 }
 
