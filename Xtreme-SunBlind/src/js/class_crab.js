@@ -3,7 +3,7 @@
 var enemy = require('./class_enemy');
 
 var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
-  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
+  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 6);
   this.enfado = false;
   this.origVel = velx;
   this.reescala_imagen(0.1,0.1);
@@ -34,5 +34,6 @@ crab.prototype.update = function(){
     }
 	this.velocidad = this.origVel;
 }
+
 
 module.exports = crab;

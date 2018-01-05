@@ -26,12 +26,12 @@ var puntuaciones = {
 
 puntuaciones.ActualizaTabla = function () {
 	
-	handle.Peticion(juego, true, false);
+	handle.Peticion(juego, true, false, null);
 }
 
-puntuaciones.mandaDatos = function(){
+puntuaciones.mandaDatos = function(datos){
   
-  handle.Peticion(juego, false, true);
+  handle.Peticion(juego, false, true, datos);
 }
 
 puntuaciones.vuelveAMenu = function(){

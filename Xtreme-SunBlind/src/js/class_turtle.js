@@ -1,10 +1,8 @@
 "use strict";
 
 var enemigo = require('./class_enemy');
-
 var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
-  
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 2);
   this.create();
 }
 tortuguita.prototype = Object.create(enemigo.prototype);
@@ -33,5 +31,7 @@ else
          this.cambia_pos(this.x, this.y);
        }
 }
+
+
 
 module.exports = tortuguita;

@@ -5,7 +5,7 @@ var escena = require('./play_scene');
 var HUD = require('./HUD');
 
 var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grabber){
-  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber);
+  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber, 1);
 
   this.agarrando = false;
   this.medAgarro = 50;
@@ -21,6 +21,7 @@ var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grab
 
 agarrador.prototype = Object.create(enemy.prototype);
 agarrador.prototype.constructor = agarrador;
+
 
 agarrador.prototype.update = function(){
 	if(this.golpeado) this.stunt = true;
@@ -76,6 +77,5 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);
 
 }
-
 
 module.exports = agarrador;
