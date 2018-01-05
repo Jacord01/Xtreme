@@ -9,12 +9,12 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
   var httpRequest;
   makeRequest();
   if(mandaDatos)
-   mandaDatos();
+   mandaInfo();
 
-  function mandaDatos(){
+  function mandaInfo(){
 
     var nombre = "Ruiderillo";
-    var punct = "10";
+    var punct = "666";
     var nivel = "50";
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
