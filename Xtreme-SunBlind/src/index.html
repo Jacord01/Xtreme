@@ -33,7 +33,7 @@ xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
         json = JSON.parse(xhr.response);
         console.log(json.score[0].nombre);
-        guardaInfo(json);
+        guardaInfo(xhr.response);
         //json.score[0].nombre = "PEDRO";
         //console.log(json.score[0].nombre);
     }
