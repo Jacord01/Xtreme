@@ -1404,11 +1404,9 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
 
     //  The Text is positioned at 0, 100
     for(var i = 0; i < 10; i++){
-      if(respuesta.score[i].nombre === null || respuesta.score[i].nombre === undefined || respuesta.score[i].nombre === "")
-        respuesta.score[i].nombre = "SIN DATOS";
+    
     	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
-      if(respuesta.score[i].punct === null || respuesta.score[i].punct === undefined || respuesta.score[i].punct === "")
-        respuesta.score[i].punct = 0;
+
     	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
 			}
 		}
