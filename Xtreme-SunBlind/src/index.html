@@ -53,13 +53,14 @@ console.log('llega4');
 xhr.onreadystatechange = function () {
   console.log('llega6');
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
         console.log('Respuesta emitida con éxito');
     }
 };
 
   console.log('llega5');
   //var data = JSON.stringify(aux);
-  xhr.send();
+  xhr.send("nada");
   
 }
 
