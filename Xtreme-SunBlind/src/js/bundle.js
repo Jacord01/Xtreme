@@ -1374,8 +1374,8 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        data = JSON.parse(this.responseText);
-        console.log(data);
+        var data = JSON.parse(this.responseText);
+        console.log('Respuesta enviada con éxito');
         //location.reload();
       }
     };
