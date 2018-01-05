@@ -39,7 +39,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       if(respuesta.score[i] === undefined)
         nombre = "SIN DATOS";
       else 
-        nombre = respuesta[i].nombre;
+        nombre = respuesta.score[i].nombre;
     	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + nombre, style);
 
       if(respuesta.score[i] === undefined)
