@@ -23,10 +23,10 @@
 
 <script>
 
-var json;
+var json; var aux;
 var xhr = new XMLHttpRequest();
 var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
-xhr.open("POST", url, false);
+xhr.open("POST", url, true);
 console.log('llega');
 xhr.setRequestHeader("Content-type", "application/json");
 xhr.onreadystatechange = function () {
@@ -34,15 +34,19 @@ xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
         json = JSON.parse(xhr.response);
         console.log(json.score[0].nombre);
-        json.score[0].nombre = "PEDRO";
-        console.log(json.score[0].nombre);
+        guardaInfo(json);
+        //json.score[0].nombre = "PEDRO";
+        //console.log(json.score[0].nombre);
     }
 };
   console.log('llega3');
-  console.log( json.score[0].nombre);
-  console.log(json);
-  var data = JSON.stringify(json);
-  xhr.send(data);
+  //var data = JSON.stringify(json);
+  xhr.send();
+
+function guardaInfo(recibe){
+  aux = recibe;
+  console.log(aux.score[0].name);
+}
 
 </script>
   
