@@ -9,9 +9,6 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
    if(mandaDatos) updateUser();
 
    function updateUser() {
-    var nombre = document.getElementById('update_nombre').value;
-    var punct = document.getElementById('update_punct').value;
-    var nivel = document.getElementById('update_nivel').value;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
