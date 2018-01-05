@@ -209,7 +209,7 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
+    juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
@@ -408,7 +408,7 @@ module.exports.PU = PU;
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
-
+  		console.log(jug);
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);

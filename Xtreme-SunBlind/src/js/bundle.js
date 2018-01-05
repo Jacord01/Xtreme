@@ -73,7 +73,7 @@ HUD.create = function(game){
  	 AG.visible = false;
 
  	 //Pausa
- 	 PA = game.add.sprite(0,0, 'Pausa');
+ 	 PA = game.add.sprite(480,40, 'Pausa');
  	 PA.visible = false;
 
 }
@@ -682,7 +682,7 @@ Protagonista.prototype.create = function (){
   jumpButton = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   this.anchor.x = 0.5;
   this.anchor.y = 0.5;
-  this.reescala_imagen(1.6, 1.2);
+  this.reescala_imagen(1.4, 1.2);
   this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
@@ -692,7 +692,7 @@ Protagonista.prototype.create = function (){
   escudo.visible = false;
   escudo.width = 250;
   escudo.height = 250;
-  this.body.setSize(20,60, 20, 0);
+  //this.body.setSize(20,60, 20, 0);
   this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
   this.juego.physics.arcade.enable(this.pis);
   this.pis.visible = false;
@@ -728,12 +728,13 @@ Protagonista.prototype.update = function (){
     this.vel = 0;
 
   //this.orina = 10;
-  //this.juego.debug.body(this.pis);
+  this.juego.debug.body(this.pis);
 	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
    this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
    this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    //this.invencible = true;
+   this.orina = 10;
     if (cursors.left.isDown)
     {
         facingRight = false;
@@ -1499,7 +1500,7 @@ var PreloaderScene = {
     this.game.load.image('interiorPis', 'images/InteriorPis.png');
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
-    this.game.load.image('Pausa', 'images/Menus/Pausa.png');
+    this.game.load.image('Pausa', 'images/Menus/pause.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -1519,12 +1520,14 @@ var PreloaderScene = {
     this.game.load.image('coin', 'images/coin.png');
 
     //Imagenes de fondo  de menu
-    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
-    this.game.load.image('Enemigos', 'images/Menus/Enemigos.png');
-    this.game.load.image('Plataformas', 'images/Menus/Plataformas.png');
-    this.game.load.image('Menu', 'images/Menus/MenuPrincipal.png');
-    this.game.load.image('Pis', 'images/Menus/Pis.png');
-    this.game.load.image('Controles', 'images/Menus/Controles.png');
+    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores2.png');
+    this.game.load.image('Enemigos', 'images/Menus/Enemigos2.png');
+    this.game.load.image('Plataformas', 'images/Menus/Plataformas2.png');
+    this.game.load.image('Menu', 'images/Menus/MenuPrincipal2.png');
+    this.game.load.image('Pis', 'images/Menus/Pis2.png');
+    this.game.load.image('Controles', 'images/Menus/Controles2.png');
+    this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
+    this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
 
   },
 
@@ -1613,7 +1616,7 @@ function actionOnClickJuego () {
 
 function actionOnClickInfo(){
 
-	juego.state.start('info');
+    juego.state.start('info');
 }
 
 function fullscreen(){
@@ -1636,7 +1639,7 @@ module.exports = menu;
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI; var buttonInfoM;
+var buttonInfoD; var buttonInfoI;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
@@ -1664,25 +1667,25 @@ var menuInformacion = {
 	
 
 	 //Boton para cambiar entre la info Derecha
-    buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'plat0', cambiainfoD, this, 2,1,0);
-    buttonInfoD.animations.add('plat0');
-    buttonInfoD.animations.play('plat0', 4, true );
+    buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
+    buttonInfoD.animations.add('button');
+    buttonInfoD.animations.play('button', 4, true );
     buttonInfoD.width = 100;
     buttonInfoD.height = 50;
 
     //Boton para cambiar entre la info Izquierda
-    buttonInfoI = juego.add.button(juego.world.centerX - 600, 650, 'plat0', cambiainfoI, this, 2,1,0);
-    buttonInfoI.animations.add('plat0');
-    buttonInfoI.animations.play('plat0', 4, true );
+    buttonInfoI = juego.add.button(juego.world.centerX - 600, 650, 'button', cambiainfoI, this, 2,1,0);
+    buttonInfoI.animations.add('button');
+    buttonInfoI.animations.play('button', 4, true );
     buttonInfoI.width = 100;
     buttonInfoI.height = 50;
 
     //Boton para volver atrás desde la info
-    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
-    buttonInfoM.animations.add('plat2');
-    buttonInfoM.animations.play('plat2', 4, true );
-    buttonInfoM.width = 100;
-    buttonInfoM.height = 50;
+    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'button2', vuelveAMenu, this, 2,1,0);
+    buttonInfoI.animations.add('button2');
+    buttonInfoI.animations.play('button2', 4, true );
+    buttonInfoI.width = 100;
+    buttonInfoI.height = 50;
 
 	}
 };
@@ -1971,7 +1974,7 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
+    juego.debug.body(jugador);
   	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
@@ -2170,7 +2173,7 @@ module.exports.PU = PU;
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
-
+  		console.log(jug);
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);
@@ -2292,7 +2295,7 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	handle.Peticion(juego, false, true);
+	//handle.Peticion(juego, false, true);
 	handle.Peticion(juego, true, false);
 }
 

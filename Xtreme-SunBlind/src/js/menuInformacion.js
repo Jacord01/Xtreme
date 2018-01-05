@@ -2,7 +2,7 @@
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI; var buttonInfoM;
+var buttonInfoD; var buttonInfoI;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
@@ -30,25 +30,25 @@ var menuInformacion = {
 	
 
 	 //Boton para cambiar entre la info Derecha
-    buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'plat0', cambiainfoD, this, 2,1,0);
-    buttonInfoD.animations.add('plat0');
-    buttonInfoD.animations.play('plat0', 4, true );
+    buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
+    buttonInfoD.animations.add('button');
+    buttonInfoD.animations.play('button', 4, true );
     buttonInfoD.width = 100;
     buttonInfoD.height = 50;
 
     //Boton para cambiar entre la info Izquierda
-    buttonInfoI = juego.add.button(juego.world.centerX - 600, 650, 'plat0', cambiainfoI, this, 2,1,0);
-    buttonInfoI.animations.add('plat0');
-    buttonInfoI.animations.play('plat0', 4, true );
+    buttonInfoI = juego.add.button(juego.world.centerX - 600, 650, 'button', cambiainfoI, this, 2,1,0);
+    buttonInfoI.animations.add('button');
+    buttonInfoI.animations.play('button', 4, true );
     buttonInfoI.width = 100;
     buttonInfoI.height = 50;
 
     //Boton para volver atrás desde la info
-    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', vuelveAMenu, this, 2,1,0);
-    buttonInfoM.animations.add('plat2');
-    buttonInfoM.animations.play('plat2', 4, true );
-    buttonInfoM.width = 100;
-    buttonInfoM.height = 50;
+    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'button2', vuelveAMenu, this, 2,1,0);
+    buttonInfoI.animations.add('button2');
+    buttonInfoI.animations.play('button2', 4, true );
+    buttonInfoI.width = 100;
+    buttonInfoI.height = 50;
 
 	}
 };

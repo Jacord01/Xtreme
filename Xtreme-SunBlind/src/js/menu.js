@@ -65,7 +65,7 @@ function actionOnClickJuego () {
 
 function actionOnClickInfo(){
 
-	juego.state.start('info');
+    juego.state.start('info');
 }
 
 function fullscreen(){
