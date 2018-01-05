@@ -14,6 +14,7 @@ var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
 var HUD = require('./HUD');
 var coins = require('./crea_Monedas');
+var Put = require('./puntuaciones');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -31,6 +32,7 @@ var course = false; var endCourse = false; var numMonedas = 0;
 var time = 0;
 var pausa; var menu; var fullS;
 var fondo; var fondocourse;
+var datos; var puntuation; var punt;
 
 var PlayScene = {
 
@@ -39,6 +41,8 @@ var PlayScene = {
   juego = this.game;
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
+  puntuation = 0;
+  punt = 0;
 
   //Imagen de fondo
   fondo = juego.add.sprite(0,0,'fondo');
@@ -229,10 +233,23 @@ function vuelvePausa(event){
    game.paused = false;
 }
 
+var puntos = {}
+
+puntos.suma = function (numero) {
+  punt += numero;
+}
+
+puntos.daPuntos = function(){
+
+  return punt
+}
+
+module.exports.puntos = puntos;
+
 function nuevoNivel(){
 
   nivel++;
-
+  puntos.suma(10);
   HUD.nivel(nivel);
 
   enemigosEnPantalla = 0;
@@ -352,12 +369,24 @@ var perd = {};
 
 perd.Perder = function(){
 
-    perder.visible = true; 
+	puntuation = puntos.daPuntos();
+
+	perder.visible = true; //Texto de perder en visible
+
     for (var i = 0 ; i < powerUps.children.length; i++){
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
               }
-    setTimeout(function(){juego.state.start('menu');}, 3000);
+    setTimeout(function(){
+
+    	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
+    	if (nombre != null && nombre != "") {
+       
+		datos = [nombre, puntuation.toString(), nivel.toString()];
+    
+   		Put.mandaDatos(datos);} //Mandamos los datos al servidor
+
+    	juego.state.start('menu');}, 3000);
 }
 
 function actualizaCont(tiempo){

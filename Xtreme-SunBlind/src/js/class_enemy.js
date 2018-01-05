@@ -2,7 +2,7 @@
 
 var movible = require('./class_movibl');	
 
-var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber, puntos){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.create();
@@ -11,6 +11,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabb
 	this.golpeado = false;
 	this.cont = 1;
 	this.grabber = grabber;
+	this.puntos = puntos;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
@@ -23,6 +24,11 @@ enemigo.prototype.create = function (){
 
 enemigo.prototype.cambia_vel = function (vl){
 	this.velocidad = vl;
+}
+
+enemigo.prototype.devuelvePuntos = function(){
+
+	return this.puntos;
 }
 module.exports = enemigo;
 

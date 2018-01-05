@@ -202,7 +202,7 @@ var escena = require('./play_scene');
 var HUD = require('./HUD');
 
 var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grabber){
-  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber);
+  enemy.call(this, game, entradax, entraday, entradasprite, 1, 1, grabber, 1);
 
   this.agarrando = false;
   this.medAgarro = 50;
@@ -218,6 +218,7 @@ var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grab
 
 agarrador.prototype = Object.create(enemy.prototype);
 agarrador.prototype.constructor = agarrador;
+
 
 agarrador.prototype.update = function(){
 	if(this.golpeado) this.stunt = true;
@@ -273,7 +274,6 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 		setTimeout(function(){agarrador.prototype.cambiaAgarre(ag, jug);}, 350);
 
 }
-
 
 module.exports = agarrador;
 },{"./HUD":1,"./class_enemy":7,"./play_scene":27}],3:[function(require,module,exports){
@@ -346,7 +346,7 @@ module.exports = bebidaEnergetica;
 var enemy = require('./class_enemy');
 
 var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
-  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
+  enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 6);
   this.enfado = false;
   this.origVel = velx;
   this.reescala_imagen(0.1,0.1);
@@ -378,13 +378,14 @@ crab.prototype.update = function(){
 	this.velocidad = this.origVel;
 }
 
+
 module.exports = crab;
 },{"./class_enemy":7}],7:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
 
-var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber){
+var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabber, puntos){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.create();
@@ -393,6 +394,7 @@ var enemigo = function(game, entradax, entraday, entradasprite, dir, velx, grabb
 	this.golpeado = false;
 	this.cont = 1;
 	this.grabber = grabber;
+	this.puntos = puntos;
 }
 
 enemigo.prototype = Object.create(movible.prototype);
@@ -405,6 +407,11 @@ enemigo.prototype.create = function (){
 
 enemigo.prototype.cambia_vel = function (vl){
 	this.velocidad = vl;
+}
+
+enemigo.prototype.devuelvePuntos = function(){
+
+	return this.puntos;
 }
 module.exports = enemigo;
 
@@ -461,7 +468,7 @@ module.exports = fireball;
 var enemigo = require('./class_enemy');
 
 var fly =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber,5);
   this.body.gravity.y = 1000;
   this.reescala_imagen(0.9,0.9);
   this.animations.add('mueve',[0,1,2,3, 4, 5], 5, true);
@@ -858,10 +865,8 @@ module.exports = powerUp;
 "use strict";
 
 var enemigo = require('./class_enemy');
-
 var tortuguita =  function(game, entradax, entraday, entradasprite, dir, velx, grabber){
-  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber);
-  
+  enemigo.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 2);
   this.create();
 }
 tortuguita.prototype = Object.create(enemigo.prototype);
@@ -890,6 +895,8 @@ else
          this.cambia_pos(this.x, this.y);
        }
 }
+
+
 
 module.exports = tortuguita;
 },{"./class_enemy":7}],18:[function(require,module,exports){
@@ -1207,7 +1214,7 @@ colisiones.create = function(game){
 }
 
 colisiones.collisionHandlerPower = function(jug, pw){
-
+  escena.puntos.suma(-3);
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
 	pw.limpia();
@@ -1229,6 +1236,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 }
 
 colisiones.collisionHandlerMonedas = function(jug, mon){
+  escena.puntos.suma(2);
   mon.kill();
   escena.stateMoneda.reduceMoneda();
 
@@ -1241,6 +1249,7 @@ colisiones.collisionHandlerEnemPis = function(jug, enem){
       escena.agarrador.False();      
     }
 
+    escena.puntos.suma(enem.devuelvePuntos());
     enem.kill();
     escena.enemigos.reducePantalla();
     escena.enemigos.reduceNumero();
@@ -1273,7 +1282,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
       //Aqui es donde peta el agarrador
       escena.agarrador.False();      
     }
-
+    escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
@@ -1358,7 +1367,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
 var handleRequest = {};
 	
-handleRequest.Peticion = function(juego, pinta, mandaDatos){
+handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
  
   var httpRequest;
@@ -1367,10 +1376,10 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
    mandaInfo();
 
   function mandaInfo(){
-
-    var nombre = "Ruiderillo";
-    var punct = "666";
-    var nivel = "50";
+    //El arrya de datos
+    var nombre = Datos[0];
+    var punct = Datos[1];
+    var nivel = Datos[2];
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -1598,8 +1607,7 @@ function actionOnClickPunt (){
 }
 
 function actionOnClickJuego () {
-
-    Put.mandaDatos();
+    
     juego.state.start('play');
 }
 
@@ -1768,6 +1776,7 @@ var greenfireball = require('./class_greenFireBall');
 var cols = require('./handleCollisions');
 var HUD = require('./HUD');
 var coins = require('./crea_Monedas');
+var Put = require('./puntuaciones');
 
 var jugador; var nivel;
 var platforms; var platformsIni;
@@ -1785,6 +1794,7 @@ var course = false; var endCourse = false; var numMonedas = 0;
 var time = 0;
 var pausa; var menu; var fullS;
 var fondo; var fondocourse;
+var datos; var puntuation; var punt;
 
 var PlayScene = {
 
@@ -1793,6 +1803,8 @@ var PlayScene = {
   juego = this.game;
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
+  puntuation = 0;
+  punt = 0;
 
   //Imagen de fondo
   fondo = juego.add.sprite(0,0,'fondo');
@@ -1983,10 +1995,23 @@ function vuelvePausa(event){
    game.paused = false;
 }
 
+var puntos = {}
+
+puntos.suma = function (numero) {
+  punt += numero;
+}
+
+puntos.daPuntos = function(){
+
+  return punt
+}
+
+module.exports.puntos = puntos;
+
 function nuevoNivel(){
 
   nivel++;
-
+  puntos.suma(10);
   HUD.nivel(nivel);
 
   enemigosEnPantalla = 0;
@@ -2106,12 +2131,24 @@ var perd = {};
 
 perd.Perder = function(){
 
-    perder.visible = true; 
+	puntuation = puntos.daPuntos();
+
+	perder.visible = true; //Texto de perder en visible
+
     for (var i = 0 ; i < powerUps.children.length; i++){
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
               }
-    setTimeout(function(){juego.state.start('menu');}, 3000);
+    setTimeout(function(){
+
+    	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
+    	if (nombre != null && nombre != "") {
+       
+		datos = [nombre, puntuation.toString(), nivel.toString()];
+    
+   		Put.mandaDatos(datos);} //Mandamos los datos al servidor
+
+    	juego.state.start('menu');}, 3000);
 }
 
 function actualizaCont(tiempo){
@@ -2256,7 +2293,7 @@ var estadosJugador = {};
 
 module.exports = PlayScene;
 
-},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22}],28:[function(require,module,exports){
+},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22,"./puntuaciones":28}],28:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
@@ -2285,12 +2322,12 @@ var puntuaciones = {
 
 puntuaciones.ActualizaTabla = function () {
 	
-	handle.Peticion(juego, true, false);
+	handle.Peticion(juego, true, false, null);
 }
 
-puntuaciones.mandaDatos = function(){
+puntuaciones.mandaDatos = function(datos){
   
-  handle.Peticion(juego, false, true);
+  handle.Peticion(juego, false, true, datos);
 }
 
 puntuaciones.vuelveAMenu = function(){

@@ -58,8 +58,7 @@ function actionOnClickPunt (){
 }
 
 function actionOnClickJuego () {
-
-    Put.mandaDatos();
+    
     juego.state.start('play');
 }
 

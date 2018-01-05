@@ -14,7 +14,7 @@ colisiones.create = function(game){
 }
 
 colisiones.collisionHandlerPower = function(jug, pw){
-
+  escena.puntos.suma(-3);
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
 	pw.limpia();
@@ -36,6 +36,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 }
 
 colisiones.collisionHandlerMonedas = function(jug, mon){
+  escena.puntos.suma(2);
   mon.kill();
   escena.stateMoneda.reduceMoneda();
 
@@ -48,6 +49,7 @@ colisiones.collisionHandlerEnemPis = function(jug, enem){
       escena.agarrador.False();      
     }
 
+    escena.puntos.suma(enem.devuelvePuntos());
     enem.kill();
     escena.enemigos.reducePantalla();
     escena.enemigos.reduceNumero();
@@ -80,7 +82,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
       //Aqui es donde peta el agarrador
       escena.agarrador.False();      
     }
-
+    escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
   	escena.enemigos.reducePantalla();
   	escena.enemigos.reduceNumero();
