@@ -43,7 +43,7 @@ xhr.onreadystatechange = function () {
   xhr.send();
 
 function guardaInfo(recibe){
-  aux = recibe;
+  aux = JSON.parse(recibe);
   console.log(aux.score[0].name);
 }
 //xhr.open("POST", url, true);
