@@ -14,9 +14,9 @@ var puntuaciones = {
   	 juego.add.sprite(0,0,'Punct');
 
   	//Boton para volver atrás desde la puntuaciones
-    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'plat2', puntuaciones.vuelveAMenu, this, 2,1,0);
-    buttonInfoM.animations.add('plat2');
-    buttonInfoM.animations.play('plat2', 4, true );
+    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'button2', puntuaciones.vuelveAMenu, this, 2,1,0);
+    buttonInfoM.animations.add('button2');
+    buttonInfoM.animations.play('button2', 4, true );
     buttonInfoM.width = 100;
     buttonInfoM.height = 50;
 

@@ -23,16 +23,16 @@ var menu = {
    juego.add.sprite(0,0,'Menu');
 
     //Boton que nos lleva al juego
-    buttonJuego = juego.add.button(juego.world.centerX - 75, 275, 'plat0', actionOnClickJuego, this, 2,1,0);
-    buttonJuego.animations.add('plat0');
-    buttonJuego.animations.play('plat0', 4, true );
+    buttonJuego = juego.add.button(juego.world.centerX - 75, 275, 'button', actionOnClickJuego, this, 2,1,0);
+    buttonJuego.animations.add('button');
+    buttonJuego.animations.play('button', 4, true );
     buttonJuego.width = 150;
     buttonJuego.height = 60;
 
     //Boton para el menú de información
-    buttonInfo = juego.add.button(juego.world.centerX - 75, 475, 'plat0', actionOnClickInfo, this, 2,1,0);
-    buttonInfo.animations.add('plat0');
-    buttonInfo.animations.play('plat0', 4, true );
+    buttonInfo = juego.add.button(juego.world.centerX - 75, 475, 'button', actionOnClickInfo, this, 2,1,0);
+    buttonInfo.animations.add('button');
+    buttonInfo.animations.play('button', 4, true );
     buttonInfo.width = 150;
     buttonInfo.height = 60;
 
@@ -44,9 +44,9 @@ var menu = {
     pantalla.height = 80;
 
     //Boton para puntuaciones
-    punt = juego.add.button(juego.world.centerX - 600, 300, 'plat0', actionOnClickPunt, this, 2,1,0);
-    punt.animations.add('plat0');
-    punt.animations.play('plat0', 4, true );
+    punt = juego.add.button(juego.world.centerX - 600, 300, 'button', actionOnClickPunt, this, 2,1,0);
+    punt.animations.add('button');
+    punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
  },
