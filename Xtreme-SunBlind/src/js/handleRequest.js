@@ -20,7 +20,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       alert('No se puede crear la instancia.');
       return false;
     }
-    var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
+    var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
     httpRequest.onreadystatechange = alertContents;
     httpRequest.open('GET', url);
 
