@@ -23,31 +23,46 @@
 
 <script>
 
-var json; var aux;
+var aux; var aux2;
 var xhr = new XMLHttpRequest();
 var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
 xhr.open("GET", url, true);
 console.log('llega');
 xhr.onreadystatechange = function () {
-  console.log('llega2');
+  console.log('llega3');
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        json = JSON.parse(xhr.response);
-        console.log(json.score[0].nombre);
-        guardaInfo(xhr.response);
+        //var json = JSON.parse(xhr.response);
+        //console.log(json.score[0].nombre);
+        enviaRespuesta(xhr.response);
         //json.score[0].nombre = "PEDRO";
         //console.log(json.score[0].nombre);
     }
 };
-  console.log('llega3');
+  console.log('llega2');
   //var data = JSON.stringify(json);
   xhr.send();
 
-function guardaInfo(recibe){
+function enviaRespuesta(recibe){
   aux = JSON.parse(recibe);
+  console.log(aux.score[0].nombre);
+
+ xhr.open("POST", url, true);
+ xhr.setRequestHeader("Content-type", "application/json");
+console.log('llega4');
+xhr.onreadystatechange = function () {
+  console.log('llega6');
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        console.log('Respuesta emitida con éxito');
+    }
+};
+
+  console.log('llega5');
+  var data = JSON.stringify(aux);
+  xhr.send(aux);
   
 }
 
-console.log(aux.score[0].nombre);
+
 //xhr.open("POST", url, true);
 
 //xhr.setRequestHeader("Content-type", "application/json");
