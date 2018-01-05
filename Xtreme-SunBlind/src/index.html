@@ -32,7 +32,7 @@
       if (this.readyState == 4 && this.status == 200) {
         data = JSON.parse(this.responseText);
         console.log(data);
-        location.reload();
+        //location.reload();
       }
     };
     xhttp.open("POST", "https://services.devpgsv.com/lent_xtreme/update.php", true);
