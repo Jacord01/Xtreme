@@ -21,8 +21,26 @@
     <iframe id="game" src="raw.html"></iframe>
   </main>
 
-<script>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $('#submit').click(  function () {
+                console.log("click");
+                var sendData = $('#data').val();
 
+                $.ajax({
+                    url: 'localhost',    //Your api url
+                    type: 'PUT',   //type is any HTTP method
+                    data: {
+                        data: sendData
+                    },      //Data as js object
+                    success: function () {
+                    }
+                })
+                ;
+
+            });
+        });
+/*
 var aux; var aux2;
 var xhr = new XMLHttpRequest();
 var url = 'https://jacord01.github.io/Xtreme/Xtreme-SunBlind/src/scores.json';
@@ -61,13 +79,19 @@ xhr.onreadystatechange = function () {
   xhr.send(data);
   
 }
-
+*/
 
 //xhr.open("POST", url, true);
 
 //xhr.setRequestHeader("Content-type", "application/json");
 
 </script>
+
+<form>
+    Data:<br>
+    <input id="data" type="text" name="data" value="Mickey"><br>
+    <input id="submit" type="button"  value="Submit">
+</form>
   
   <footer>
     <p ><font size="6" color = "white"><strong>XtremeSunblind!<br>
