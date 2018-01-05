@@ -34,12 +34,19 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
   	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
     for(var i = 0; i < 10; i++){
+      var nombre;
+      var punct;
       if(respuesta.score[i] === undefined)
-        respuesta.score[i].nombre = "SIN DATOS";
-    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + respuesta.score[i].nombre, style);
+        nombre = "SIN DATOS";
+      else 
+        nombre = respuesta[i].nombre;
+    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + nombre, style);
+
       if(respuesta.score[i] === undefined)
-        respuesta.score[i] === "0";
-    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + respuesta.score[i].punct, style);
+        punct = "0";
+      else 
+        punct = respuesta.score[i].punct;
+    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + punct, style);
 			}
 		}
 
