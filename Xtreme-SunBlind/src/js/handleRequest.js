@@ -5,10 +5,28 @@ var handleRequest = {};
 	
 handleRequest.Peticion = function(juego, pinta, mandaDatos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
-  var httpRequest;
-  var tipo;
-  if(!mandaDatos) tipo = 'GET';
-  else if (mandaDatos) tipo = 'POST';
+   var httpRequest;
+   if(mandaDatos) updateUser();
+
+   function updateUser() {
+    var nombre = document.getElementById('update_nombre').value;
+    var punct = document.getElementById('update_punct').value;
+    var nivel = document.getElementById('update_nivel').value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        data = JSON.parse(this.responseText);
+        console.log(data);
+        location.reload();
+      }
+    };
+    var nombre = "Joaquina"; var punct = "50"; var nivel = "10";
+    xhttp.open("POST", "https://services.devpgsv.com/lent_xtreme/update.php", true);
+    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhttp.send("nombre="+nombre+"&punct="+punct+"&nivel="+nivel);
+  }
+
+ if(pinta || !mandaDatos)
   makeRequest();
 
   function makeRequest() {
@@ -20,21 +38,11 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
       return false;
     }
     var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
-    if(!mandaDatos){
     httpRequest.onreadystatechange = alertContents;
-    httpRequest.open(tipo, url, true);
+    httpRequest.open('GET', url, true);
     httpRequest.send();
-    }
-
-    else if(mandaDatos){
-    var nombre = "Joaquina"; var punct = 50; var nivel = 10;
-    httpRequest.onreadystatechange = alertContents;
-    httpRequest.open("POST", url, true);
-    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    httpRequest.send("nombre="+nombre+"&punct="+punct+"&nivel="+nivel);
-    }
-
   }
+
   function alertContents() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
