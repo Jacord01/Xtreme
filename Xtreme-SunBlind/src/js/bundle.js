@@ -1363,6 +1363,26 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos){
  
   var httpRequest;
   makeRequest();
+  if(mandaDatos)
+   mandaDatos();
+
+  function mandaDatos(){
+
+    var nombre = "Ruiderillo";
+    var punct = "10";
+    var nivel = "50";
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        data = JSON.parse(this.responseText);
+        console.log(data);
+        //location.reload();
+      }
+    };
+    xhttp.open("POST", "https://services.devpgsv.com/lent_xtreme/update.php", true);
+    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhttp.send("nombre="+nombre+"&punct="+punct+"&nivel="+nivel);
+  }
 
   function makeRequest() {
   	//console.log('Mensaje Enviado');
@@ -2264,8 +2284,13 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	//handle.Peticion(juego, false, true);
+	
 	handle.Peticion(juego, true, false);
+}
+
+puntuaciones.mandaDatos = function(){
+  
+  handle.Peticion(juego, false, true);
 }
 
 puntuaciones.vuelveAMenu = function(){

@@ -25,8 +25,13 @@ var puntuaciones = {
 }
 
 puntuaciones.ActualizaTabla = function () {
-	//handle.Peticion(juego, false, true);
+	
 	handle.Peticion(juego, true, false);
+}
+
+puntuaciones.mandaDatos = function(){
+  
+  handle.Peticion(juego, false, true);
 }
 
 puntuaciones.vuelveAMenu = function(){

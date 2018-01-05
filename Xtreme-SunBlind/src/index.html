@@ -20,26 +20,6 @@
   <main>
     <iframe id="game" src="raw.html"></iframe>
   </main>
-
-<script>
-  updateUser();
-  function updateUser() {
-    //var nombre = document.getElementById('update_nombre').value;
-    //var punct = document.getElementById('update_punct').value;
-    //var nivel = document.getElementById('update_nivel').value;
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        data = JSON.parse(this.responseText);
-        console.log(data);
-        //location.reload();
-      }
-    };
-    xhttp.open("POST", "https://services.devpgsv.com/lent_xtreme/update.php", true);
-    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhttp.send("nombre="+"Ruiderillo"+"&punct="+"10"+"&nivel="+"10");
-  }
-</script>
   
   <footer>
     <p ><font size="6" color = "white"><strong>XtremeSunblind!<br>
