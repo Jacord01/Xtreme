@@ -7,7 +7,8 @@ var greenfireball = function(game, entradax, entraday, entradasprite, dir, velx,
 	this.juego = game;
 	this.velocidadY = vely;
 	this.cont = 0;
-	this.reescala_imagen(0.075, 0.075);
+	this.animations.add('mueve',[0,1,2,3,4,5], 7, true);
+	this.animations.play('mueve');
 }
 
 greenfireball.prototype = Object.create(fireball.prototype);
