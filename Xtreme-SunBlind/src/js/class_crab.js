@@ -6,7 +6,10 @@ var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber
   enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 6);
   this.enfado = false;
   this.origVel = velx;
-  this.reescala_imagen(0.1,0.1);
+  this.reescala_imagen(1.2,1.2);
+  this.animations.add('mueve',[0,1], 5, true);
+  this.animations.add('enfado',[2,3]);
+  this.animations.play('mueve');
 }
 crab.prototype = Object.create(enemy.prototype);
 crab.prototype.constructor = crab;
@@ -19,13 +22,18 @@ crab.prototype.update = function(){
 	else if (this.golpeado && this.enfado){
 		this.stunt = true;
 	}
-	else
+	else{
 		this.stunt = false;
+	}
 
-	if (this.enfado && !this.stunt)
+	if (this.enfado && !this.stunt){
 		this.actualiza_pos(this.velocidad * 1.25 * this.cont);
-	else if (!this.enfado && !this.stunt)
+		this.animations.play('enfado', 5, true);
+	}
+	else if (!this.enfado && !this.stunt){
 		this.actualiza_pos(this.velocidad * this.cont);
+		this.animations.play('mueve');
+	}
 	else
 		this.actualiza_pos(0);
 

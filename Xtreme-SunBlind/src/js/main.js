@@ -25,7 +25,7 @@ var PreloaderScene = {
 
 	//Carga de imagenes para el juego
 
-  //Fondo
+    //Fondo
     this.game.stage.backgroundColor = '#220A29'; 
     this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
     this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
@@ -56,7 +56,7 @@ var PreloaderScene = {
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
     this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
-    this.game.load.image('crabby', 'images/crab.png');
+    this.game.load.spritesheet('crabby', 'images/crabby.png', 64, 57, 4);
     this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.image('fireball', 'images/fireball.png');
     this.game.load.image('greenfireball', 'images/greenfireball.png');
