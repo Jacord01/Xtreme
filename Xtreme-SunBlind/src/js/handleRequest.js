@@ -7,9 +7,11 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
  
   var httpRequest;
-  makeRequest();
+ 
   if(mandaDatos)
    mandaInfo();
+ 
+  makeRequest();
 
   function mandaInfo(){
     //El arrya de datos
@@ -60,13 +62,13 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
         nombre = "SIN DATOS";
       else 
         nombre = respuesta.score[i].nombre;
-    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + nombre, style);
+    	juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
 
       if(respuesta.score[i] === undefined)
         punct = "0";
       else 
         punct = respuesta.score[i].punct;
-    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + punct, style);
+    	juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
 			}
 		}
 
