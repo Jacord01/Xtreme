@@ -44,7 +44,7 @@ var menu = {
     pantalla.height = 80;
 
     //Boton para puntuaciones
-    punt = juego.add.button(juego.world.centerX - 600, 300, 'button', actionOnClickPunt, this, 2,1,0);
+    punt = juego.add.button(juego.world.centerX - 535, 300, 'button', actionOnClickPunt, this, 2,1,0);
     punt.animations.add('button');
     punt.animations.play('button', 4, true );
     punt.width = 150;
