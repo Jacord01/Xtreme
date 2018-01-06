@@ -58,7 +58,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
     this.game.load.spritesheet('crabby', 'images/crabby.png', 64, 57, 4);
     this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
-    this.game.load.image('fireball', 'images/fireball.png');
+    this.game.load.spritesheet('fireball', 'images/fireball.png', 64, 32, 2);
     this.game.load.image('greenfireball', 'images/greenfireball.png');
 
     //Bebidas
