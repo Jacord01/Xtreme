@@ -1371,9 +1371,11 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
  
   var httpRequest;
-  makeRequest();
+ 
   if(mandaDatos)
    mandaInfo();
+ 
+  makeRequest();
 
   function mandaInfo(){
     //El arrya de datos
@@ -1424,13 +1426,13 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
         nombre = "SIN DATOS";
       else 
         nombre = respuesta.score[i].nombre;
-    	juego.add.text(300, 100 + i * 50, "NOMBRE:  " + nombre, style);
+    	juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
 
       if(respuesta.score[i] === undefined)
         punct = "0";
       else 
         punct = respuesta.score[i].punct;
-    	juego.add.text(700, 100 + i * 50, "PUNTUACION:  " + punct, style);
+    	juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
 			}
 		}
 
@@ -1518,12 +1520,12 @@ var PreloaderScene = {
     this.game.load.image('coin', 'images/coin.png');
 
     //Imagenes de fondo  de menu
-    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores2.png');
-    this.game.load.image('Enemigos', 'images/Menus/Enemigos2.png');
-    this.game.load.image('Plataformas', 'images/Menus/Plataformas2.png');
-    this.game.load.image('Menu', 'images/Menus/MenuPrincipal2.png');
-    this.game.load.image('Pis', 'images/Menus/Pis2.png');
-    this.game.load.image('Controles', 'images/Menus/Controles2.png');
+    this.game.load.image('Potenciadores', 'images/Menus/Potenciadores.png');
+    this.game.load.image('Enemigos', 'images/Menus/Enemigos.png');
+    this.game.load.image('Plataformas', 'images/Menus/Plataformas.png');
+    this.game.load.image('Menu', 'images/Menus/MenuPrincipal.png');
+    this.game.load.image('Pis', 'images/Menus/Pis.png');
+    this.game.load.image('Controles', 'images/Menus/Controles.png');
     this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
 
@@ -1636,7 +1638,7 @@ module.exports = menu;
 
 var men = require('./menu.js');
 
-var buttonInfoD; var buttonInfoI;
+var buttonInfoD; var buttonInfoI; var buttonInfoM;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
@@ -1678,11 +1680,11 @@ var menuInformacion = {
     buttonInfoI.height = 50;
 
     //Boton para volver atrás desde la info
-    buttonInfoI = juego.add.button(juego.world.centerX - 600 , 25, 'button2', vuelveAMenu, this, 2,1,0);
-    buttonInfoI.animations.add('button2');
-    buttonInfoI.animations.play('button2', 4, true );
-    buttonInfoI.width = 100;
-    buttonInfoI.height = 50;
+    buttonInfoM = juego.add.button(juego.world.centerX - 600 , 25, 'button2', vuelveAMenu, this, 2,1,0);
+    buttonInfoM.animations.add('button2');
+    buttonInfoM.animations.play('button2', 4, true );
+    buttonInfoM.width = 100;
+    buttonInfoM.height = 50;
 
 	}
 };
