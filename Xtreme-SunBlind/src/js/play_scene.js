@@ -89,7 +89,6 @@ var PlayScene = {
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
-    jugador.vidas = 1;
 
   //Creamos el hud
   HUD.create(juego);
@@ -382,8 +381,15 @@ perd.Perder = function(){
       powerUps.children[i].kill();
               }
     setTimeout(function(){
-
-    	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
+      var nombre = "abcdefsgufjsl"
+      var cont = 0;
+      while(nombre.length > 12){
+        if(cont <= 3)
+    	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
+       else
+        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
+      cont++;
+    }
     	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];

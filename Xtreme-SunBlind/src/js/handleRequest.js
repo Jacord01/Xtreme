@@ -29,10 +29,12 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     var punct = Datos[1];
     var nivel = Datos[2];
     //console.log(daPuntos());
-    console.log(puntuacionAnterior);
-    if(puntuacionAnterior > punct)
+    
+    if(puntuacionAnterior > punct){
+      alert("La puntuación que has conseguido (" +punct +") es menor que tu anterior puntuación " +nombre +"... (" +puntuacionAnterior +") \n\nSomos buenos y te guardamos la mejor ;)");
       punct = puntuacionAnterior;
-    console.log (punct);
+    }
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
