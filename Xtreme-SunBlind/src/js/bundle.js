@@ -1404,10 +1404,12 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     var punct = Datos[1];
     var nivel = Datos[2];
     //console.log(daPuntos());
-    console.log(puntuacionAnterior);
-    if(puntuacionAnterior > punct)
+    
+    if(puntuacionAnterior > punct){
+      alert("La puntuación que has conseguido (" +punct +") es menor que tu anterior puntuación " +nombre +"... (" +puntuacionAnterior +") \n\nSomos buenos y te guardamos la mejor ;)");
       punct = puntuacionAnterior;
-    console.log (punct);
+    }
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -1887,7 +1889,6 @@ var PlayScene = {
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
-    jugador.vidas = 1;
 
   //Creamos el hud
   HUD.create(juego);
@@ -2180,8 +2181,15 @@ perd.Perder = function(){
       powerUps.children[i].kill();
               }
     setTimeout(function(){
-
-    	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
+      var nombre = "abcdefsgufjsl"
+      var cont = 0;
+      while(nombre.length > 12){
+        if(cont <= 3)
+    	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
+       else
+        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
+      cont++;
+    }
     	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
