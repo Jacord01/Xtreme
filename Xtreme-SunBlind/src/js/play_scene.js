@@ -380,10 +380,13 @@ perd.Perder = function(){
     setTimeout(function(){
 
     	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
-    	if (nombre != null && nombre != "") {
-       
+    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   ") {
+        
 		datos = [nombre, puntuation.toString(), nivel.toString()];
+		if(puntuation <= 0)
+			prompt("!" + nombre + " tu puntuación es 0!"  +"\n" "(mejor vuelve a intentarlo, que queda feo poner un 0)");
     
+    	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
 
     	juego.state.start('menu');}, 3000);
