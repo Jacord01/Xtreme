@@ -287,8 +287,10 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-  if(nivel > 10)
-    enemigosPorNivel = 3
+  if(nivel > 25)
+    enemigosPorNivel = 4;
+  else if(nivel > 10)
+    enemigosPorNivel = 3;
 	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else

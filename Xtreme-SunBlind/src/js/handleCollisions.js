@@ -100,7 +100,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   		
     }
 
-    else if (plat.hielo){
+    else if (plat.hielo && !jug.body.touching.up){
       if(!jug.corriendo)
         jug.corriendo = true;
       setTimeout(function(){jug.corriendo = false;}, 300);

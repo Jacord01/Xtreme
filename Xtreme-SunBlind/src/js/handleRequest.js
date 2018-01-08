@@ -7,17 +7,21 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
  
   var httpRequest;
+  var puntuacionAnterior;
  
+   makeRequest();
+
   if(mandaDatos)
    mandaInfo();
  
-  makeRequest();
-
   function mandaInfo(){
     //El arrya de datos
     var nombre = Datos[0];
     var punct = Datos[1];
     var nivel = Datos[2];
+    if(puntuacionAnterior <= punct)
+      punct = puntuacionAnterior;
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -50,6 +54,8 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
 
+
+
         //console.log('Ha llegado la respuesta.');
     var respuesta = JSON.parse(httpRequest.response);
     if(pinta){
@@ -62,6 +68,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
         nombre = "SIN DATOS";
       else 
         nombre = respuesta.score[i].nombre;
+
     	juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
 
       if(respuesta.score[i] === undefined)
@@ -69,6 +76,11 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
       else 
         punct = respuesta.score[i].punct;
     	juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
+
+      //Vamos a ver si el nombre ya existe dentro del top 10 de puntuaciones. Si existe, guardamos su puntuación para despues
+      //ver si pasamos los datos o no.
+        if(nombre = Datos[0])
+          puntuacionAnterior = punct;
 			}
 		}
 
