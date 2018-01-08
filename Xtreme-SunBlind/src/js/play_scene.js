@@ -383,7 +383,7 @@ perd.Perder = function(){
     setTimeout(function(){
       var nombre = "abcdefsgufjsl"
       var cont = 0;
-      while(nombre.length > 12){
+      while(nombre.length > 11){
         if(cont <= 3)
     	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
        else
