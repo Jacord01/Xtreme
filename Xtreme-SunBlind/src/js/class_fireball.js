@@ -6,7 +6,7 @@ var fireball = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.sale = false;
-	this.escala = 0.05;
+	this.escala = 1.1;
 	this.create();
 }
 
@@ -19,6 +19,8 @@ fireball.prototype.create = function (){
  	this.reescala_imagen(this.escala, this.escala);
  	var bola = this;
   	setTimeout(function(){bola.sale = true;}, 250);
+  	this.animations.add('mueve',[0,1], 5, true);
+	this.animations.play('mueve');
 }
 
 fireball.prototype.update = function (){

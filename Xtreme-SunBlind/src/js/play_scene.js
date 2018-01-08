@@ -39,6 +39,7 @@ var PlayScene = {
   create: function () {
 
   juego = this.game;
+
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
   puntuation = 0;
@@ -88,6 +89,7 @@ var PlayScene = {
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
+    jugador.vidas = 1;
 
   //Creamos el hud
   HUD.create(juego);
@@ -287,8 +289,10 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-  if(nivel > 10)
-    enemigosPorNivel = 3
+  if(nivel > 25)
+    enemigosPorNivel = 4;
+  else if(nivel > 10)
+    enemigosPorNivel = 3;
 	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else
@@ -380,11 +384,11 @@ perd.Perder = function(){
     setTimeout(function(){
 
     	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
-    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   ") {
+    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
-			 prompt("!" + nombre + " tu puntuación es 0!"  +"\n" + "(mejor vuelve a intentarlo, que queda feo poner un 0)");
+			alert("¡" + nombre + " tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
@@ -440,7 +444,6 @@ module.exports.PU = PU;
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
-  		console.log(jug);
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);

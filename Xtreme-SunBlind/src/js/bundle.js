@@ -349,7 +349,10 @@ var crab =  function(game, entradax, entraday, entradasprite, dir, velx, grabber
   enemy.call(this, game, entradax, entraday, entradasprite, dir, velx, grabber, 6);
   this.enfado = false;
   this.origVel = velx;
-  this.reescala_imagen(0.1,0.1);
+  this.reescala_imagen(1.2,1.2);
+  this.animations.add('mueve',[0,1], 5, true);
+  this.animations.add('enfado',[2,3]);
+  this.animations.play('mueve');
 }
 crab.prototype = Object.create(enemy.prototype);
 crab.prototype.constructor = crab;
@@ -362,13 +365,18 @@ crab.prototype.update = function(){
 	else if (this.golpeado && this.enfado){
 		this.stunt = true;
 	}
-	else
+	else{
 		this.stunt = false;
+	}
 
-	if (this.enfado && !this.stunt)
+	if (this.enfado && !this.stunt){
 		this.actualiza_pos(this.velocidad * 1.25 * this.cont);
-	else if (!this.enfado && !this.stunt)
+		this.animations.play('enfado', 5, true);
+	}
+	else if (!this.enfado && !this.stunt){
 		this.actualiza_pos(this.velocidad * this.cont);
+		this.animations.play('mueve');
+	}
 	else
 		this.actualiza_pos(0);
 
@@ -440,7 +448,7 @@ var fireball = function(game, entradax, entraday, entradasprite, dir, velx){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.juego = game;
 	this.sale = false;
-	this.escala = 0.05;
+	this.escala = 1.1;
 	this.create();
 }
 
@@ -453,6 +461,8 @@ fireball.prototype.create = function (){
  	this.reescala_imagen(this.escala, this.escala);
  	var bola = this;
   	setTimeout(function(){bola.sale = true;}, 250);
+  	this.animations.add('mueve',[0,1], 5, true);
+	this.animations.play('mueve');
 }
 
 fireball.prototype.update = function (){
@@ -508,7 +518,8 @@ var greenfireball = function(game, entradax, entraday, entradasprite, dir, velx,
 	this.juego = game;
 	this.velocidadY = vely;
 	this.cont = 0;
-	this.reescala_imagen(0.075, 0.075);
+	this.animations.add('mueve',[0,1,2,3,4,5], 7, true);
+	this.animations.play('mueve');
 }
 
 greenfireball.prototype = Object.create(fireball.prototype);
@@ -1300,7 +1311,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   		
     }
 
-    else if (plat.hielo){
+    else if (plat.hielo && !jug.body.touching.up){
       if(!jug.corriendo)
         jug.corriendo = true;
       setTimeout(function(){jug.corriendo = false;}, 300);
@@ -1366,22 +1377,37 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
 
 var handleRequest = {};
+
+var auxNombre;
 	
 handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
  //Script sacado de la recopilación de varios sitios web. Con varios quiero decir MUCHISIMO.
  
   var httpRequest;
- 
-  if(mandaDatos)
-   mandaInfo();
- 
-  makeRequest();
+  var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
+  var puntuacionAnterior = 0;
+  if(mandaDatos){
+    //DATOS
+    auxNombre = Datos[0];
+    //console.log(auxNobre)
+   makeRequest(auxNombre);
+   setTimeout(function(){mandaInfo()}, 500);
+  }
 
+  else 
+    makeRequest();
+ 
   function mandaInfo(){
-    //El arrya de datos
+    //El array de datos
+    //console.log(daPuntos());
     var nombre = Datos[0];
     var punct = Datos[1];
     var nivel = Datos[2];
+    //console.log(daPuntos());
+    console.log(puntuacionAnterior);
+    if(puntuacionAnterior > punct)
+      punct = puntuacionAnterior;
+    console.log (punct);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -1395,7 +1421,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     xhttp.send("nombre="+nombre+"&punct="+punct+"&nivel="+nivel);
   }
 
-  function makeRequest() {
+  function makeRequest(auxNombre) {
   	//console.log('Mensaje Enviado');
     httpRequest = new XMLHttpRequest();
 
@@ -1403,21 +1429,16 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
       alert('No se puede crear la instancia.');
       return false;
     }
-    var url = 'https://services.devpgsv.com/lent_xtreme/score.json';
-    httpRequest.onreadystatechange = alertContents;
-    httpRequest.open('GET', url, true);
-    httpRequest.send();
+    
+    httpRequest.onreadystatechange = function(){
 
-  }
-
-  function alertContents() {
-    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-      if (httpRequest.status === 200) {
+          if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
 
         //console.log('Ha llegado la respuesta.');
     var respuesta = JSON.parse(httpRequest.response);
-    if(pinta){
-  	var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+    var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
     for(var i = 0; i < 10; i++){
       var nombre;
@@ -1426,24 +1447,37 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
         nombre = "SIN DATOS";
       else 
         nombre = respuesta.score[i].nombre;
-    	juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
 
       if(respuesta.score[i] === undefined)
         punct = "0";
       else 
         punct = respuesta.score[i].punct;
-    	juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
-			}
-		}
+      
+
+      if (pinta){
+
+        juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
+        juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
+      }
+
+      //Vamos a ver si el nombre ya existe dentro del top 10 de puntuaciones. Si existe, guardamos su puntuación para despues
+      //ver si pasamos los datos o no.
+        if(mandaDatos && nombre === auxNombre){
+          puntuacionAnterior = punct;
+        }
+      }
+    
 
       } else {
         alert('Problema con la petición.');
       }
     }
   }
+    };
+    httpRequest.open('GET', url, true);
+    httpRequest.send();
 
-}
-
+  }
 
 module.exports = handleRequest;
 },{}],24:[function(require,module,exports){
@@ -1474,7 +1508,7 @@ var PreloaderScene = {
 
 	//Carga de imagenes para el juego
 
-  //Fondo
+    //Fondo
     this.game.stage.backgroundColor = '#220A29'; 
     this.game.load.spritesheet('fondo', 'images/spacerun.png', 1280, 720, 9);
     this.game.load.spritesheet('fondocourse', 'images/spacecourse.png', 1280, 720, 7);
@@ -1505,10 +1539,10 @@ var PreloaderScene = {
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
     this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
-    this.game.load.image('crabby', 'images/crab.png');
+    this.game.load.spritesheet('crabby', 'images/crabby.png', 64, 57, 4);
     this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
-    this.game.load.image('fireball', 'images/fireball.png');
-    this.game.load.image('greenfireball', 'images/greenfireball.png');
+    this.game.load.spritesheet('fireball', 'images/fireball.png', 64, 32, 2);
+    this.game.load.spritesheet('greenfireball', 'images/greenfireball.png', 64, 64, 6);
 
     //Bebidas
     this.game.load.image('energetica', 'images/Energetica.png');
@@ -1595,7 +1629,7 @@ var menu = {
     pantalla.height = 80;
 
     //Boton para puntuaciones
-    punt = juego.add.button(juego.world.centerX - 600, 300, 'button', actionOnClickPunt, this, 2,1,0);
+    punt = juego.add.button(juego.world.centerX - 535, 300, 'button', actionOnClickPunt, this, 2,1,0);
     punt.animations.add('button');
     punt.animations.play('button', 4, true );
     punt.width = 150;
@@ -1803,6 +1837,7 @@ var PlayScene = {
   create: function () {
 
   juego = this.game;
+
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
   puntuation = 0;
@@ -1852,6 +1887,7 @@ var PlayScene = {
   //Creamos al jugador
   jugador = new player(juego, 200, 600, 'player', 1, 350 , 3);
   jugador.body.setSize(25, 60, 15,-3);
+    jugador.vidas = 1;
 
   //Creamos el hud
   HUD.create(juego);
@@ -2051,8 +2087,10 @@ function nuevoNivel(){
 
 	var porcentaje = juego.rnd.integerInRange(0,100);
 	
-  if(nivel > 10)
-    enemigosPorNivel = 3
+  if(nivel > 25)
+    enemigosPorNivel = 4;
+  else if(nivel > 10)
+    enemigosPorNivel = 3;
 	else if(nivel > 2)
 		enemigosPorNivel = 2;
 	else
@@ -2144,11 +2182,11 @@ perd.Perder = function(){
     setTimeout(function(){
 
     	var nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación)");
-    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   ") {
+    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
-			 prompt("!" + nombre + " tu puntuación es 0!"  +"\n" + "(mejor vuelve a intentarlo, que queda feo poner un 0)");
+			alert("¡" + nombre + " tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
@@ -2204,7 +2242,6 @@ module.exports.PU = PU;
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
-  		console.log(jug);
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);
