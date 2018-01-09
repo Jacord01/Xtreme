@@ -390,7 +390,9 @@ perd.Perder = function(){
         nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
       cont++;
     }
-    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
+    nombre.trim(); 
+
+    if(nombre.length != 0 && nombre != undefined && nombre != null){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
