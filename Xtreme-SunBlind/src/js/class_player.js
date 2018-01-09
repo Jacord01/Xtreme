@@ -66,6 +66,9 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
+    this.borracho = false;
+
+    HUD.noBorracho();
     escudo.visible = true;
     escudo.x = this.x - 125;
     escudo.y = this.y - 120;

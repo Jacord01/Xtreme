@@ -258,6 +258,10 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
+   for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+    }
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
