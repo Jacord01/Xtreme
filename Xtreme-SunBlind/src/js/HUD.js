@@ -3,7 +3,7 @@
 var HUD = {};
 var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
-var pisDentro; var pisFuera;
+var pisDentro; var pisFuera; var medPis; var fondoRet;
 var ebrio;
 var Temp1; var Temp2; 
 var AG; 
@@ -49,14 +49,23 @@ HUD.create = function(game){
 
 
  	//Medidor de Pis
+ 	fondoRet = game.add.sprite(870, 25, 'fondoRetrete');
+ 	fondoRet.height = 60;
+ 	fondoRet.width = 400;
 
- 	pisDentro = game.add.sprite(950,30, 'interiorPis');
- 	pisDentro.height = 20;
+ 	pisDentro = game.add.sprite(950,50, 'interiorPis');
+ 	pisDentro.height = 10;
  	pisDentro.width = 0;
 
- 	pisFuera = game.add.sprite(950,30, 'exteriorPis');
- 	pisFuera.height = 20;
+ 	pisFuera = game.add.sprite(950,50, 'exteriorPis');
+ 	pisFuera.height = 10;
  	pisFuera.width = 300; 	
+
+ 	medPis = game.add.sprite(890,20, 'medPis');
+ 	medPis.width = 50;
+ 	medPis.height = 50;
+ 	medPis.animations.add('maximo', [10,11]);
+ 	medPis.frame = 0;
 
  	//Jugador ebrio
  	 ebrio = game.add.sprite(0 ,0,'borracho');
@@ -72,7 +81,7 @@ HUD.create = function(game){
  	 AG.visible = false;
 
  	 //Pausa
- 	 PA = game.add.sprite(480,40, 'Pausa');
+ 	 PA = game.add.sprite(150,0, 'Pausa');
  	 PA.visible = false;
 
 }
@@ -138,6 +147,21 @@ HUD.muestraTempLevel = function(){
 HUD.cambiaPis = function(pis){
 
 	 	pisDentro.width = pis * 30;
+	 	
+	 	if(pis === 0){
+
+	 		medPis.animations.stop(null, true);
+	 		medPis.frame = 0;
+	 	}
+	 	else if(pis >= 10){
+	 		medPis.animations.play('maximo', 2, true);
+	 		
+	 	}
+	 	else {
+	 		
+	 		medPis.frame = pis - 1;
+	 	}
+	 	
 }
 
 HUD.borracho = function(){
