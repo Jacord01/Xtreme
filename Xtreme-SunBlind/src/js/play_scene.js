@@ -67,7 +67,6 @@ var PlayScene = {
 
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
-  PU.creaPower();
 
   //Creamos enemigos
   enem.creaGrupo(juego);
@@ -113,12 +112,7 @@ var PlayScene = {
 
     if(juego.paused){
       juego.paused = false;
-      HUD.Pausa();
-                for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
-               
+      HUD.Pausa();               
       juego.state.start('menu');
     }
   },this);
@@ -263,6 +257,8 @@ function nuevoNivel(){
       powerUps.children[i].kill();
     }
 
+    PU.creaPower();
+
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
   else
@@ -270,6 +266,7 @@ function nuevoNivel(){
 
   jugador.borracho = false;
   HUD.noBorracho();
+  jugador.orinando = false;
   jugador.invencible = false;
   jugador.corriendo = false;
 
@@ -311,11 +308,6 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-    /*for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }*/
-               
 
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
@@ -380,10 +372,6 @@ perd.Perder = function(){
 
 	perder.visible = true; //Texto de perder en visible
 
-    for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
     setTimeout(function(){
       var nombre = "abcdefsgufjsl"
       var cont = 0;
