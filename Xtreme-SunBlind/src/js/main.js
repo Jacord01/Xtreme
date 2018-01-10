@@ -84,6 +84,10 @@ var PreloaderScene = {
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
     this.game.load.image('fVideo', 'images/Menus/FondoVideo.png');
 
+    //Carga de vídeos
+    this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
+    this.game.load.image('aux', 'images/FondoIndex.png');
+
   },
 
   create: function () {
