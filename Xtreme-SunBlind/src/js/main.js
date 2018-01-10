@@ -35,7 +35,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('escudo', 'images/Escudo.png');
     this.game.load.spritesheet('play', 'images/alientotal.png', 60, 57, 15);
-    this.game.load.spritesheet('player', 'images/alientotal3.png', 64, 57, 26);
+    this.game.load.spritesheet('player', 'images/alientotal5.png', 64, 57, 29);
 	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas

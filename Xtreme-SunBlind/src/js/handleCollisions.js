@@ -81,9 +81,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     }
     escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
-  	escena.enemigos.reducePantalla();
-  	escena.enemigos.reduceNumero();
+    jug.atacando = true;
+  	
   }
+  }
+
+  colisiones.reduceEnem = function(){
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){

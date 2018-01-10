@@ -392,7 +392,9 @@ perd.Perder = function(){
       cont++;
     } 
 
-    if(nombre.length != 0 && nombre != undefined && nombre != null){
+    if(nombre != undefined && nombre != null) 
+      
+    if  (nombre.length != 0){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
@@ -425,23 +427,24 @@ PU.creaPower = function() {
 setTimeout(function(){ 
 			if(aleatorio === 0){
     		po = new ener(juego,'energetica');
- 			powerUps.add(po);
+ 			
   			}
 
   			else if(aleatorio === 1){
   			po = new alc(juego, 'alcohol');
-  			powerUps.add(po);
+  			
   			}
 
   			else if(aleatorio === 2){
   				po = new wat(juego, 'agua');
-  				powerUps.add(po);
+  				
   			}
 
   			else if(aleatorio === 3){
   				po = new prot(juego, 'proteinas');
-  				powerUps.add(po);
+  				
   			}
+        powerUps.add(po);
 
 	}, 2000);
     		
