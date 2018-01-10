@@ -47,7 +47,7 @@ Protagonista.prototype.create = function (){
   this.animations.add('peeing', [15,16,17,18,19,20,21,22,23,24,25]);
   this.animations.add('attack1', [26]);
   this.animations.add('attack2', [27]);
-  this.animations.add('attack3', [28]);
+  this.animations.add('attack3', [28, 29],2);
   this.animations.play('stay');
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
