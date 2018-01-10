@@ -112,7 +112,11 @@ var PlayScene = {
 
     if(juego.paused){
       juego.paused = false;
-      HUD.Pausa();               
+      HUD.Pausa();        
+         for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+    }       
       juego.state.start('menu');
     }
   },this);
@@ -128,6 +132,11 @@ var PlayScene = {
         HUD.fullscreen()}
       
   },this);
+
+     for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+    }
   	
  },
 
@@ -381,8 +390,7 @@ perd.Perder = function(){
        else
         nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
       cont++;
-    }
-    nombre.trim(); 
+    } 
 
     if(nombre.length != 0 && nombre != undefined && nombre != null){
         

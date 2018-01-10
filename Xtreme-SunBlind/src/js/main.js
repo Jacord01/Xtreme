@@ -42,6 +42,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
     this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
+    this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -81,6 +82,7 @@ var PreloaderScene = {
     this.game.load.image('Controles', 'images/Menus/Controles.png');
     this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
+    this.game.load.image('fVideo', 'images/Menus/FondoVideo.png');
 
   },
 

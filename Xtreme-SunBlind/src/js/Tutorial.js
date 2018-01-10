@@ -10,11 +10,13 @@ var Tutorial = {
     juego = this.game;
 
     juego.state.add('play', PlayScene); 
+    //Aquí insertamos el vídeo de cómo jugar
+    juego.add.sprite(0,0, 'fVideo');
 
     //Boton que nos lleva al juego
-    buttonJuego = juego.add.button(juego.world.centerX - 75, 275, 'button', actionOnClickJuego, this, 2,1,0);
-    buttonJuego.animations.add('button');
-    buttonJuego.animations.play('button', 4, true );
+    buttonJuego = juego.add.button(juego.world.centerX + 400, 600, 'omitir', actionOnClickJuego, this, 2,1,0);
+    buttonJuego.animations.add('omitir');
+    buttonJuego.animations.play('omitir', 4, true );
     buttonJuego.width = 150;
     buttonJuego.height = 60;
 
