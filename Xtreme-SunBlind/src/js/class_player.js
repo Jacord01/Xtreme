@@ -99,7 +99,7 @@ Protagonista.prototype.update = function (){
    //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
    //this.invencible = true;
   // this.orina = 10;
-    if (cursors.left.isDown)
+    if (cursors.left.isDown && !this.atacando)
     {
         facingRight = false;
         this.body.velocity.x = -this.vel;
@@ -111,7 +111,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown)
+    else if (cursors.right.isDown && !this.atacando)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -164,13 +164,14 @@ Protagonista.prototype.update = function (){
          this.cambia_pos(this.x, this.y);
        }
 
-       if (!this.body.touching.down && !this.atacando)
-        this.animations.play('jump', 10 , true);
+       
 
        else if (this.body.velocity.x === 0 && !this.orinando && !this.atacando)
        	this.animations.play('stay');
 
        if (this.atacando){
+        this.vel = 0;
+    this.body.touching.down = true;
        if (!this.haAtacado){
         var num = this.juego.rnd.integerInRange(0,3);
         var prota = this;
@@ -179,6 +180,9 @@ Protagonista.prototype.update = function (){
      }
      this.animations.play('attack'+num,4,false);
       }
+
+      if (!this.body.touching.down && !this.atacando)
+        this.animations.play('jump', 10 , true);
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){
