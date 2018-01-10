@@ -1,6 +1,6 @@
 'use strict';
 
-var PlayScene = require('./play_scene.js');
+var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
@@ -16,7 +16,7 @@ var menu = {
 
     juego.state.add('info', menuInformacion);
 
-    juego.state.add('play', PlayScene); 
+    juego.state.add('tutorial', tuto); 
 
     juego.state.add('puntuation', Put);
 
@@ -59,7 +59,7 @@ function actionOnClickPunt (){
 
 function actionOnClickJuego () {
     
-    juego.state.start('play');
+    juego.state.start('tutorial');
 }
 
 function actionOnClickInfo(){
