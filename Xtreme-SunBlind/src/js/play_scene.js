@@ -161,7 +161,7 @@ var PlayScene = {
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado){
+    if(!jugador.agarrado && !jugador.atacando){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 

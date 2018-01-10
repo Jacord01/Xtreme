@@ -75,7 +75,8 @@ Protagonista.prototype.update = function (){
     this.borracho = false;
 
     HUD.noBorracho();
-    escudo.visible = true;
+    if(!this.atacando)
+    	escudo.visible = true;
     escudo.x = this.x - 125;
     escudo.y = this.y - 120;
   }
@@ -83,6 +84,8 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
+   	this.borracho = false;
+   	HUD.noBorracho();
     this.vel = 0;
     this.body.touching.down = true;
   } 
@@ -171,12 +174,13 @@ Protagonista.prototype.update = function (){
 
        if (this.atacando){
         this.vel = 0;
-    this.body.touching.down = true;
+        this.invencible = true;
+    	this.body.touching.down = true;
        if (!this.haAtacado){
-        var num = this.juego.rnd.integerInRange(0,3);
+        var num = this.juego.rnd.integerInRange(1,3);
         var prota = this;
         prota.haAtacado = true;
-       setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false;}, 700);
+       setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false; prota.invencible = false;}, 700);
      }
      this.animations.play('attack'+num,4,false);
       }
