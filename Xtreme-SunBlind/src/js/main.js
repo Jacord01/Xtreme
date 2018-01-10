@@ -40,7 +40,7 @@ var PreloaderScene = {
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
-    this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
+    this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
     this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);

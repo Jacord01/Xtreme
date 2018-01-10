@@ -21,7 +21,8 @@ var Tutorial = {
     video.play(false);
     video.addToWorld(650, 300, 0.5, 0.5, 0.8, 0.8);
 
-    timer = setTimeout(function(){juego.state.start('play');}, 35000);
+    timer = setTimeout(function(){video.currentTime = 0;
+	video.stop(); juego.state.start('play');}, 35000);
 
     //Boton que nos lleva al juego
     buttonJuego = juego.add.button(juego.world.centerX + 400, 600, 'omitir', actionOnClickJuego, this, 2,1,0);
@@ -35,6 +36,8 @@ var Tutorial = {
 
 
 function actionOnClickJuego () {
+	video.currentTime = 0;
+	video.stop();
     clearTimeout(timer);
     juego.state.start('play');
 }
