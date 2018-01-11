@@ -408,8 +408,9 @@ perd.Perder = function(){
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
+        }, 3000);
 
-    	juego.state.start('menu');}, 3000);
+    setTimeout(function(){juego.state.start('menu')}, 6000);
 }
 
 function actualizaCont(tiempo){
