@@ -87,6 +87,8 @@ var PreloaderScene = {
     //Carga de vídeos
     this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
     this.game.load.image('aux', 'images/FondoIndex.png');
+    this.game.load.video('pis1', 'images/Menus/pis1.mp4');
+    this.game.load.video('pis2', 'images/Menus/pis2.mp4');
 
     //Carda de los sfx
     this.game.load.audio('death', 'sfx/death.mp3');

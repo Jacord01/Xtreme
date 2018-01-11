@@ -7,6 +7,7 @@ var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
 var click; var back;
+var video1; var video2;
 
 var menuInformacion = {
 
@@ -29,9 +30,14 @@ var menuInformacion = {
 
 	cont = 0;
 
-	cambiaImagenes();
-
 	
+	video1 = juego.add.video('pis1');
+	video2 = juego.add.video('pis2');
+
+	video1.addToWorld(400, 300, 0.5, 0.5, 0.2, 0.2);
+	video2.addToWorld(800, 300, 0.5, 0.5, 0.2, 0.2);
+
+	cambiaImagenes();
 
 	 //Boton para cambiar entre la info Derecha
     buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
@@ -87,13 +93,22 @@ function cambiainfoI(){
 function cambiaImagenes(){
 
 	if(cont === 0){
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.stop();
+    	video2.stop();
 		Pot.visible = true;
 		Enem.visible = false;
 		Plat.visible = false;
 		Pis.visible = false;
 		Ctrl.visible = false;
+
 	}
 	else if (cont === 1){
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.stop();
+    	video2.stop();
 		Enem.visible = true;
 		Pot.visible = false;
 		Plat.visible = false;
@@ -102,6 +117,10 @@ function cambiaImagenes(){
 	}
 
 	else if(cont === 2){
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.stop();
+    	video2.stop();
 		Plat.visible = true;
 		Pot.visible = false;
 		Enem.visible = false;
@@ -115,9 +134,17 @@ function cambiaImagenes(){
 		Enem.visible = false;
 		Pis.visible = true;
 		Ctrl.visible = false;
+
+    	video1.play(true);
+    	video2.play(true);
+
 	}
 
 	else if(cont === 4){
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.stop();
+    	video2.stop();
 		Plat.visible = false;
 		Pot.visible = false;
 		Enem.visible = false;
