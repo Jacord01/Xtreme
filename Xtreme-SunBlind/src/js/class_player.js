@@ -8,6 +8,8 @@ var jumpButton;
 var escudo;
 var daVida;
 var facingRight;
+var salta1; var salta2;
+var hurt1; var hurt2; var hurt3;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -49,6 +51,13 @@ Protagonista.prototype.create = function (){
   this.animations.add('attack2', [27]);
   this.animations.add('attack3', [28, 29],2);
   this.animations.play('stay');
+  //añadimos sonidos del player
+  salta1 = this.juego.add.audio('jumpa1');
+  salta2 = this.juego.add.audio('jumpa2');
+  hurt1 = this.juego.add.audio('hurt1');
+  hurt2 = this.juego.add.audio('hurt2');
+  hurt3 = this.juego.add.audio('hurt3');
+
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
   escudo.width = 250;
@@ -133,6 +142,11 @@ Protagonista.prototype.update = function (){
       || this.body.touching.down))
 
     {
+      var n = this.juego.rnd.integerInRange(0,1);
+      if (n === 0)
+        salta1.play();
+      else
+        salta2.play();
 
         this.body.velocity.y = -1000;
     }
@@ -179,14 +193,21 @@ Protagonista.prototype.update = function (){
        if (!this.haAtacado){
         var num = this.juego.rnd.integerInRange(1,3);
         var prota = this;
+        if (num === 1)
+          hurt1.play();
+        else if (num === 2)
+          hurt2.play();
+        else
+          hurt3.play();
         prota.haAtacado = true;
        setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false; prota.invencible = false;}, 700);
      }
      this.animations.play('attack'+num,4,false);
       }
 
-      if (!this.body.touching.down && !this.atacando)
+      if (!this.body.touching.down && !this.atacando){
         this.animations.play('jump', 10 , true);
+      }
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){

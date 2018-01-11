@@ -88,6 +88,18 @@ var PreloaderScene = {
     this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
     this.game.load.image('aux', 'images/FondoIndex.png');
 
+    //Carda de los sfx
+    this.game.load.audio('death', 'sfx/death.mp3');
+    this.game.load.audio('jumpa1', 'sfx/jump1.mp3');
+    this.game.load.audio('jumpa2', 'sfx/jump2.mp3');
+    this.game.load.audio('hurt1', 'sfx/hurt1.mp3');
+    this.game.load.audio('hurt2', 'sfx/hurt2.mp3');
+    this.game.load.audio('hurt3', 'sfx/hurt3.mp3');
+    this.game.load.audio('coin', 'sfx/coin2.mp3');
+    this.game.load.audio('water', 'sfx/pu1.mp3');
+    this.game.load.audio('energ', 'sfx/pu2.mp3');
+    this.game.load.audio('beer', 'sfx/pu3.mp3');
+    this.game.load.audio('prot', 'sfx/pu4.mp3');
   },
 
   create: function () {

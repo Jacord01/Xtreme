@@ -6,11 +6,12 @@ var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
 var juego ;
+var coin;
 
 colisiones.create = function(game){
 
   juego = game;
-
+  coin = juego.add.audio('coin');
 }
 
 colisiones.collisionHandlerPower = function(jug, pw){
@@ -34,6 +35,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 colisiones.collisionHandlerMonedas = function(jug, mon){
   escena.puntos.suma(2);
+  coin.play();
   mon.kill();
   escena.stateMoneda.reduceMoneda();
 

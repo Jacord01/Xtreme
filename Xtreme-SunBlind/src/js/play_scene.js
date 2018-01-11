@@ -34,6 +34,9 @@ var pausa; var menu; var fullS;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 
+var muerte;
+
+
 var PlayScene = {
 
   create: function () {
@@ -92,6 +95,9 @@ var PlayScene = {
   //Creamos el hud
   HUD.create(juego);
   cols.create(juego);
+
+  //variables de audio
+  muerte = juego.add.audio('death');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -455,6 +461,7 @@ module.exports.PU = PU;
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
+        muerte.play();
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);
