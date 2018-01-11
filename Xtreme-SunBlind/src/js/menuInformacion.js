@@ -34,8 +34,8 @@ var menuInformacion = {
 	video1 = juego.add.video('pis1');
 	video2 = juego.add.video('pis2');
 
-	video1.addToWorld(400, 300, 0.5, 0.5, 0.2, 0.2);
-	video2.addToWorld(800, 300, 0.5, 0.5, 0.2, 0.2);
+	video1.addToWorld(320, 400, 0.5, 0.5, 0.4, 0.4);
+	video2.addToWorld(960, 400, 0.5, 0.5, 0.4, 0.4);
 
 	cambiaImagenes();
 
