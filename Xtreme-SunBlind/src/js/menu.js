@@ -6,6 +6,7 @@ var Put = require('./puntuaciones');
 
 var buttonJuego; var buttonInfo; var pantalla; var punt;
 var juego;
+var click; var back;
 
 var menu = {
 
@@ -19,6 +20,9 @@ var menu = {
     juego.state.add('tutorial', tuto); 
 
     juego.state.add('puntuation', Put);
+
+    click = juego.add.audio('click');
+    
 
    juego.add.sprite(0,0,'Menu');
 
@@ -53,17 +57,17 @@ var menu = {
 };
 
 function actionOnClickPunt (){
-
+    click.play();
     juego.state.start('puntuation');
 }
 
 function actionOnClickJuego () {
-    
+    click.play();
     juego.state.start('tutorial');
 }
 
 function actionOnClickInfo(){
-
+    click.play();
     juego.state.start('info');
 }
 

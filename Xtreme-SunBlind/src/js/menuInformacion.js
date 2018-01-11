@@ -6,6 +6,7 @@ var buttonInfoD; var buttonInfoI; var buttonInfoM;
 var Pot; var Enem; var Plat; var Pis; var Ctrl;
 var cont;
 var juego;
+var click; var back;
 
 var menuInformacion = {
 
@@ -22,6 +23,9 @@ var menuInformacion = {
     Pis.visible = false;
     Ctrl = juego.add.sprite(0,0,'Controles');
     Ctrl.visible = false;
+
+    click = juego.add.audio('click');
+    back = juego.add.audio('back');
 
 	cont = 0;
 
@@ -55,13 +59,13 @@ var menuInformacion = {
 
 
 function vuelveAMenu(){
-
+	back.play();
 	juego.state.start('menu');
 }
 
 
 function cambiainfoD(){
-
+	click.play();
 	cont++;
 
 	if (cont >= 5)
@@ -71,7 +75,7 @@ function cambiainfoD(){
 }
 
 function cambiainfoI(){
-
+	back.play();
 	cont--;
 
 	if (cont < 0)

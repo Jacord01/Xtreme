@@ -3,11 +3,14 @@
 var PlayScene = require('./play_scene.js');
 
 var buttonJuego;  var juego; var video; var timer;
+var click;
 
 var Tutorial = {
 
   create: function () {
     juego = this.game;
+
+    click = juego.add.audio('click');
 
     juego.state.add('play', PlayScene); 
     //Aquí insertamos el vídeo de cómo jugar
@@ -36,6 +39,7 @@ var Tutorial = {
 
 
 function actionOnClickJuego () {
+	click.play();
 	video.currentTime = 0;
 	video.stop();
     clearTimeout(timer);

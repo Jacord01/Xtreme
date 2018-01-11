@@ -33,6 +33,7 @@ var time = 0;
 var pausa; var menu; var fullS;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
+var pause; var drop; var back;
 
 var muerte;
 
@@ -98,6 +99,9 @@ var PlayScene = {
 
   //variables de audio
   muerte = juego.add.audio('death');
+  pause = juego.add.audio('pause');
+  drop = juego.add.audio('drop');
+  back = juego.add.audio('back');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -106,16 +110,18 @@ var PlayScene = {
   pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
 
   pausa.onDown.add(function () {
+
     if(juego.paused){juego.paused = false
       HUD.quitaPausa();
       
     };
+    pause.play();
   },this);
 
   menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
 
   menu.onDown.add(function () {
-
+    back.play();
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();        
@@ -452,6 +458,7 @@ setTimeout(function(){
   				
   			}
         powerUps.add(po);
+        drop.play();
 
 	}, 2000);
     		
