@@ -416,7 +416,13 @@ perd.Perder = function(){
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
         }, 3000);
 
-    setTimeout(function(){juego.state.start('menu')}, 6000);
+    setTimeout(function(){ 
+      for (var i = 0 ; i < powerUps.children.length; i++){
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+        };
+    juego.state.start('menu')
+  }, 6000);
 }
 
 function actualizaCont(tiempo){
