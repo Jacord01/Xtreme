@@ -4,7 +4,7 @@
 var HUD = {};
 var vida1; var vida2; var vida3;
 var punct1; var punct2; var nivel;
-var pisDentro; var pisFuera;
+var pisDentro; var pisFuera; var medPis; var fondoRet;
 var ebrio;
 var Temp1; var Temp2; 
 var AG; 
@@ -50,14 +50,23 @@ HUD.create = function(game){
 
 
  	//Medidor de Pis
+ 	fondoRet = game.add.sprite(870, 25, 'fondoRetrete');
+ 	fondoRet.height = 60;
+ 	fondoRet.width = 400;
 
- 	pisDentro = game.add.sprite(950,30, 'interiorPis');
- 	pisDentro.height = 20;
+ 	pisDentro = game.add.sprite(950,50, 'interiorPis');
+ 	pisDentro.height = 10;
  	pisDentro.width = 0;
 
- 	pisFuera = game.add.sprite(950,30, 'exteriorPis');
- 	pisFuera.height = 20;
+ 	pisFuera = game.add.sprite(950,50, 'exteriorPis');
+ 	pisFuera.height = 10;
  	pisFuera.width = 300; 	
+
+ 	medPis = game.add.sprite(890,20, 'medPis');
+ 	medPis.width = 50;
+ 	medPis.height = 50;
+ 	medPis.animations.add('maximo', [10,11]);
+ 	medPis.frame = 0;
 
  	//Jugador ebrio
  	 ebrio = game.add.sprite(0 ,0,'borracho');
@@ -73,7 +82,7 @@ HUD.create = function(game){
  	 AG.visible = false;
 
  	 //Pausa
- 	 PA = game.add.sprite(480,40, 'Pausa');
+ 	 PA = game.add.sprite(150,0, 'Pausa');
  	 PA.visible = false;
 
 }
@@ -139,6 +148,21 @@ HUD.muestraTempLevel = function(){
 HUD.cambiaPis = function(pis){
 
 	 	pisDentro.width = pis * 30;
+	 	
+	 	if(pis === 0){
+
+	 		medPis.animations.stop(null, true);
+	 		medPis.frame = 0;
+	 	}
+	 	else if(pis >= 10){
+	 		medPis.animations.play('maximo', 2, true);
+	 		
+	 	}
+	 	else {
+	 		
+	 		medPis.frame = pis - 1;
+	 	}
+	 	
 }
 
 HUD.borracho = function(){
@@ -195,6 +219,58 @@ HUD.fullscreen = function(){
 
 module.exports = HUD;
 },{}],2:[function(require,module,exports){
+'use strict';
+
+var PlayScene = require('./play_scene.js');
+
+var buttonJuego;  var juego; var video; var timer;
+var click;
+
+var Tutorial = {
+
+  create: function () {
+    juego = this.game;
+
+    click = juego.add.audio('click');
+
+    juego.state.add('play', PlayScene); 
+    //Aquí insertamos el vídeo de cómo jugar
+   
+    juego.add.sprite(0,0, 'fVideo');
+    var aux = juego.add.sprite(100,0, 'aux');
+    aux.width = 1100;
+    aux.height = 615;
+
+    video = juego.add.video('tuto');
+    video.play(false);
+    video.addToWorld(650, 300, 0.5, 0.5, 0.8, 0.8);
+
+    timer = setTimeout(function(){video.currentTime = 0;
+	video.stop(); juego.state.start('play');}, 51000);
+
+    //Boton que nos lleva al juego
+    buttonJuego = juego.add.button(juego.world.centerX + 400, 600, 'omitir', actionOnClickJuego, this, 2,1,0);
+    buttonJuego.animations.add('omitir');
+    buttonJuego.animations.play('omitir', 4, true );
+    buttonJuego.width = 150;
+    buttonJuego.height = 60;
+
+ },
+};
+
+
+function actionOnClickJuego () {
+	click.play();
+	video.currentTime = 0;
+	video.stop();
+    clearTimeout(timer);
+    juego.state.start('play');
+}
+
+module.exports = Tutorial; 
+
+
+},{"./play_scene.js":28}],3:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
@@ -276,12 +352,13 @@ agarrador.prototype.cambiaAgarre = function(ag, jug){
 }
 
 module.exports = agarrador;
-},{"./HUD":1,"./class_enemy":7,"./play_scene":27}],3:[function(require,module,exports){
+},{"./HUD":1,"./class_enemy":8,"./play_scene":28}],4:[function(require,module,exports){
 var PU = require('./class_powerUp');
 var HUD = require('./HUD');	
+var sound;
 
 var alcohol = function(game, entradasprite){
-
+	sound = game.add.audio('beer');
 	this.orina = 5;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.9,0.9);
@@ -292,17 +369,19 @@ alcohol.prototype = Object.create(PU.prototype);
 alcohol.prototype.constructor = alcohol;
 
 alcohol.prototype.efecto = function(jug){
+	sound.play();
 	jug.borracho = true;
 	HUD.borracho();
 	setTimeout(function(){jug.borracho = false; HUD.noBorracho();}, 5000);
 }
 
 module.exports = alcohol;
-},{"./HUD":1,"./class_powerUp":16}],4:[function(require,module,exports){
+},{"./HUD":1,"./class_powerUp":17}],5:[function(require,module,exports){
 var PU = require('./class_powerUp');	
+var sound;
 
 var batidoDeProteinas = function(game, entradasprite){
-
+	sound = game.add.audio('prot');
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
 	this.reescala_imagen(0.9,0.9);	
@@ -312,6 +391,7 @@ batidoDeProteinas.prototype = Object.create(PU.prototype);
 batidoDeProteinas.prototype.constructor = batidoDeProteinas;
 
 batidoDeProteinas.prototype.efecto = function(jug){
+	sound.play();
 	jug.invencible = true;
 	jug.borracho = false;
 	setTimeout(function(){jug.invencible = false}, 5000);
@@ -319,14 +399,15 @@ batidoDeProteinas.prototype.efecto = function(jug){
 }
 
 module.exports = batidoDeProteinas;
-},{"./class_powerUp":16}],5:[function(require,module,exports){
+},{"./class_powerUp":17}],6:[function(require,module,exports){
 var PU = require('./class_powerUp');	
+var sound;
 
 var bebidaEnergetica = function(game, entradasprite){
-
+	sound = game.add.audio('energ');
 	this.orina = 3;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.07,0.07);
+	this.reescala_imagen(0.9,0.9);
 	
 }
 
@@ -334,13 +415,14 @@ bebidaEnergetica.prototype = Object.create(PU.prototype);
 bebidaEnergetica.prototype.constructor = bebidaEnergetica;
 
 bebidaEnergetica.prototype.efecto = function(jug){
+	sound.play();
 	jug.corriendo = true;
 	setTimeout(function(){jug.corriendo = false}, 5000);
 
 }
 
 module.exports = bebidaEnergetica;
-},{"./class_powerUp":16}],6:[function(require,module,exports){
+},{"./class_powerUp":17}],7:[function(require,module,exports){
 "use strict";
 
 var enemy = require('./class_enemy');
@@ -388,7 +470,7 @@ crab.prototype.update = function(){
 
 
 module.exports = crab;
-},{"./class_enemy":7}],7:[function(require,module,exports){
+},{"./class_enemy":8}],8:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -424,7 +506,7 @@ enemigo.prototype.devuelvePuntos = function(){
 module.exports = enemigo;
 
 
-},{"./class_movibl":12}],8:[function(require,module,exports){
+},{"./class_movibl":13}],9:[function(require,module,exports){
 //clase para los elementos del entorno
 
 "use strict"; 
@@ -439,7 +521,7 @@ entorno.prototype = Object.create(GO.prototype);
 entorno.prototype.constructor = entorno;
 
 module.exports = entorno;
-},{"./class_object":13}],9:[function(require,module,exports){
+},{"./class_object":14}],10:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');	
@@ -472,7 +554,7 @@ fireball.prototype.update = function (){
 }
 
 module.exports = fireball;
-},{"./class_movibl":12}],10:[function(require,module,exports){
+},{"./class_movibl":13}],11:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -508,7 +590,7 @@ else
 }
 
 module.exports = fly;
-},{"./class_enemy":7}],11:[function(require,module,exports){
+},{"./class_enemy":8}],12:[function(require,module,exports){
 'use strict';
 
 var fireball = require('./class_fireball');	
@@ -534,7 +616,7 @@ greenfireball.prototype.update = function (){
 }
 
 module.exports = greenfireball;
-},{"./class_fireball":9}],12:[function(require,module,exports){
+},{"./class_fireball":10}],13:[function(require,module,exports){
 //Scripta para objetos movibles
 
 "use strict";
@@ -561,7 +643,7 @@ movibl.prototype.cambia_dir = function(){
 }
 
 module.exports = movibl;
-},{"./class_object":13}],13:[function(require,module,exports){
+},{"./class_object":14}],14:[function(require,module,exports){
 //Script general para todos los objetos, que contendrán una posición y un sprite
 
 "use strict"; //Correción en modo estricto
@@ -588,7 +670,7 @@ GO.prototype.reescala_imagen = function (x, y){
 };
 
 module.exports = GO;
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var entorno = require('./class_environment');
@@ -660,16 +742,19 @@ function vuelve(){
 
 
 module.exports = plataforma;
-},{"./class_environment":8}],15:[function(require,module,exports){
+},{"./class_environment":9}],16:[function(require,module,exports){
 'use strict';
 
 var movible = require('./class_movibl');
 var HUD = require('./HUD');	
+var cols = require('./handleCollisions');
 var cursors;
 var jumpButton;
 var escudo;
 var daVida;
 var facingRight;
+var salta1; var salta2;
+var hurt1; var hurt2; var hurt3;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -687,6 +772,8 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.invencible = false;
   this.saltando = false;
   this.agarrado = false;
+  this.atacando = false;
+  this.haAtacado = false;
   this.pis;
   this.create();
 }
@@ -705,7 +792,17 @@ Protagonista.prototype.create = function (){
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
   this.animations.add('peeing', [15,16,17,18,19,20,21,22,23,24,25]);
+  this.animations.add('attack1', [26]);
+  this.animations.add('attack2', [27]);
+  this.animations.add('attack3', [28, 29],2);
   this.animations.play('stay');
+  //añadimos sonidos del player
+  salta1 = this.juego.add.audio('jumpa1');
+  salta2 = this.juego.add.audio('jumpa2');
+  hurt1 = this.juego.add.audio('hurt1');
+  hurt2 = this.juego.add.audio('hurt2');
+  hurt3 = this.juego.add.audio('hurt3');
+
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
   escudo.width = 250;
@@ -720,6 +817,7 @@ Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
+   this.vel = this.origVel - (this.orina * 10);
    
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
@@ -729,7 +827,11 @@ Protagonista.prototype.update = function (){
    }
 
    if(this.invencible){
-    escudo.visible = true;
+    this.borracho = false;
+
+    HUD.noBorracho();
+    if(!this.atacando)
+    	escudo.visible = true;
     escudo.x = this.x - 125;
     escudo.y = this.y - 120;
   }
@@ -745,14 +847,8 @@ Protagonista.prototype.update = function (){
   if(this.agarrado)
     this.vel = 0;
 
-  //this.orina = 10;
-  //this.juego.debug.body(this.pis);
-	/* this.juego.debug.text('VELOCIDAD: ' + this.vel, 32, 70);
-   this.juego.debug.text('SALTO: ' + this.saltando, 230, 70);
-   this.juego.debug.text('ORINANDO: ' + this.orinando, 500, 50);*/
-   //this.juego.debug.text('VIDA: ' + this.vidas, 500, 50);
-   //this.invencible = true;
-  // this.orina = 10;
+  if(!this.atacando){
+
     if (cursors.left.isDown)
     {
         facingRight = false;
@@ -760,7 +856,7 @@ Protagonista.prototype.update = function (){
         if(!this.borracho)
           this.scale.x = -this.escala;
         else this.scale.x = this.escala;
-        if (this.body.touching.down && !this.orinando)
+        if (this.body.touching.down && !this.orinando && !this.atacando)
            this.animations.play('walk', 6, true);
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
@@ -772,28 +868,36 @@ Protagonista.prototype.update = function (){
         if(!this.borracho)
         this.scale.x = this.escala;
         else this.scale.x = -this.escala;
-        if (this.body.touching.down && !this.orinando)
+        if (this.body.touching.down && !this.orinando && !this.atacando)
            this.animations.play('walk', 6, true);
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 150, this. y -620);
 
     }
 
-    this.vel = this.origVel - (this.orina * 10);
-    if (jumpButton.isDown && !this.agarrado && !this.orinando && (this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
+      this.animations.play('jump', 10 , true);
+      var n = this.juego.rnd.integerInRange(0,1);
+      if (n === 0)
+        salta1.play();
+      else
+        salta2.play();
 
         this.body.velocity.y = -1000;
     }
+}
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
+    if(cursors.up.isDown && !this.saltando && !atacando && this.orina >= 10)
         {
+          this.borracho = false;
+          HUD.noBorracho();
           this.animations.play('peeing', 6, false);
           this.orina = 0;
           HUD.cambiaPis(this.orina);
@@ -818,11 +922,27 @@ Protagonista.prototype.update = function (){
          this.cambia_pos(this.x, this.y);
        }
 
-       if (!this.body.touching.down)
-        this.animations.play('jump', 10 , true);
-
-       else if (this.body.velocity.x === 0 && !this.orinando)
+       else if (this.body.velocity.x === 0 && !this.orinando && !this.atacando)
        	this.animations.play('stay');
+
+       if (this.atacando){
+        this.vel = 0;
+        this.invencible = true;
+    	this.body.touching.down = true;
+       if (!this.haAtacado){
+        var num = this.juego.rnd.integerInRange(1,3);
+        var prota = this;
+        if (num === 1)
+          hurt1.play();
+        else if (num === 2)
+          hurt2.play();
+        else
+          hurt3.play();
+        prota.haAtacado = true;
+       setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false; prota.invencible = false;}, 700);
+     }
+     this.animations.play('attack'+num,4,false);
+      }
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){
@@ -835,7 +955,7 @@ Protagonista.prototype.incrementaOrina = function (orina){
 }
 
 module.exports = Protagonista;
-},{"./HUD":1,"./class_movibl":12}],16:[function(require,module,exports){
+},{"./HUD":1,"./class_movibl":13,"./handleCollisions":23}],17:[function(require,module,exports){
 
 "use strict";
 
@@ -861,7 +981,7 @@ powerUp.prototype.constructor = powerUp;
 
 powerUp.prototype.llama = function(){
 	var objeto = this;
-	this.timer = setTimeout(function(){objeto.kill(); escena.PU.creaPower(); //Aqui tenemos que llamar a crear un nuevo PU
+	this.timer = setTimeout(function(){objeto.kill(); clearTimeout(this.timer);escena.PU.eliminado(objeto); escena.PU.creaPower(); //Aqui tenemos que llamar a crear un nuevo PU
 	}, 6000);
 
 }
@@ -872,7 +992,7 @@ powerUp.prototype.limpia = function(){
 }
 
 module.exports = powerUp;
-},{"./class_object":13,"./play_scene":27}],17:[function(require,module,exports){
+},{"./class_object":14,"./play_scene":28}],18:[function(require,module,exports){
 "use strict";
 
 var enemigo = require('./class_enemy');
@@ -910,14 +1030,15 @@ else
 
 
 module.exports = tortuguita;
-},{"./class_enemy":7}],18:[function(require,module,exports){
+},{"./class_enemy":8}],19:[function(require,module,exports){
 var PU = require('./class_powerUp');	
+var sound;
 
 var agua = function(game, entradasprite){
-
+	sound = game.add.audio('water');
 	this.orina = 2;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.1,0.1);
+	this.reescala_imagen(0.9,0.9);
 	
 }
 	
@@ -926,11 +1047,12 @@ agua.prototype.constructor = agua;
 
 agua.prototype.efecto = function(jug){
 	console.log('El agua no hace nada, pringado.');
+	sound.play();
 }
 
 
 module.exports = agua;
-},{"./class_powerUp":16}],19:[function(require,module,exports){
+},{"./class_powerUp":17}],20:[function(require,module,exports){
 'use strict'
 
 var tort = require('./class_turtle');
@@ -1045,7 +1167,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
 
 
 module.exports = enemigoRandom;
-},{"./class_agarrador":2,"./class_crab":6,"./class_fly":10,"./class_turtle":17,"./play_scene":27}],20:[function(require,module,exports){
+},{"./class_agarrador":3,"./class_crab":7,"./class_fly":11,"./class_turtle":18,"./play_scene":28}],21:[function(require,module,exports){
 'use strict'
 	
 var creaMonedas = {};
@@ -1078,7 +1200,7 @@ creaMonedas.devuelveGrupo = function(juego, numMonedas){
 }
 
 module.exports = creaMonedas;
-},{"./class_object":13}],21:[function(require,module,exports){
+},{"./class_object":14}],22:[function(require,module,exports){
 'use strict'
 
 var plat = require('./class_platform');
@@ -1208,7 +1330,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
   
 
 module.exports = plataforma;
-},{"./class_platform":14}],22:[function(require,module,exports){
+},{"./class_platform":15}],23:[function(require,module,exports){
 'use strict'
 
 var escena = require('./play_scene');
@@ -1217,21 +1339,22 @@ var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
 var juego ;
+var coin;
 
 colisiones.create = function(game){
 
   juego = game;
-
+  coin = juego.add.audio('coin');
 }
 
 colisiones.collisionHandlerPower = function(jug, pw){
   escena.puntos.suma(-3);
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
-	pw.limpia();
+  pw.limpia();
+  escena.PU.eliminado(pw);
+  escena.PU.creaPower();
 	pw.kill();
-	escena.PU.creaPower(); 
-
 }
 
 colisiones.collisionHandlerFireBall = function(jug, fb){
@@ -1248,6 +1371,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 colisiones.collisionHandlerMonedas = function(jug, mon){
   escena.puntos.suma(2);
+  coin.play();
   mon.kill();
   escena.stateMoneda.reduceMoneda();
 
@@ -1295,9 +1419,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     }
     escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
-  	escena.enemigos.reducePantalla();
-  	escena.enemigos.reduceNumero();
+    jug.atacando = true;
+  	
   }
+  }
+
+  colisiones.reduceEnem = function(){
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){
@@ -1372,7 +1501,7 @@ colisiones.collisionHandlerEnem = function(jug, enem){
 
   module.exports = colisiones;
 
-},{"./HUD":1,"./crea_Plataformas":21,"./play_scene":27}],23:[function(require,module,exports){
+},{"./HUD":1,"./crea_Plataformas":22,"./play_scene":28}],24:[function(require,module,exports){
 'use strict';
 
 
@@ -1401,6 +1530,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     //El array de datos
     //console.log(daPuntos());
     var nombre = Datos[0];
+    
     var punct = Datos[1];
     var nivel = Datos[2];
     //console.log(daPuntos());
@@ -1482,7 +1612,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
   }
 
 module.exports = handleRequest;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 var Menu = require('./menu.js');
@@ -1520,13 +1650,14 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('escudo', 'images/Escudo.png');
     this.game.load.spritesheet('play', 'images/alientotal.png', 60, 57, 15);
-    this.game.load.spritesheet('player', 'images/alientotal3.png', 64, 57, 26);
+    this.game.load.spritesheet('player', 'images/alientotal5.png', 64, 57, 29);
 	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
-    this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
+    this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
+    this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -1537,6 +1668,8 @@ var PreloaderScene = {
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
     this.game.load.image('Pausa', 'images/Menus/pause.png');
+    this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
+    this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -1564,7 +1697,30 @@ var PreloaderScene = {
     this.game.load.image('Controles', 'images/Menus/Controles.png');
     this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
+    this.game.load.image('fVideo', 'images/Menus/FondoVideo.png');
 
+    //Carga de vídeos
+    this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
+    this.game.load.image('aux', 'images/FondoIndex.png');
+    this.game.load.video('pis1', 'images/Menus/pis1.mp4');
+    this.game.load.video('pis2', 'images/Menus/pis2.mp4');
+
+    //Carda de los sfx
+    this.game.load.audio('death', 'sfx/death.mp3');
+    this.game.load.audio('jumpa1', 'sfx/jump1.mp3');
+    this.game.load.audio('jumpa2', 'sfx/jump2.mp3');
+    this.game.load.audio('hurt1', 'sfx/hurt1.mp3');
+    this.game.load.audio('hurt2', 'sfx/hurt2.mp3');
+    this.game.load.audio('hurt3', 'sfx/hurt3.mp3');
+    this.game.load.audio('coin', 'sfx/coin2.mp3');
+    this.game.load.audio('water', 'sfx/pu1.mp3');
+    this.game.load.audio('energ', 'sfx/pu2.mp3');
+    this.game.load.audio('beer', 'sfx/pu3.mp3');
+    this.game.load.audio('prot', 'sfx/pu4.mp3');
+    this.game.load.audio('drop', 'sfx/puDrop.mp3');
+    this.game.load.audio('pause', 'sfx/pause.mp3');
+    this.game.load.audio('click', 'sfx/click.mp3');
+    this.game.load.audio('back', 'sfx/back.mp3');
   },
 
   create: function () {
@@ -1584,15 +1740,16 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./menu.js":25}],25:[function(require,module,exports){
+},{"./menu.js":26}],26:[function(require,module,exports){
 'use strict';
 
-var PlayScene = require('./play_scene.js');
+var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
 var buttonJuego; var buttonInfo; var pantalla; var punt;
 var juego;
+var click; var back;
 
 var menu = {
 
@@ -1603,9 +1760,12 @@ var menu = {
 
     juego.state.add('info', menuInformacion);
 
-    juego.state.add('play', PlayScene); 
+    juego.state.add('tutorial', tuto); 
 
     juego.state.add('puntuation', Put);
+
+    click = juego.add.audio('click');
+    
 
    juego.add.sprite(0,0,'Menu');
 
@@ -1640,17 +1800,17 @@ var menu = {
 };
 
 function actionOnClickPunt (){
-
+    click.play();
     juego.state.start('puntuation');
 }
 
 function actionOnClickJuego () {
-    
-    juego.state.start('play');
+    click.play();
+    juego.state.start('tutorial');
 }
 
 function actionOnClickInfo(){
-
+    click.play();
     juego.state.start('info');
 }
 
@@ -1669,39 +1829,102 @@ function fullscreen(){
 
 
 module.exports = menu; 
-},{"./menuInformacion":26,"./play_scene.js":27,"./puntuaciones":28}],26:[function(require,module,exports){
+},{"./Tutorial.js":2,"./menuInformacion":27,"./puntuaciones":29}],27:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
 
 var buttonInfoD; var buttonInfoI; var buttonInfoM;
-var Pot; var Enem; var Plat; var Pis; var Ctrl;
+var fondo;
 var cont;
 var juego;
+var click; var back;
+var video1; var video2;
 
 var menuInformacion = {
 
 	create: function(){
 	juego = this.game;
 	//Cargamos las imágenes del menú
-	Pot = juego.add.sprite(0,0,'Potenciadores');
-    Pot.visible = false;
-    Enem = juego.add.sprite(0,0,'Enemigos');
-    Enem.visible = false;
-    Plat = juego.add.sprite(0,0, 'Plataformas');
-    Plat.visible = false;
-    Pis = juego.add.sprite(0,0, 'Pis');
-    Pis.visible = false;
-    Ctrl = juego.add.sprite(0,0,'Controles');
-    Ctrl.visible = false;
+	fondo = juego.add.sprite(0,0,'Potenciadores');
+
+    click = juego.add.audio('click');
+    back = juego.add.audio('back');
 
 	cont = 0;
 
 	cambiaImagenes();
+	}
+};
 
-	
 
-	 //Boton para cambiar entre la info Derecha
+function vuelveAMenu(){
+	back.play();
+	juego.state.start('menu');
+}
+
+
+function cambiainfoD(){
+	click.play();
+	cont++;
+
+	if (cont >= 5)
+		cont = 0;
+
+	cambiaImagenes();
+}
+
+function cambiainfoI(){
+	back.play();
+	cont--;
+
+	if (cont < 0)
+		cont = 4;
+
+	cambiaImagenes();
+}
+
+function cambiaImagenes(){
+
+	if(cont === 0){
+		juego.add.sprite(0,0,'Potenciadores');
+		creaBotones();
+	}
+	else if (cont === 1){
+		juego.add.sprite(0,0,'Enemigos');
+		creaBotones();		
+	}
+
+	else if(cont === 2){
+		juego.add.sprite(0,0,'Plataformas');
+		creaBotones();	
+	}
+
+	else if(cont === 3){
+		juego.add.sprite(0,0,'Pis');
+		creaBotones();
+		video1 = juego.add.video('pis1');
+		video2 = juego.add.video('pis2');
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.addToWorld(320, 400, 0.5, 0.5, 0.4, 0.4);
+		video2.addToWorld(960, 400, 0.5, 0.5, 0.4, 0.4);
+    	video1.play(true);
+    	video2.play(true);
+
+	}
+
+	else if(cont === 4){
+		juego.add.sprite(0,0,'Controles');
+		creaBotones();		
+	}
+
+
+}
+
+function creaBotones(){
+
+		 //Boton para cambiar entre la info Derecha
     buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
     buttonInfoD.animations.add('button');
     buttonInfoD.animations.play('button', 4, true );
@@ -1722,82 +1945,10 @@ var menuInformacion = {
     buttonInfoM.width = 100;
     buttonInfoM.height = 50;
 
-	}
-};
-
-
-function vuelveAMenu(){
-
-	juego.state.start('menu');
-}
-
-
-function cambiainfoD(){
-
-	cont++;
-
-	if (cont >= 5)
-		cont = 0;
-
-	cambiaImagenes();
-}
-
-function cambiainfoI(){
-
-	cont--;
-
-	if (cont < 0)
-		cont = 4;
-
-	cambiaImagenes();
-}
-
-function cambiaImagenes(){
-
-	if(cont === 0){
-		Pot.visible = true;
-		Enem.visible = false;
-		Plat.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-	else if (cont === 1){
-		Enem.visible = true;
-		Pot.visible = false;
-		Plat.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 2){
-		Plat.visible = true;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 3){
-		Plat.visible = false;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = true;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 4){
-		Plat.visible = false;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = true;
-	}
-
-
 }
 
 module.exports = menuInformacion;
-},{"./menu.js":25}],27:[function(require,module,exports){
+},{"./menu.js":26}],28:[function(require,module,exports){
 'use strict';
 var go = require('./class_object');
 var mov = require('./class_movibl');
@@ -1824,7 +1975,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; 
+var powerUps; var PUcreado; 
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -1833,6 +1984,12 @@ var time = 0;
 var pausa; var menu; var fullS;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
+var pause; var drop; var back;
+var style; var letras;
+
+var muerte;
+var debug = false;
+
 
 var PlayScene = {
 
@@ -1857,7 +2014,6 @@ var PlayScene = {
   fondocourse.height = 720;
   fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
   fondocourse.visible = false;
-  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -1867,8 +2023,7 @@ var PlayScene = {
 
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
-  PU.creaPower();
-
+  PUcreado = false;
   //Creamos enemigos
   enem.creaGrupo(juego);
   auxRn = false;
@@ -1894,6 +2049,12 @@ var PlayScene = {
   HUD.create(juego);
   cols.create(juego);
 
+  //variables de audio
+  muerte = juego.add.audio('death');
+  pause = juego.add.audio('pause');
+  drop = juego.add.audio('drop');
+  back = juego.add.audio('back');
+
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
   nuevoNivel();
@@ -1901,24 +2062,23 @@ var PlayScene = {
   pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
 
   pausa.onDown.add(function () {
+
     if(juego.paused){juego.paused = false
       HUD.quitaPausa();
       
     };
+    pause.play();
   },this);
 
   menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
 
   menu.onDown.add(function () {
-
+    back.play();
     if(juego.paused){
       juego.paused = false;
-      HUD.Pausa();
-                for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
-               
+      HUD.Pausa();        
+	PU.eliminado();
+
       juego.state.start('menu');
     }
   },this);
@@ -1934,7 +2094,12 @@ var PlayScene = {
         HUD.fullscreen()}
       
   },this);
-  	
+
+
+	PU.eliminado();
+
+    style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
+    letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
  },
 
   update: function (){
@@ -1944,7 +2109,8 @@ var PlayScene = {
       juego.paused = true;
       HUD.Pausa();
     }
-
+    
+    letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
 
@@ -1958,7 +2124,7 @@ var PlayScene = {
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado){
+    if(!jugador.agarrado && !jugador.atacando){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -2014,17 +2180,19 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
-  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	if(debug){
+    juego.debug.body(jugador);
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
-  	/*if(nivel % 5 === 0)
-  		juego.debug.text('TIME: ' + time, 500, 70);*/
-      //juego.debug.text('agarro: ' + agarro, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);
+      juego.debug.text('agarro: ' + agarro, 500, 30);
+  }
   }
 };
 
@@ -2058,6 +2226,8 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
+  PU.eliminado();
+    PU.creaPower();
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
@@ -2066,6 +2236,7 @@ function nuevoNivel(){
 
   jugador.borracho = false;
   HUD.noBorracho();
+  jugador.orinando = false;
   jugador.invencible = false;
   jugador.corriendo = false;
 
@@ -2107,18 +2278,10 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-    /*for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }*/
-               
 
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
-  	/*var timer = juego.time.create(true);
-  	myloop = juego.time.events.loop(time, endedCourse, this);
-  	timer.start();*/
     HUD.muestraTempLevel();
     actualizaCont(time);
   	course = true;
@@ -2131,11 +2294,6 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
 
   else 
     HUD.ocultaTempLevel();
-
-	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
-	agarrador = enem.devuelveAgarre();
-	auxRn = !auxRn;
-	enemigosEnPantalla++;*/
 }
 
 agarrador.devuelve= function (){
@@ -2176,21 +2334,20 @@ perd.Perder = function(){
 
 	perder.visible = true; //Texto de perder en visible
 
-    for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
     setTimeout(function(){
       var nombre = "abcdefsgufjsl"
       var cont = 0;
-      while(nombre.length > 12){
+      while(nombre.length > 11){
         if(cont <= 3)
     	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
        else
         nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
       cont++;
-    }
-    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
+    } 
+
+    if(nombre != undefined && nombre != null) 
+      
+    if  (nombre.length != 0){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
@@ -2198,8 +2355,12 @@ perd.Perder = function(){
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
+        }, 3000);
 
-    	juego.state.start('menu');}, 3000);
+    setTimeout(function(){ 
+      PU.eliminado();
+    juego.state.start('menu');
+  }, 6000);
 }
 
 function actualizaCont(tiempo){
@@ -2215,41 +2376,61 @@ function actualizaCont(tiempo){
 module.exports.perd = perd;
 
 //Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
+var PUcreado;
 var PU = {};
+
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
-    		
+    		if(!PU.devuelve()){
+    			PU.creado();
 setTimeout(function(){ 
-			if(aleatorio === 0){
-    		po = new ener(juego,'energetica');
- 			powerUps.add(po);
-  			}
 
-  			else if(aleatorio === 1){
-  			po = new alc(juego, 'alcohol');
-  			powerUps.add(po);
-  			}
+			if(aleatorio === 0) po = new ener(juego,'energetica');
 
-  			else if(aleatorio === 2){
-  				po = new wat(juego, 'agua');
-  				powerUps.add(po);
-  			}
+  			else if(aleatorio === 1) po = new alc(juego, 'alcohol');
 
-  			else if(aleatorio === 3){
-  				po = new prot(juego, 'proteinas');
-  				powerUps.add(po);
-  			}
+  			else if(aleatorio === 2) po = new wat(juego, 'agua');
 
-	}, 2000);
+  			else if(aleatorio === 3) po = new prot(juego, 'proteinas');
+
+        powerUps.add(po);
+        drop.play();
+
+		}, 2000);
+	 }
     		
 }
+
+PU.creado = function () {
+  PUcreado = true;
+}
+
+PU.devuelve = function(){
+
+  return PUcreado;
+}
+
+PU.eliminado = function(){
+
+	for (var i = 0 ; i < powerUps.length; i++){
+
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+      powerUps.remove(powerUps.children[i]);
+      
+    }
+  
+  PUcreado = false;
+}
+
 module.exports.PU = PU;
 
 
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
+        muerte.play();
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);
@@ -2343,7 +2524,7 @@ var estadosJugador = {};
 
 module.exports = PlayScene;
 
-},{"./HUD":1,"./class_alcohol":3,"./class_batidoDeProteinas":4,"./class_bebidaEnergetica":5,"./class_environment":8,"./class_fireball":9,"./class_greenFireBall":11,"./class_movibl":12,"./class_object":13,"./class_player":15,"./class_water":18,"./crea_Enemigos":19,"./crea_Monedas":20,"./crea_Plataformas":21,"./handleCollisions":22,"./puntuaciones":28}],28:[function(require,module,exports){
+},{"./HUD":1,"./class_alcohol":4,"./class_batidoDeProteinas":5,"./class_bebidaEnergetica":6,"./class_environment":9,"./class_fireball":10,"./class_greenFireBall":12,"./class_movibl":13,"./class_object":14,"./class_player":16,"./class_water":19,"./crea_Enemigos":20,"./crea_Monedas":21,"./crea_Plataformas":22,"./handleCollisions":23,"./puntuaciones":29}],29:[function(require,module,exports){
 'use strict';
 
 var men = require('./menu.js');
@@ -2352,6 +2533,7 @@ var handle = require('./handleRequest.js');
 var juego;
 var respuesta;
 var buttonInfoM;
+var back;
 
 var puntuaciones = {
 
@@ -2365,6 +2547,8 @@ var puntuaciones = {
     buttonInfoM.animations.play('button2', 4, true );
     buttonInfoM.width = 100;
     buttonInfoM.height = 50;
+
+    back = juego.add.audio('back');
 
     puntuaciones.ActualizaTabla();
 	}
@@ -2381,9 +2565,9 @@ puntuaciones.mandaDatos = function(datos){
 }
 
 puntuaciones.vuelveAMenu = function(){
-
+  back.play();
 	juego.state.start('menu');
 }
 
 module.exports = puntuaciones;
-},{"./handleRequest.js":23,"./menu.js":25}]},{},[24]);
+},{"./handleRequest.js":24,"./menu.js":26}]},{},[25]);

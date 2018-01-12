@@ -35,13 +35,14 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('escudo', 'images/Escudo.png');
     this.game.load.spritesheet('play', 'images/alientotal.png', 60, 57, 15);
-    this.game.load.spritesheet('player', 'images/alientotal3.png', 64, 57, 26);
+    this.game.load.spritesheet('player', 'images/alientotal5.png', 64, 57, 29);
 	  this.game.load.spritesheet('borracho', 'images/Borracho.png', 1280, 720, 4);
 
     //Plataformas
     this.game.load.spritesheet('plat0', 'images/plat0.png', 64, 64, 3);
-    this.game.load.spritesheet('plat1', 'images/plat1.png', 64, 64, 3);
+    this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
+    this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -52,6 +53,8 @@ var PreloaderScene = {
     this.game.load.image('exteriorPis', 'images/ExteriorPis.png');
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
     this.game.load.image('Pausa', 'images/Menus/pause.png');
+    this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
+    this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -79,7 +82,30 @@ var PreloaderScene = {
     this.game.load.image('Controles', 'images/Menus/Controles.png');
     this.game.load.spritesheet('button', 'images/Menus/boton.png', 64, 64, 3);
     this.game.load.spritesheet('button2', 'images/Menus/boton2.png', 64, 64, 3);
+    this.game.load.image('fVideo', 'images/Menus/FondoVideo.png');
 
+    //Carga de vídeos
+    this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
+    this.game.load.image('aux', 'images/FondoIndex.png');
+    this.game.load.video('pis1', 'images/Menus/pis1.mp4');
+    this.game.load.video('pis2', 'images/Menus/pis2.mp4');
+
+    //Carda de los sfx
+    this.game.load.audio('death', 'sfx/death.mp3');
+    this.game.load.audio('jumpa1', 'sfx/jump1.mp3');
+    this.game.load.audio('jumpa2', 'sfx/jump2.mp3');
+    this.game.load.audio('hurt1', 'sfx/hurt1.mp3');
+    this.game.load.audio('hurt2', 'sfx/hurt2.mp3');
+    this.game.load.audio('hurt3', 'sfx/hurt3.mp3');
+    this.game.load.audio('coin', 'sfx/coin2.mp3');
+    this.game.load.audio('water', 'sfx/pu1.mp3');
+    this.game.load.audio('energ', 'sfx/pu2.mp3');
+    this.game.load.audio('beer', 'sfx/pu3.mp3');
+    this.game.load.audio('prot', 'sfx/pu4.mp3');
+    this.game.load.audio('drop', 'sfx/puDrop.mp3');
+    this.game.load.audio('pause', 'sfx/pause.mp3');
+    this.game.load.audio('click', 'sfx/click.mp3');
+    this.game.load.audio('back', 'sfx/back.mp3');
   },
 
   create: function () {

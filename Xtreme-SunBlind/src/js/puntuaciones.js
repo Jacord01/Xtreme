@@ -6,6 +6,7 @@ var handle = require('./handleRequest.js');
 var juego;
 var respuesta;
 var buttonInfoM;
+var back;
 
 var puntuaciones = {
 
@@ -19,6 +20,8 @@ var puntuaciones = {
     buttonInfoM.animations.play('button2', 4, true );
     buttonInfoM.width = 100;
     buttonInfoM.height = 50;
+
+    back = juego.add.audio('back');
 
     puntuaciones.ActualizaTabla();
 	}
@@ -35,7 +38,7 @@ puntuaciones.mandaDatos = function(datos){
 }
 
 puntuaciones.vuelveAMenu = function(){
-
+  back.play();
 	juego.state.start('menu');
 }
 

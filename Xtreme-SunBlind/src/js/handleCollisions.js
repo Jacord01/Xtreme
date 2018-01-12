@@ -6,21 +6,22 @@ var HUD = require('./HUD');
 var colisiones = {};
 var enemigosEnPantalla;
 var juego ;
+var coin;
 
 colisiones.create = function(game){
 
   juego = game;
-
+  coin = juego.add.audio('coin');
 }
 
 colisiones.collisionHandlerPower = function(jug, pw){
   escena.puntos.suma(-3);
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
-	pw.limpia();
+  pw.limpia();
+  escena.PU.eliminado(pw);
+  escena.PU.creaPower();
 	pw.kill();
-	escena.PU.creaPower(); 
-
 }
 
 colisiones.collisionHandlerFireBall = function(jug, fb){
@@ -37,6 +38,7 @@ colisiones.collisionHandlerFireBall = function(jug, fb){
 
 colisiones.collisionHandlerMonedas = function(jug, mon){
   escena.puntos.suma(2);
+  coin.play();
   mon.kill();
   escena.stateMoneda.reduceMoneda();
 
@@ -84,9 +86,14 @@ colisiones.collisionHandlerEnem = function(jug, enem){
     }
     escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
-  	escena.enemigos.reducePantalla();
-  	escena.enemigos.reduceNumero();
+    jug.atacando = true;
+  	
   }
+  }
+
+  colisiones.reduceEnem = function(){
+    escena.enemigos.reducePantalla();
+    escena.enemigos.reduceNumero();
   }
 
   colisiones.collisionHandlerJug = function(jug, plat){

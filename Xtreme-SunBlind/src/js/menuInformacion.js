@@ -3,33 +3,96 @@
 var men = require('./menu.js');
 
 var buttonInfoD; var buttonInfoI; var buttonInfoM;
-var Pot; var Enem; var Plat; var Pis; var Ctrl;
+var fondo;
 var cont;
 var juego;
+var click; var back;
+var video1; var video2;
 
 var menuInformacion = {
 
 	create: function(){
 	juego = this.game;
 	//Cargamos las imágenes del menú
-	Pot = juego.add.sprite(0,0,'Potenciadores');
-    Pot.visible = false;
-    Enem = juego.add.sprite(0,0,'Enemigos');
-    Enem.visible = false;
-    Plat = juego.add.sprite(0,0, 'Plataformas');
-    Plat.visible = false;
-    Pis = juego.add.sprite(0,0, 'Pis');
-    Pis.visible = false;
-    Ctrl = juego.add.sprite(0,0,'Controles');
-    Ctrl.visible = false;
+	fondo = juego.add.sprite(0,0,'Potenciadores');
+
+    click = juego.add.audio('click');
+    back = juego.add.audio('back');
 
 	cont = 0;
 
 	cambiaImagenes();
+	}
+};
 
-	
 
-	 //Boton para cambiar entre la info Derecha
+function vuelveAMenu(){
+	back.play();
+	juego.state.start('menu');
+}
+
+
+function cambiainfoD(){
+	click.play();
+	cont++;
+
+	if (cont >= 5)
+		cont = 0;
+
+	cambiaImagenes();
+}
+
+function cambiainfoI(){
+	back.play();
+	cont--;
+
+	if (cont < 0)
+		cont = 4;
+
+	cambiaImagenes();
+}
+
+function cambiaImagenes(){
+
+	if(cont === 0){
+		juego.add.sprite(0,0,'Potenciadores');
+		creaBotones();
+	}
+	else if (cont === 1){
+		juego.add.sprite(0,0,'Enemigos');
+		creaBotones();		
+	}
+
+	else if(cont === 2){
+		juego.add.sprite(0,0,'Plataformas');
+		creaBotones();	
+	}
+
+	else if(cont === 3){
+		juego.add.sprite(0,0,'Pis');
+		creaBotones();
+		video1 = juego.add.video('pis1');
+		video2 = juego.add.video('pis2');
+		video1.currentTime = 0;
+		video2.currentTime = 0;
+		video1.addToWorld(320, 400, 0.5, 0.5, 0.4, 0.4);
+		video2.addToWorld(960, 400, 0.5, 0.5, 0.4, 0.4);
+    	video1.play(true);
+    	video2.play(true);
+
+	}
+
+	else if(cont === 4){
+		juego.add.sprite(0,0,'Controles');
+		creaBotones();		
+	}
+
+
+}
+
+function creaBotones(){
+
+		 //Boton para cambiar entre la info Derecha
     buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
     buttonInfoD.animations.add('button');
     buttonInfoD.animations.play('button', 4, true );
@@ -49,78 +112,6 @@ var menuInformacion = {
     buttonInfoM.animations.play('button2', 4, true );
     buttonInfoM.width = 100;
     buttonInfoM.height = 50;
-
-	}
-};
-
-
-function vuelveAMenu(){
-
-	juego.state.start('menu');
-}
-
-
-function cambiainfoD(){
-
-	cont++;
-
-	if (cont >= 5)
-		cont = 0;
-
-	cambiaImagenes();
-}
-
-function cambiainfoI(){
-
-	cont--;
-
-	if (cont < 0)
-		cont = 4;
-
-	cambiaImagenes();
-}
-
-function cambiaImagenes(){
-
-	if(cont === 0){
-		Pot.visible = true;
-		Enem.visible = false;
-		Plat.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-	else if (cont === 1){
-		Enem.visible = true;
-		Pot.visible = false;
-		Plat.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 2){
-		Plat.visible = true;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 3){
-		Plat.visible = false;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = true;
-		Ctrl.visible = false;
-	}
-
-	else if(cont === 4){
-		Plat.visible = false;
-		Pot.visible = false;
-		Enem.visible = false;
-		Pis.visible = false;
-		Ctrl.visible = true;
-	}
-
 
 }
 

@@ -24,7 +24,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; 
+var powerUps; var PUcreado; 
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -33,6 +33,12 @@ var time = 0;
 var pausa; var menu; var fullS;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
+var pause; var drop; var back;
+var style; var letras;
+
+var muerte;
+var debug = false;
+
 
 var PlayScene = {
 
@@ -57,7 +63,6 @@ var PlayScene = {
   fondocourse.height = 720;
   fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
   fondocourse.visible = false;
-  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -67,8 +72,7 @@ var PlayScene = {
 
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
-  PU.creaPower();
-
+  PUcreado = false;
   //Creamos enemigos
   enem.creaGrupo(juego);
   auxRn = false;
@@ -94,6 +98,12 @@ var PlayScene = {
   HUD.create(juego);
   cols.create(juego);
 
+  //variables de audio
+  muerte = juego.add.audio('death');
+  pause = juego.add.audio('pause');
+  drop = juego.add.audio('drop');
+  back = juego.add.audio('back');
+
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
   nuevoNivel();
@@ -101,24 +111,23 @@ var PlayScene = {
   pausa = juego.input.keyboard.addKey(Phaser.Keyboard.P);
 
   pausa.onDown.add(function () {
+
     if(juego.paused){juego.paused = false
       HUD.quitaPausa();
       
     };
+    pause.play();
   },this);
 
   menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
 
   menu.onDown.add(function () {
-
+    back.play();
     if(juego.paused){
       juego.paused = false;
-      HUD.Pausa();
-                for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
-               
+      HUD.Pausa();        
+	PU.eliminado();
+
       juego.state.start('menu');
     }
   },this);
@@ -134,7 +143,12 @@ var PlayScene = {
         HUD.fullscreen()}
       
   },this);
-  	
+
+
+	PU.eliminado();
+
+    style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
+    letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
  },
 
   update: function (){
@@ -144,7 +158,8 @@ var PlayScene = {
       juego.paused = true;
       HUD.Pausa();
     }
-
+    
+    letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
 
@@ -158,7 +173,7 @@ var PlayScene = {
 
     juego.physics.arcade.collide(enem.devuelveGrupo(), platforms, cols.collisionHandlerPlat);
 
-    if(!jugador.agarrado){
+    if(!jugador.agarrado && !jugador.atacando){
         	juego.physics.arcade.overlap(enem.devuelveGrupo(), jugador, cols.collisionHandlerEnem);
     }
 
@@ -214,17 +229,19 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
-  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	if(debug){
+    juego.debug.body(jugador);
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
-  	/*if(nivel % 5 === 0)
-  		juego.debug.text('TIME: ' + time, 500, 70);*/
-      //juego.debug.text('agarro: ' + agarro, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);
+      juego.debug.text('agarro: ' + agarro, 500, 30);
+  }
   }
 };
 
@@ -258,6 +275,8 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
+  PU.eliminado();
+    PU.creaPower();
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
@@ -266,6 +285,7 @@ function nuevoNivel(){
 
   jugador.borracho = false;
   HUD.noBorracho();
+  jugador.orinando = false;
   jugador.invencible = false;
   jugador.corriendo = false;
 
@@ -307,18 +327,10 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-    /*for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }*/
-               
 
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
-  	/*var timer = juego.time.create(true);
-  	myloop = juego.time.events.loop(time, endedCourse, this);
-  	timer.start();*/
     HUD.muestraTempLevel();
     actualizaCont(time);
   	course = true;
@@ -331,11 +343,6 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
 
   else 
     HUD.ocultaTempLevel();
-
-	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
-	agarrador = enem.devuelveAgarre();
-	auxRn = !auxRn;
-	enemigosEnPantalla++;*/
 }
 
 agarrador.devuelve= function (){
@@ -376,21 +383,20 @@ perd.Perder = function(){
 
 	perder.visible = true; //Texto de perder en visible
 
-    for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-              }
     setTimeout(function(){
       var nombre = "abcdefsgufjsl"
       var cont = 0;
-      while(nombre.length > 12){
+      while(nombre.length > 11){
         if(cont <= 3)
     	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
        else
         nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
       cont++;
-    }
-    	if (nombre != null && nombre != "" &&nombre != " " && nombre != "  " && nombre != "   " && nombre != undefined) {
+    } 
+
+    if(nombre != undefined && nombre != null) 
+      
+    if  (nombre.length != 0){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
@@ -398,8 +404,12 @@ perd.Perder = function(){
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
+        }, 3000);
 
-    	juego.state.start('menu');}, 3000);
+    setTimeout(function(){ 
+      PU.eliminado();
+    juego.state.start('menu');
+  }, 6000);
 }
 
 function actualizaCont(tiempo){
@@ -415,41 +425,61 @@ function actualizaCont(tiempo){
 module.exports.perd = perd;
 
 //Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
+var PUcreado;
 var PU = {};
+
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
-    		
+    		if(!PU.devuelve()){
+    			PU.creado();
 setTimeout(function(){ 
-			if(aleatorio === 0){
-    		po = new ener(juego,'energetica');
- 			powerUps.add(po);
-  			}
 
-  			else if(aleatorio === 1){
-  			po = new alc(juego, 'alcohol');
-  			powerUps.add(po);
-  			}
+			if(aleatorio === 0) po = new ener(juego,'energetica');
 
-  			else if(aleatorio === 2){
-  				po = new wat(juego, 'agua');
-  				powerUps.add(po);
-  			}
+  			else if(aleatorio === 1) po = new alc(juego, 'alcohol');
 
-  			else if(aleatorio === 3){
-  				po = new prot(juego, 'proteinas');
-  				powerUps.add(po);
-  			}
+  			else if(aleatorio === 2) po = new wat(juego, 'agua');
 
-	}, 2000);
+  			else if(aleatorio === 3) po = new prot(juego, 'proteinas');
+
+        powerUps.add(po);
+        drop.play();
+
+		}, 2000);
+	 }
     		
 }
+
+PU.creado = function () {
+  PUcreado = true;
+}
+
+PU.devuelve = function(){
+
+  return PUcreado;
+}
+
+PU.eliminado = function(){
+
+	for (var i = 0 ; i < powerUps.length; i++){
+
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+      powerUps.remove(powerUps.children[i]);
+      
+    }
+  
+  PUcreado = false;
+}
+
 module.exports.PU = PU;
 
 
 var estadosJugador = {};
 
   estadosJugador.jugadorMuerte = function(jug){
+        muerte.play();
         jugador.kill();
         jugador.vidas--;
         HUD.actualizaVida(jugador);
