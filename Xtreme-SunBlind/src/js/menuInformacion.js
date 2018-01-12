@@ -22,9 +22,6 @@ var menuInformacion = {
 	cont = 0;
 
 	cambiaImagenes();
-
-
-
 	}
 };
 
