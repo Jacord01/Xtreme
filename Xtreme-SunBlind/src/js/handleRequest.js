@@ -26,6 +26,7 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     //El array de datos
     //console.log(daPuntos());
     var nombre = Datos[0];
+    
     var punct = Datos[1];
     var nivel = Datos[2];
     //console.log(daPuntos());

@@ -24,7 +24,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; var PUcreado;
+var powerUps; var PUcreado; 
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -126,12 +126,7 @@ var PlayScene = {
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();        
-   for (var i = 0 ; i < powerUps.length; i++){
-
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-      PU.eliminado(powerUps.children[i]);
-    }
+	PU.eliminado();
 
       juego.state.start('menu');
     }
@@ -149,6 +144,9 @@ var PlayScene = {
       
   },this);
 
+
+	PU.eliminado();
+
     style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
     letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
  },
@@ -160,6 +158,8 @@ var PlayScene = {
       juego.paused = true;
       HUD.Pausa();
     }
+
+    //console.log(powerUps.length);
     
     letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
     //Para que choque el personaje con las plataformas
@@ -275,12 +275,7 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
-   for (var i = 0 ; i < powerUps.length; i++){
-
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-      PU.eliminado(powerUps.children[i]);
-    }
+  PU.eliminado();
     PU.creaPower();
 
   if(nivel >= 7)
@@ -420,13 +415,7 @@ perd.Perder = function(){
         }, 3000);
 
     setTimeout(function(){ 
-      for (var i = 0 ; i < powerUps.length; i++){
-
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-      PU.eliminado(powerUps.children[i]);
-
-    };
+      PU.eliminado();
     juego.state.start('menu');
   }, 6000);
 }
@@ -470,6 +459,7 @@ setTimeout(function(){
   				po = new prot(juego, 'proteinas');
   				
   			}
+
         PU.creado();
         powerUps.add(po);
         drop.play();
@@ -487,8 +477,16 @@ PU.devuelve = function(){
   return PUcreado;
 }
 
-PU.eliminado = function(pw){
-  powerUps.remove(pw);
+PU.eliminado = function(){
+
+	for (var i = 0 ; i < powerUps.length; i++){
+
+      powerUps.children[i].limpia();
+      powerUps.children[i].kill();
+      powerUps.remove(powerUps.children[i]);
+      
+    }
+  
   PUcreado = false;
 }
 

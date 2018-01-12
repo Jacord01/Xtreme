@@ -57,22 +57,15 @@ function cambiaImagenes(){
 	if(cont === 0){
 		juego.add.sprite(0,0,'Potenciadores');
 		creaBotones();
-
-		
-
 	}
 	else if (cont === 1){
 		juego.add.sprite(0,0,'Enemigos');
-		creaBotones();
-
-		
+		creaBotones();		
 	}
 
 	else if(cont === 2){
 		juego.add.sprite(0,0,'Plataformas');
 		creaBotones();
-
-		
 	}
 
 	else if(cont === 3){
