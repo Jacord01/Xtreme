@@ -434,33 +434,20 @@ PU.creaPower = function() {
     		if(!PU.devuelve()){
     			PU.creado();
 setTimeout(function(){ 
-			if(aleatorio === 0){
-    		po = new ener(juego,'energetica');
- 			
-  			}
 
-  			else if(aleatorio === 1){
-  			po = new alc(juego, 'alcohol');
-  			
-  			}
+			if(aleatorio === 0) po = new ener(juego,'energetica');
 
-  			else if(aleatorio === 2){
-  				po = new wat(juego, 'agua');
-  				
-  			}
+  			else if(aleatorio === 1) po = new alc(juego, 'alcohol');
 
-  			else if(aleatorio === 3){
-  				po = new prot(juego, 'proteinas');
-  				
-  			}
+  			else if(aleatorio === 2) po = new wat(juego, 'agua');
+
+  			else if(aleatorio === 3) po = new prot(juego, 'proteinas');
 
         powerUps.add(po);
         drop.play();
 
-	}, 2000);
-
-	
-		}
+		}, 2000);
+	 }
     		
 }
 

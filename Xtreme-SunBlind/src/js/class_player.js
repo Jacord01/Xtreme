@@ -72,6 +72,7 @@ Protagonista.prototype.update = function (){
 
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
+   this.vel = this.origVel - (this.orina * 10);
    
 	 if (this.corriendo)
 	 	this.vel = 2*this.vel;
@@ -101,7 +102,9 @@ Protagonista.prototype.update = function (){
   if(this.agarrado)
     this.vel = 0;
 
-    if (cursors.left.isDown && !this.atacando)
+  if(!this.atacando){
+
+    if (cursors.left.isDown)
     {
         facingRight = false;
         this.body.velocity.x = -this.vel;
@@ -113,7 +116,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown && !this.atacando)
+    else if (cursors.right.isDown)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -127,11 +130,11 @@ Protagonista.prototype.update = function (){
 
     }
 
-    this.vel = this.origVel - (this.orina * 10);
-    if (jumpButton.isDown && !this.agarrado && !this.orinando && (this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
+      this.animations.play('jump', 10 , true);
       var n = this.juego.rnd.integerInRange(0,1);
       if (n === 0)
         salta1.play();
@@ -140,12 +143,13 @@ Protagonista.prototype.update = function (){
 
         this.body.velocity.y = -1000;
     }
+}
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
+    if(cursors.up.isDown && !this.saltando && !atacando && this.orina >= 10)
         {
           this.borracho = false;
           HUD.noBorracho();
@@ -173,8 +177,6 @@ Protagonista.prototype.update = function (){
          this.cambia_pos(this.x, this.y);
        }
 
-       
-
        else if (this.body.velocity.x === 0 && !this.orinando && !this.atacando)
        	this.animations.play('stay');
 
@@ -195,10 +197,6 @@ Protagonista.prototype.update = function (){
        setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false; prota.invencible = false;}, 700);
      }
      this.animations.play('attack'+num,4,false);
-      }
-
-      if (!this.body.touching.down && !this.atacando){
-        this.animations.play('jump', 10 , true);
       }
 }
 
