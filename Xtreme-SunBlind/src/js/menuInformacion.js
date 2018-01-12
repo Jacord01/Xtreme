@@ -65,7 +65,7 @@ function cambiaImagenes(){
 
 	else if(cont === 2){
 		juego.add.sprite(0,0,'Plataformas');
-		creaBotones();
+		creaBotones();	
 	}
 
 	else if(cont === 3){

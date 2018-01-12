@@ -37,6 +37,7 @@ var pause; var drop; var back;
 var style; var letras;
 
 var muerte;
+var debug = false;
 
 
 var PlayScene = {
@@ -62,7 +63,6 @@ var PlayScene = {
   fondocourse.height = 720;
   fondocourse.animations.add('runcourse', [0,1,2,3,4,5,6], 5, true);
   fondocourse.visible = false;
-  //fondo.animations.play('runcourse');
 
   //Imagen de perder
   perder = new go(juego, 500,0, 'perder');
@@ -158,8 +158,6 @@ var PlayScene = {
       juego.paused = true;
       HUD.Pausa();
     }
-
-    //console.log(powerUps.length);
     
     letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
     //Para que choque el personaje con las plataformas
@@ -231,17 +229,19 @@ var PlayScene = {
   },
 
   render: function(){
-    //juego.debug.body(jugador);
-  	/*juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
+  	if(debug){
+    juego.debug.body(jugador);
+  	juego.debug.text('VIDAS: ' + jugador.vidas, 32, 50);
   	juego.debug.text('ORINA: ' + jugador.orina, 32, 30);
   	juego.debug.text('NUM ENEMIGOS: ' + numeroEnemigos, 32, 70);
   	juego.debug.text('NIVEL: ' + nivel, 232, 30);
   	juego.debug.text('ENEMIGOS EN PANTALLA: ' + enemigosPorNivel, 232, 50);
   	juego.debug.text('INVENCIBLE: ' + jugador.invencible, 232, 70);
-  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);*/
-  	/*if(nivel % 5 === 0)
-  		juego.debug.text('TIME: ' + time, 500, 70);*/
-      //juego.debug.text('agarro: ' + agarro, 500, 30);
+  	juego.debug.text('BORRACHO: ' + jugador.borracho, 500, 30);
+  	if(nivel % 5 === 0)
+  		juego.debug.text('TIME: ' + time, 500, 70);
+      juego.debug.text('agarro: ' + agarro, 500, 30);
+  }
   }
 };
 
@@ -331,9 +331,6 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
-  	/*var timer = juego.time.create(true);
-  	myloop = juego.time.events.loop(time, endedCourse, this);
-  	timer.start();*/
     HUD.muestraTempLevel();
     actualizaCont(time);
   	course = true;
@@ -346,11 +343,6 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
 
   else 
     HUD.ocultaTempLevel();
-
-	/*enem.creaEnemigoRandom(juego, nivel, auxRn, agarrador, jugador);
-	agarrador = enem.devuelveAgarre();
-	auxRn = !auxRn;
-	enemigosEnPantalla++;*/
 }
 
 agarrador.devuelve= function (){
@@ -435,10 +427,12 @@ module.exports.perd = perd;
 //Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
 var PUcreado;
 var PU = {};
+
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
-    		if(!PU.devuelve())
+    		if(!PU.devuelve()){
+    			PU.creado();
 setTimeout(function(){ 
 			if(aleatorio === 0){
     		po = new ener(juego,'energetica');
@@ -460,11 +454,13 @@ setTimeout(function(){
   				
   			}
 
-        PU.creado();
         powerUps.add(po);
         drop.play();
 
 	}, 2000);
+
+	
+		}
     		
 }
 
