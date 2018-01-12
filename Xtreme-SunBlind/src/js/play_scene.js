@@ -24,7 +24,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; 
+var powerUps; var PUcreado;
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -34,6 +34,7 @@ var pausa; var menu; var fullS;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 var pause; var drop; var back;
+var style; var letras;
 
 var muerte;
 
@@ -71,7 +72,7 @@ var PlayScene = {
 
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
-
+  PUcreado = false;
   //Creamos enemigos
   enem.creaGrupo(juego);
   auxRn = false;
@@ -125,10 +126,13 @@ var PlayScene = {
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();        
-         for (var i = 0 ; i < powerUps.children.length; i++){
+   for (var i = 0 ; i < powerUps.length; i++){
+
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
-    }       
+      PU.eliminado(powerUps.children[i]);
+    }
+
       juego.state.start('menu');
     }
   },this);
@@ -145,11 +149,8 @@ var PlayScene = {
       
   },this);
 
-     for (var i = 0 ; i < powerUps.children.length; i++){
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-    }
-  	
+    style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
+    letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
  },
 
   update: function (){
@@ -159,7 +160,8 @@ var PlayScene = {
       juego.paused = true;
       HUD.Pausa();
     }
-
+    
+    letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
     //Para que choque el personaje con las plataformas
     juego.physics.arcade.collide(jugador, platforms, cols.collisionHandlerJug);
 
@@ -273,11 +275,12 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
-   for (var i = 0 ; i < powerUps.children.length; i++){
+   for (var i = 0 ; i < powerUps.length; i++){
+
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
+      PU.eliminado(powerUps.children[i]);
     }
-
     PU.creaPower();
 
   if(nivel >= 7)
@@ -417,11 +420,14 @@ perd.Perder = function(){
         }, 3000);
 
     setTimeout(function(){ 
-      for (var i = 0 ; i < powerUps.children.length; i++){
+      for (var i = 0 ; i < powerUps.length; i++){
+
       powerUps.children[i].limpia();
       powerUps.children[i].kill();
-        };
-    juego.state.start('menu')
+      PU.eliminado(powerUps.children[i]);
+
+    };
+    juego.state.start('menu');
   }, 6000);
 }
 
@@ -438,11 +444,12 @@ function actualizaCont(tiempo){
 module.exports.perd = perd;
 
 //Este PU sirve para ser llamado desde la clase PowerUp. Creará un nuevo PU aleatorio
+var PUcreado;
 var PU = {};
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
     		var po; 
-    		
+    		if(!PU.devuelve())
 setTimeout(function(){ 
 			if(aleatorio === 0){
     		po = new ener(juego,'energetica');
@@ -463,12 +470,28 @@ setTimeout(function(){
   				po = new prot(juego, 'proteinas');
   				
   			}
+        PU.creado();
         powerUps.add(po);
         drop.play();
 
 	}, 2000);
     		
 }
+
+PU.creado = function () {
+  PUcreado = true;
+}
+
+PU.devuelve = function(){
+
+  return PUcreado;
+}
+
+PU.eliminado = function(pw){
+  powerUps.remove(pw);
+  PUcreado = false;
+}
+
 module.exports.PU = PU;
 
 

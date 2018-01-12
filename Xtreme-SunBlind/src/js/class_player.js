@@ -93,8 +93,6 @@ Protagonista.prototype.update = function (){
     escudo.visible = false;
 
    if(this.orinando){
-   	this.borracho = false;
-   	HUD.noBorracho();
     this.vel = 0;
     this.body.touching.down = true;
   } 
@@ -157,6 +155,8 @@ Protagonista.prototype.update = function (){
 
     if(cursors.up.isDown && !this.saltando  && this.orina >= 10)
         {
+          this.borracho = false;
+          HUD.noBorracho();
           this.animations.play('peeing', 6, false);
           this.orina = 0;
           HUD.cambiaPis(this.orina);
