@@ -20,6 +20,7 @@ var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var monedas;
+var auxMute;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
@@ -30,12 +31,13 @@ var agarrador = {};
 var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
 var time = 0;
-var pausa; var menu; var fullS;
+var pausa; var menu; var fullS; var mute;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 var pause; var drop; var back;
 var style; var letras;
-var menuSound;
+var menuSound; var courseSound; var gameSound;
+var victory;
 
 var muerte;
 var debug = false;
@@ -105,6 +107,9 @@ var PlayScene = {
   drop = juego.add.audio('drop');
   back = juego.add.audio('back');
   menuSound = juego.add.audio('menu');
+  courseSound = juego.add.audio('course');
+  gameSound = juego.add.audio('game');
+  victory = juego.add.audio('victory');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -114,9 +119,9 @@ var PlayScene = {
 
   pausa.onDown.add(function () {
 
-    if(juego.paused){juego.paused = false
+    if(juego.paused){
+      juego.paused = false
       HUD.quitaPausa();
-      
     };
     pause.play();
   },this);
@@ -133,6 +138,13 @@ var PlayScene = {
       menuSound.loopFull();
       juego.state.start('menu');
     }
+  },this);
+
+  mute = juego.input.keyboard.addKey(Phaser.Keyboard.S);
+
+  mute.onDown.add(function () { 
+    if (juego.paused)
+      juego.sound.mute = !juego.sound.mute;;
   },this);
 
   juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -158,8 +170,10 @@ var PlayScene = {
 
     //Para el menú de pausa
     if(pausa.isDown && !juego.paused){
+      auxMute = juego.sound.mute; //necesario guardar en una variable auxiliar el estado del muteo porque el pausa lo cambia
       juego.paused = true;
       HUD.Pausa();
+      juego.sound.mute = auxMute;
     }
     
     letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
@@ -330,7 +344,8 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-
+    juego.sound.stopAll();
+    courseSound.loopFull();
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
@@ -344,8 +359,12 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 
-  else 
+  else {
+    juego.sound.stopAll();
+    victory.play();
+    gameSound.loopFull();
     HUD.ocultaTempLevel();
+  }
 }
 
 agarrador.devuelve= function (){
@@ -411,6 +430,8 @@ perd.Perder = function(){
 
     setTimeout(function(){ 
       PU.eliminado();
+      juego.sound.stopAll();
+      menuSound.loopFull();
     juego.state.start('menu');
   }, 6000);
 }

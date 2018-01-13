@@ -107,7 +107,9 @@ var PreloaderScene = {
     this.game.load.audio('click', 'sfx/click.mp3');
     this.game.load.audio('back', 'sfx/back.mp3');
     this.game.load.audio('pis', 'sfx/pis.mp3');
+    this.game.load.audio('victory', 'sfx/victory.mp3');
     this.game.load.audio('game', 'sfx/Juego.mp3');
+    this.game.load.audio('course', 'sfx/course.mp3');
     this.game.load.audio('menu', 'sfx/Menu.mp3');
   },
 
