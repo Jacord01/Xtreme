@@ -35,6 +35,7 @@ var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 var pause; var drop; var back;
 var style; var letras;
+var menuSound;
 
 var muerte;
 var debug = false;
@@ -103,6 +104,7 @@ var PlayScene = {
   pause = juego.add.audio('pause');
   drop = juego.add.audio('drop');
   back = juego.add.audio('back');
+  menuSound = juego.add.audio('menu');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -127,7 +129,8 @@ var PlayScene = {
       juego.paused = false;
       HUD.Pausa();        
 	PU.eliminado();
-
+      juego.sound.stopAll();
+      menuSound.loopFull();
       juego.state.start('menu');
     }
   },this);

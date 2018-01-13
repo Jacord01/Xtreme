@@ -6,7 +6,7 @@ var Put = require('./puntuaciones');
 
 var buttonJuego; var buttonInfo; var pantalla; var punt;
 var juego;
-var click; var back;
+var click; var back; var gameSound;
 
 var menu = {
 
@@ -22,7 +22,8 @@ var menu = {
     juego.state.add('puntuation', Put);
 
     click = juego.add.audio('click');
-    
+    back = juego.add.audio('back');
+    gameSound = juego.add.audio('game');
 
    juego.add.sprite(0,0,'Menu');
 
@@ -62,6 +63,8 @@ function actionOnClickPunt (){
 }
 
 function actionOnClickJuego () {
+    juego.sound.stopAll();
+    gameSound.loopFull();
     click.play();
     juego.state.start('tutorial');
 }
@@ -72,13 +75,14 @@ function actionOnClickInfo(){
 }
 
 function fullscreen(){
-
     if (this.game.scale.isFullScreen)
     {
+        back.play();
         this.game.scale.stopFullScreen();
     }
     else
     {
+        click.play();
         this.game.scale.startFullScreen(false);
     }
 }
