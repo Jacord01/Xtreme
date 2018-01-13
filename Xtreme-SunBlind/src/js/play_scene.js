@@ -37,7 +37,7 @@ var datos; var puntuation; var punt;
 var pause; var drop; var back;
 var style; var letras;
 var menuSound; var courseSound; var gameSound;
-var victory;
+var victory; var tempExtra;
 
 var muerte;
 var debug = false;
@@ -293,7 +293,7 @@ function nuevoNivel(){
   agarro = false;
 
   PU.eliminado();
-    PU.creaPower();
+  PU.creaPower();
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
@@ -442,7 +442,7 @@ function actualizaCont(tiempo){
      HUD.tempLevel(tiempo); 
      tiempo--;
      if(time >= 0 && !endCourse) {
-      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+      tempExtra = setTimeout(function(){actualizaCont(tiempo);}, 1000);
     }
 }
 
