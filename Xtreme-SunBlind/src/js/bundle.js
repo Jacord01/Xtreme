@@ -82,7 +82,7 @@ HUD.create = function(game){
  	 AG.visible = false;
 
  	 //Pausa
- 	 PA = game.add.sprite(150,0, 'Pausa');
+ 	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
 }
@@ -754,7 +754,7 @@ var escudo;
 var daVida;
 var facingRight;
 var salta1; var salta2;
-var hurt1; var hurt2; var hurt3;
+var hurt1; var hurt2; var hurt3; var pisSpound;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -802,6 +802,7 @@ Protagonista.prototype.create = function (){
   hurt1 = this.juego.add.audio('hurt1');
   hurt2 = this.juego.add.audio('hurt2');
   hurt3 = this.juego.add.audio('hurt3');
+  pisSpound = this.juego.add.audio('pis');
 
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
@@ -894,11 +895,12 @@ Protagonista.prototype.update = function (){
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando && !atacando && this.orina >= 10)
+    if(cursors.up.isDown && !this.saltando && !this.atacando && this.orina >= 10)
         {
           this.borracho = false;
           HUD.noBorracho();
           this.animations.play('peeing', 6, false);
+          pisSpound.play();
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;
@@ -1530,7 +1532,6 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
     //El array de datos
     //console.log(daPuntos());
     var nombre = Datos[0];
-    
     var punct = Datos[1];
     var nivel = Datos[2];
     //console.log(daPuntos());
@@ -1658,6 +1659,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
     this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
+    this.game.load.spritesheet('mute', 'images/Menus/mute.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -1721,9 +1723,17 @@ var PreloaderScene = {
     this.game.load.audio('pause', 'sfx/pause.mp3');
     this.game.load.audio('click', 'sfx/click.mp3');
     this.game.load.audio('back', 'sfx/back.mp3');
+    this.game.load.audio('pis', 'sfx/pis.mp3');
+    this.game.load.audio('victory', 'sfx/victory.mp3');
+    this.game.load.audio('game', 'sfx/Juego.mp3');
+    this.game.load.audio('course', 'sfx/course.mp3');
+    this.game.load.audio('menu', 'sfx/Menu.mp3');
   },
 
   create: function () {
+  	var menuSound;
+  	menuSound = this.game.add.audio('menu');
+    menuSound.loopFull();
     this.game.state.start('menu');
   }
 };
@@ -1747,9 +1757,9 @@ var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla; var punt;
+var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
 var juego;
-var click; var back;
+var click; var back; var gameSound;
 
 var menu = {
 
@@ -1765,7 +1775,8 @@ var menu = {
     juego.state.add('puntuation', Put);
 
     click = juego.add.audio('click');
-    
+    back = juego.add.audio('back');
+    gameSound = juego.add.audio('game');
 
    juego.add.sprite(0,0,'Menu');
 
@@ -1786,9 +1797,16 @@ var menu = {
     //Boton para fullscreen
     pantalla = juego.add.button(juego.world.centerX - 600, 600, 'PCompleta', fullscreen, this, 2,1,0);
     pantalla.animations.add('PCompleta');
-    pantalla.animations.play('PCompleta', 4, true );
+    pantalla.animations.play('PCompleta', 4, true);
     pantalla.width = 150;
     pantalla.height = 80;
+
+    //Boton para mutear audio
+    muteb = juego.add.button(juego.world.centerX - 400, 600, 'mute', muteSound, this, 2,1,0);
+    muteb.animations.add('static' [1]);
+    muteb.animations.play('static', 4, true);
+    muteb.width = 150;
+    muteb.height = 80;
 
     //Boton para puntuaciones
     punt = juego.add.button(juego.world.centerX - 535, 300, 'button', actionOnClickPunt, this, 2,1,0);
@@ -1805,6 +1823,8 @@ function actionOnClickPunt (){
 }
 
 function actionOnClickJuego () {
+    juego.sound.stopAll();
+    gameSound.loopFull();
     click.play();
     juego.state.start('tutorial');
 }
@@ -1815,15 +1835,21 @@ function actionOnClickInfo(){
 }
 
 function fullscreen(){
-
     if (this.game.scale.isFullScreen)
     {
+        back.play();
         this.game.scale.stopFullScreen();
     }
     else
     {
+        click.play();
         this.game.scale.startFullScreen(false);
     }
+}
+
+function muteSound(){
+  this.game.sound.mute = !this.game.sound.mute;
+  click.play();
 }
 
 
@@ -1971,6 +1997,7 @@ var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var monedas;
+var auxMute;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
@@ -1981,11 +2008,13 @@ var agarrador = {};
 var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
 var time = 0;
-var pausa; var menu; var fullS;
+var pausa; var menu; var fullS; var mute;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 var pause; var drop; var back;
 var style; var letras;
+var menuSound; var courseSound; var gameSound;
+var victory; var tempExtra;
 
 var muerte;
 var debug = false;
@@ -2054,6 +2083,10 @@ var PlayScene = {
   pause = juego.add.audio('pause');
   drop = juego.add.audio('drop');
   back = juego.add.audio('back');
+  menuSound = juego.add.audio('menu');
+  courseSound = juego.add.audio('course');
+  gameSound = juego.add.audio('game');
+  victory = juego.add.audio('victory');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -2063,9 +2096,9 @@ var PlayScene = {
 
   pausa.onDown.add(function () {
 
-    if(juego.paused){juego.paused = false
+    if(juego.paused){
+      juego.paused = false
       HUD.quitaPausa();
-      
     };
     pause.play();
   },this);
@@ -2078,9 +2111,17 @@ var PlayScene = {
       juego.paused = false;
       HUD.Pausa();        
 	PU.eliminado();
-
+      juego.sound.stopAll();
+      menuSound.loopFull();
       juego.state.start('menu');
     }
+  },this);
+
+  mute = juego.input.keyboard.addKey(Phaser.Keyboard.S);
+
+  mute.onDown.add(function () { 
+    if (juego.paused)
+      juego.sound.mute = !juego.sound.mute;;
   },this);
 
   juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -2106,8 +2147,10 @@ var PlayScene = {
 
     //Para el menú de pausa
     if(pausa.isDown && !juego.paused){
+      auxMute = juego.sound.mute; //necesario guardar en una variable auxiliar el estado del muteo porque el pausa lo cambia
       juego.paused = true;
       HUD.Pausa();
+      juego.sound.mute = auxMute;
     }
     
     letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
@@ -2227,7 +2270,7 @@ function nuevoNivel(){
   agarro = false;
 
   PU.eliminado();
-    PU.creaPower();
+  PU.creaPower();
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
@@ -2278,7 +2321,8 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-
+    juego.sound.stopAll();
+    courseSound.loopFull();
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
@@ -2292,8 +2336,12 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 
-  else 
+  else {
+    juego.sound.stopAll();
+    victory.play();
+    gameSound.loopFull();
     HUD.ocultaTempLevel();
+  }
 }
 
 agarrador.devuelve= function (){
@@ -2359,6 +2407,8 @@ perd.Perder = function(){
 
     setTimeout(function(){ 
       PU.eliminado();
+      juego.sound.stopAll();
+      menuSound.loopFull();
     juego.state.start('menu');
   }, 6000);
 }
@@ -2369,7 +2419,7 @@ function actualizaCont(tiempo){
      HUD.tempLevel(tiempo); 
      tiempo--;
      if(time >= 0 && !endCourse) {
-      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+      tempExtra = setTimeout(function(){actualizaCont(tiempo);}, 1000);
     }
 }
 

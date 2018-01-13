@@ -9,7 +9,7 @@ var escudo;
 var daVida;
 var facingRight;
 var salta1; var salta2;
-var hurt1; var hurt2; var hurt3;
+var hurt1; var hurt2; var hurt3; var pisSpound;
 
 var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, vidas){
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
@@ -57,6 +57,7 @@ Protagonista.prototype.create = function (){
   hurt1 = this.juego.add.audio('hurt1');
   hurt2 = this.juego.add.audio('hurt2');
   hurt3 = this.juego.add.audio('hurt3');
+  pisSpound = this.juego.add.audio('pis');
 
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
@@ -149,11 +150,12 @@ Protagonista.prototype.update = function (){
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando && !atacando && this.orina >= 10)
+    if(cursors.up.isDown && !this.saltando && !this.atacando && this.orina >= 10)
         {
           this.borracho = false;
           HUD.noBorracho();
           this.animations.play('peeing', 6, false);
+          pisSpound.play();
           this.orina = 0;
           HUD.cambiaPis(this.orina);
           this.orinando = true;

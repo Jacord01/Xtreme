@@ -43,6 +43,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
     this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
+    this.game.load.spritesheet('mute', 'images/Menus/mute.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -106,9 +107,17 @@ var PreloaderScene = {
     this.game.load.audio('pause', 'sfx/pause.mp3');
     this.game.load.audio('click', 'sfx/click.mp3');
     this.game.load.audio('back', 'sfx/back.mp3');
+    this.game.load.audio('pis', 'sfx/pis.mp3');
+    this.game.load.audio('victory', 'sfx/victory.mp3');
+    this.game.load.audio('game', 'sfx/Juego.mp3');
+    this.game.load.audio('course', 'sfx/course.mp3');
+    this.game.load.audio('menu', 'sfx/Menu.mp3');
   },
 
   create: function () {
+  	var menuSound;
+  	menuSound = this.game.add.audio('menu');
+    menuSound.loopFull();
     this.game.state.start('menu');
   }
 };

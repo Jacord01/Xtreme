@@ -4,9 +4,9 @@ var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla; var punt;
+var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
 var juego;
-var click; var back;
+var click; var back; var gameSound;
 
 var menu = {
 
@@ -22,7 +22,8 @@ var menu = {
     juego.state.add('puntuation', Put);
 
     click = juego.add.audio('click');
-    
+    back = juego.add.audio('back');
+    gameSound = juego.add.audio('game');
 
    juego.add.sprite(0,0,'Menu');
 
@@ -43,9 +44,16 @@ var menu = {
     //Boton para fullscreen
     pantalla = juego.add.button(juego.world.centerX - 600, 600, 'PCompleta', fullscreen, this, 2,1,0);
     pantalla.animations.add('PCompleta');
-    pantalla.animations.play('PCompleta', 4, true );
+    pantalla.animations.play('PCompleta', 4, true);
     pantalla.width = 150;
     pantalla.height = 80;
+
+    //Boton para mutear audio
+    muteb = juego.add.button(juego.world.centerX - 400, 600, 'mute', muteSound, this, 2,1,0);
+    muteb.animations.add('static' [1]);
+    muteb.animations.play('static', 4, true);
+    muteb.width = 150;
+    muteb.height = 80;
 
     //Boton para puntuaciones
     punt = juego.add.button(juego.world.centerX - 535, 300, 'button', actionOnClickPunt, this, 2,1,0);
@@ -62,6 +70,8 @@ function actionOnClickPunt (){
 }
 
 function actionOnClickJuego () {
+    juego.sound.stopAll();
+    gameSound.loopFull();
     click.play();
     juego.state.start('tutorial');
 }
@@ -72,15 +82,21 @@ function actionOnClickInfo(){
 }
 
 function fullscreen(){
-
     if (this.game.scale.isFullScreen)
     {
+        back.play();
         this.game.scale.stopFullScreen();
     }
     else
     {
+        click.play();
         this.game.scale.startFullScreen(false);
     }
+}
+
+function muteSound(){
+  this.game.sound.mute = !this.game.sound.mute;
+  click.play();
 }
 
 

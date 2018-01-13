@@ -81,7 +81,7 @@ HUD.create = function(game){
  	 AG.visible = false;
 
  	 //Pausa
- 	 PA = game.add.sprite(150,0, 'Pausa');
+ 	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
 }
