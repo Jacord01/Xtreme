@@ -55,7 +55,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
     this.game.load.image('Pausa', 'images/Menus/pause.png');
     this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
-    this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
+    this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -88,8 +88,8 @@ var PreloaderScene = {
     //Carga de vídeos
     this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
     this.game.load.image('aux', 'images/FondoIndex.png');
-    this.game.load.video('pis1', 'images/Menus/pis1.mp4');
-    this.game.load.video('pis2', 'images/Menus/pis2.mp4');
+    this.game.load.video('pis1', 'images/Menus/Pis1.mp4');
+    this.game.load.video('pis2', 'images/Menus/Pis2.mp4');
 
     //Carda de los sfx
     this.game.load.audio('death', 'sfx/death.mp3');
