@@ -9,7 +9,7 @@ var powerUp = function(game, entradasprite, orina){
 	this.Rx = game.rnd.integerInRange(0, 1200);
  	this.Ry = game.rnd.integerInRange(0, 500);
  	this.timer;
- 	this.llama();
+ 	//this.llama();
  	
   GO.call(this, game, this.Rx, this.Ry, entradasprite);
   this.orina = orina;
@@ -19,18 +19,5 @@ var powerUp = function(game, entradasprite, orina){
 
 powerUp.prototype = Object.create(GO.prototype);
 powerUp.prototype.constructor = powerUp;
-
-
-powerUp.prototype.llama = function(){
-	var objeto = this;
-	this.timer = setTimeout(function(){objeto.kill(); clearTimeout(this.timer);escena.PU.eliminado(objeto); escena.PU.creaPower(); //Aqui tenemos que llamar a crear un nuevo PU
-	}, 6000);
-
-}
-
-powerUp.prototype.limpia = function(){
-
-	clearTimeout(this.timer);
-}
 
 module.exports = powerUp;
