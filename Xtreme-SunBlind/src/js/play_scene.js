@@ -87,8 +87,7 @@ var PlayScene = {
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
   creaDeadZone();
-
-
+  
   //Creamos bolas de fuego
   fireballs = juego.add.physicsGroup();
 
