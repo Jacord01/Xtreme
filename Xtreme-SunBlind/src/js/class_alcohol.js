@@ -6,8 +6,7 @@ var alcohol = function(game, entradasprite){
 	sound = game.add.audio('beer');
 	this.orina = 5;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.9,0.9);
-	
+	this.reescala_imagen(0.9,0.9);	
 }
 
 alcohol.prototype = Object.create(PU.prototype);
