@@ -25,7 +25,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; var PUcreado; 
+var powerUps; var PUcreado; var po;
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -48,7 +48,6 @@ var PlayScene = {
   create: function () {
 
   juego = this.game;
-
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
   puntuation = 0;
@@ -452,7 +451,7 @@ var PU = {};
 
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
-    		var po; 
+    		 
     		if(!PU.devuelve()){
     			PU.creado();
 setTimeout(function(){ 
@@ -468,7 +467,7 @@ setTimeout(function(){
         powerUps.add(po);
         drop.play();
         if(menuP === false)
-          po.temp = setTimeout(function(){po.kill(); PU.eliminado(po); PU.creaPower();}, 6000);
+          po.temp = setTimeout(function(){PU.eliminado(po); }, 6000);
 
 		}, 2000);
 	 }
@@ -490,6 +489,7 @@ PU.eliminado = function(po){
   po.kill();
   powerUps.remove(po);
   PUcreado = false;
+  PU.creaPower();
 }
 
 module.exports.PU = PU;

@@ -19,7 +19,6 @@ colisiones.collisionHandlerPower = function(jug, pw){
 	jug.incrementaOrina(pw.orina);
 	pw.efecto(jug);
   escena.PU.eliminado(pw);
-  escena.PU.creaPower();
 }
 
 colisiones.collisionHandlerFireBall = function(jug, fb){
