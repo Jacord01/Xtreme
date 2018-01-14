@@ -25,7 +25,7 @@ var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; var PUcreado; var po;
+var powerUps; var PUcreado; var po; var inMenu;
 var auxRn;
 var agarrador = {};
 var agarro;
@@ -48,6 +48,7 @@ var PlayScene = {
   create: function () {
 
   juego = this.game;
+  inMenu = false;
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
   puntuation = 0;
@@ -86,8 +87,7 @@ var PlayScene = {
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
   creaDeadZone();
-
-
+  
   //Creamos bolas de fuego
   fireballs = juego.add.physicsGroup();
 
@@ -135,6 +135,7 @@ var PlayScene = {
       juego.sound.stopAll();
       menuSound.loopFull();
       menuP = true;
+      inMenu = true;
       juego.state.start('menu');
     }
   },this);
@@ -429,6 +430,7 @@ perd.Perder = function(){
     setTimeout(function(){ 
       juego.sound.stopAll();
       menuSound.loopFull();
+      inMenu = true;
     juego.state.start('menu');
   }, 6000);
 }
@@ -489,7 +491,8 @@ PU.eliminado = function(po){
   po.kill();
   powerUps.remove(po);
   PUcreado = false;
-  PU.creaPower();
+  if (!inMenu)
+    PU.creaPower();
 }
 
 module.exports.PU = PU;
