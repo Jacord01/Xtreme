@@ -10,6 +10,7 @@ var AG;
 var PA;
 var juego;
 var fullscreen;
+var vidaExtra;
 
 HUD.create = function(game){
 
@@ -19,6 +20,9 @@ HUD.create = function(game){
 	vida1 =  game.add.sprite(10,10,'vidas');
 	vida2 = game.add.sprite(74, 10, 'vidas');
 	vida3 = game.add.sprite(138, 10, 'vidas');
+	
+
+
 
 	//Nivel
 
@@ -79,6 +83,12 @@ HUD.create = function(game){
  	 AG.height = 20;
  	 AG.width = 0;
  	 AG.visible = false;
+
+ 	 //Para nivel extra
+ 	vidaExtra = game.add.sprite(350,400, 'vidaExtra');
+ 	vidaExtra.width = 1000;
+ 	vidaExtra.height = 500;
+ 	vidaExtra.visible = false;
 
  	 //Pausa
  	 PA = game.add.sprite(0,0, 'Pausa');
@@ -214,6 +224,11 @@ HUD.fullscreen = function(){
     {
         juego.scale.startFullScreen(false);
     }
+}
+
+HUD.cambiaExtra = function(){
+
+	vidaExtra.visible = !vidaExtra.visible;
 }
 
 module.exports = HUD;

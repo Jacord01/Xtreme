@@ -38,7 +38,7 @@ var pause; var drop; var back;
 var style; var letras;
 var menuSound; var courseSound; var gameSound;
 var victory; var tempExtra;
-
+var menuP;
 var muerte;
 var debug = false;
 
@@ -71,7 +71,6 @@ var PlayScene = {
   perder = new go(juego, 500,0, 'perder');
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
-
 
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
@@ -127,15 +126,16 @@ var PlayScene = {
   },this);
 
   menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
+  menuP = false;
 
   menu.onDown.add(function () {
     back.play();
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();        
-	PU.eliminado();
       juego.sound.stopAll();
       menuSound.loopFull();
+      menuP = true;
       juego.state.start('menu');
     }
   },this);
@@ -158,9 +158,6 @@ var PlayScene = {
         HUD.fullscreen()}
       
   },this);
-
-
-	PU.eliminado();
 
     style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
     letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
@@ -222,6 +219,8 @@ var PlayScene = {
 
     	if (numMonedas <= 0 && course){
     		course = false;
+        HUD.cambiaExtra();
+        setTimeout(function(){HUD.cambiaExtra()}, 2000);
     		jugador.vidas++;
     		HUD.actualizaVida(jugador);
     		endCourse = false;
@@ -292,7 +291,7 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
-  PU.eliminado();
+ 
   PU.creaPower();
 
   if(nivel >= 7)
@@ -429,7 +428,6 @@ perd.Perder = function(){
         }, 3000);
 
     setTimeout(function(){ 
-      PU.eliminado();
       juego.sound.stopAll();
       menuSound.loopFull();
     juego.state.start('menu');
@@ -469,6 +467,8 @@ setTimeout(function(){
 
         powerUps.add(po);
         drop.play();
+        if(menuP === false)
+          po.temp = setTimeout(function(){po.kill(); PU.eliminado(po); PU.creaPower();}, 6000);
 
 		}, 2000);
 	 }
@@ -484,16 +484,11 @@ PU.devuelve = function(){
   return PUcreado;
 }
 
-PU.eliminado = function(){
+PU.eliminado = function(po){
 
-	for (var i = 0 ; i < powerUps.length; i++){
-
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-      powerUps.remove(powerUps.children[i]);
-      
-    }
-  
+  clearTimeout(po.temp);
+  po.kill();
+  powerUps.remove(po);
   PUcreado = false;
 }
 
