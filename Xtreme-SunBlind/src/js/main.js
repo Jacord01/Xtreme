@@ -55,13 +55,8 @@ var PreloaderScene = {
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
     this.game.load.image('Pausa', 'images/Menus/pause.png');
     this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
-<<<<<<< HEAD
-    this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
-    this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
-=======
     this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
     this.game.load.image('vidaExtra', 'images/vidaExtra.png');
->>>>>>> f2534def25ff5bf414cb22379766ced46cb85f55
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
