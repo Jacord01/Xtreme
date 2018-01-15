@@ -149,7 +149,7 @@ Protagonista.prototype.update = function (){
              this.saltando = true;
     else this.saltando = false;
 
-    if(cursors.up.isDown && !this.saltando && !atacando && this.orina >= 10)
+    if(cursors.up.isDown && !this.saltando && !this.atacando && this.orina >= 10)
         {
           this.borracho = false;
           HUD.noBorracho();

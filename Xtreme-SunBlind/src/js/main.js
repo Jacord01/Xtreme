@@ -55,6 +55,7 @@ var PreloaderScene = {
     this.game.load.image('Pausa', 'images/Menus/pause.png');
     this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
     this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
+    this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);

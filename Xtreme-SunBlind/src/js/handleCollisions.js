@@ -82,8 +82,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   else {
     if(enem.grabber){
       //Aqui es donde peta el agarrador
-      escena.agarrador.False();      
+      escena.agarrador.False();   
+      HUD.GrabberInvisible();   
     }
+    HUD.GrabberInvisible();
     escena.puntos.suma(enem.devuelvePuntos());
   	enem.kill();
     jug.atacando = true;
