@@ -5,7 +5,7 @@ var agua = function(game, entradasprite){
 	sound = game.add.audio('water');
 	this.orina = 2;
 	PU.call(this, game, entradasprite, this.orina);
-	this.reescala_imagen(0.9,0.9);
+	this.reescala_imagen(0.9,0.9);	
 	
 }
 	

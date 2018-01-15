@@ -43,6 +43,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('plat1', 'images/plat4.png', 64, 64, 3);
     this.game.load.spritesheet('plat2', 'images/plat2.png', 64, 64, 3);
     this.game.load.spritesheet('omitir', 'images/Menus/Omitir.png', 64, 64, 3);
+    this.game.load.spritesheet('mute', 'images/Menus/mute.png', 64, 64, 3);
     this.game.load.spritesheet('PCompleta', 'images/PCompleta.png', 64,64,3);
 
     //HUD
@@ -54,8 +55,13 @@ var PreloaderScene = {
     this.game.load.spritesheet('vidas', 'images/Vidas.png');
     this.game.load.image('Pausa', 'images/Menus/pause.png');
     this.game.load.spritesheet('medPis', 'images/Pis.png', 64,64, 12);
+<<<<<<< HEAD
     this.game.load.image('fondoRetrete', 'images/fondoRetrete.png');
     this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
+=======
+    this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
+    this.game.load.image('vidaExtra', 'images/vidaExtra.png');
+>>>>>>> f2534def25ff5bf414cb22379766ced46cb85f55
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -88,8 +94,8 @@ var PreloaderScene = {
     //Carga de vídeos
     this.game.load.video('tuto', 'images/Menus/Tutorial.mp4');
     this.game.load.image('aux', 'images/FondoIndex.png');
-    this.game.load.video('pis1', 'images/Menus/pis1.mp4');
-    this.game.load.video('pis2', 'images/Menus/pis2.mp4');
+    this.game.load.video('pis1', 'images/Menus/Pis1.mp4');
+    this.game.load.video('pis2', 'images/Menus/Pis2.mp4');
 
     //Carda de los sfx
     this.game.load.audio('death', 'sfx/death.mp3');
@@ -107,9 +113,17 @@ var PreloaderScene = {
     this.game.load.audio('pause', 'sfx/pause.mp3');
     this.game.load.audio('click', 'sfx/click.mp3');
     this.game.load.audio('back', 'sfx/back.mp3');
+    this.game.load.audio('pis', 'sfx/pis.mp3');
+    this.game.load.audio('victory', 'sfx/victory.mp3');
+    this.game.load.audio('game', 'sfx/Juego.mp3');
+    this.game.load.audio('course', 'sfx/course.mp3');
+    this.game.load.audio('menu', 'sfx/Menu.mp3');
   },
 
   create: function () {
+  	var menuSound;
+  	menuSound = this.game.add.audio('menu');
+    menuSound.loopFull();
     this.game.state.start('menu');
   }
 };

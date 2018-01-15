@@ -20,22 +20,25 @@ var jugador; var nivel;
 var platforms; var platformsIni;
 var enemies; var numeroEnemigos; var enemigosPorNivel; var enemigosEnPantalla;
 var monedas;
+var auxMute;
 var deadZone1; var deadZone2; var deadZones;
 var fireballs; var bolaCreada = false; var bolaGreenCreada = false;
 var juego;
 var perder;
-var powerUps; var PUcreado; 
+var powerUps; var PUcreado; var po; var inMenu;
 var auxRn;
 var agarrador = {};
 var agarro;
 var course = false; var endCourse = false; var numMonedas = 0; 
 var time = 0;
-var pausa; var menu; var fullS;
+var pausa; var menu; var fullS; var mute;
 var fondo; var fondocourse;
 var datos; var puntuation; var punt;
 var pause; var drop; var back;
 var style; var letras;
-
+var menuSound; var courseSound; var gameSound;
+var victory; var tempExtra;
+var menuP;
 var muerte;
 var debug = false;
 
@@ -45,7 +48,7 @@ var PlayScene = {
   create: function () {
 
   juego = this.game;
-
+  inMenu = false;
   //Activamos la física del juego
   juego.physics.startSystem(Phaser.Physics.ARCADE);
   puntuation = 0;
@@ -69,7 +72,6 @@ var PlayScene = {
   perder.reescala_imagen(0.2,0.2);
   perder.visible = false;
 
-
   //Creamos primer PowerUp
   powerUps = juego.add.physicsGroup();
   PUcreado = false;
@@ -85,8 +87,7 @@ var PlayScene = {
   //Creamos las deadzones 
   deadZones = juego.add.physicsGroup();
   creaDeadZone();
-
-
+  
   //Creamos bolas de fuego
   fireballs = juego.add.physicsGroup();
 
@@ -103,6 +104,10 @@ var PlayScene = {
   pause = juego.add.audio('pause');
   drop = juego.add.audio('drop');
   back = juego.add.audio('back');
+  menuSound = juego.add.audio('menu');
+  courseSound = juego.add.audio('course');
+  gameSound = juego.add.audio('game');
+  victory = juego.add.audio('victory');
 
   //Finalmente, creamos el nivel
   nivel = 0; //Para el nivel 1
@@ -112,24 +117,34 @@ var PlayScene = {
 
   pausa.onDown.add(function () {
 
-    if(juego.paused){juego.paused = false
+    if(juego.paused){
+      juego.paused = false
       HUD.quitaPausa();
-      
     };
     pause.play();
   },this);
 
   menu = juego.input.keyboard.addKey(Phaser.Keyboard.M);
+  menuP = false;
 
   menu.onDown.add(function () {
     back.play();
     if(juego.paused){
       juego.paused = false;
       HUD.Pausa();        
-	PU.eliminado();
-
+      juego.sound.stopAll();
+      menuSound.loopFull();
+      menuP = true;
+      inMenu = true;
       juego.state.start('menu');
     }
+  },this);
+
+  mute = juego.input.keyboard.addKey(Phaser.Keyboard.S);
+
+  mute.onDown.add(function () { 
+    if (juego.paused)
+      juego.sound.mute = !juego.sound.mute;;
   },this);
 
   juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -144,9 +159,6 @@ var PlayScene = {
       
   },this);
 
-
-	PU.eliminado();
-
     style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"};
     letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  	
  },
@@ -155,8 +167,10 @@ var PlayScene = {
 
     //Para el menú de pausa
     if(pausa.isDown && !juego.paused){
+      auxMute = juego.sound.mute; //necesario guardar en una variable auxiliar el estado del muteo porque el pausa lo cambia
       juego.paused = true;
       HUD.Pausa();
+      juego.sound.mute = auxMute;
     }
     
     letras.setText("PUNTUACIÓN:  " + puntos.daPuntos());
@@ -205,6 +219,8 @@ var PlayScene = {
 
     	if (numMonedas <= 0 && course){
     		course = false;
+        HUD.cambiaExtra();
+        setTimeout(function(){HUD.cambiaExtra()}, 2000);
     		jugador.vidas++;
     		HUD.actualizaVida(jugador);
     		endCourse = false;
@@ -275,8 +291,8 @@ function nuevoNivel(){
   bolaGreenCreada = false;
   agarro = false;
 
-  PU.eliminado();
-    PU.creaPower();
+ 
+  PU.creaPower();
 
   if(nivel >= 7)
 	 numeroEnemigos = nivel + juego.rnd.integerInRange(0,2);
@@ -327,7 +343,8 @@ function nuevoNivel(){
 
 if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   {
-
+    juego.sound.stopAll();
+    courseSound.loopFull();
   	fondocourse.animations.play('runcourse');
   	fondocourse.visible = true;
   	time = 15;
@@ -341,8 +358,12 @@ if (nivel % 5 === 0) //cada 5 niveles pantalla bonus
   	monedas = coins.devuelveGrupo(juego, numMonedas);
   }
 
-  else 
+  else {
+    juego.sound.stopAll();
+    victory.play();
+    gameSound.loopFull();
     HUD.ocultaTempLevel();
+  }
 }
 
 agarrador.devuelve= function (){
@@ -407,7 +428,9 @@ perd.Perder = function(){
         }, 3000);
 
     setTimeout(function(){ 
-      PU.eliminado();
+      juego.sound.stopAll();
+      menuSound.loopFull();
+      inMenu = true;
     juego.state.start('menu');
   }, 6000);
 }
@@ -418,7 +441,7 @@ function actualizaCont(tiempo){
      HUD.tempLevel(tiempo); 
      tiempo--;
      if(time >= 0 && !endCourse) {
-      setTimeout(function(){actualizaCont(tiempo);}, 1000);
+      tempExtra = setTimeout(function(){actualizaCont(tiempo);}, 1000);
     }
 }
 
@@ -430,7 +453,7 @@ var PU = {};
 
 PU.creaPower = function() {
 			var aleatorio = juego.rnd.integerInRange(0, 3);
-    		var po; 
+    		 
     		if(!PU.devuelve()){
     			PU.creado();
 setTimeout(function(){ 
@@ -445,6 +468,8 @@ setTimeout(function(){
 
         powerUps.add(po);
         drop.play();
+        if(menuP === false)
+          po.temp = setTimeout(function(){PU.eliminado(po); }, 6000);
 
 		}, 2000);
 	 }
@@ -460,17 +485,14 @@ PU.devuelve = function(){
   return PUcreado;
 }
 
-PU.eliminado = function(){
+PU.eliminado = function(po){
 
-	for (var i = 0 ; i < powerUps.length; i++){
-
-      powerUps.children[i].limpia();
-      powerUps.children[i].kill();
-      powerUps.remove(powerUps.children[i]);
-      
-    }
-  
+  clearTimeout(po.temp);
+  po.kill();
+  powerUps.remove(po);
   PUcreado = false;
+  if (!inMenu)
+    PU.creaPower();
 }
 
 module.exports.PU = PU;
