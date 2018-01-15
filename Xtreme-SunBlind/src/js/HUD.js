@@ -79,7 +79,7 @@ HUD.create = function(game){
  	 ebrio.play('drunk');
 
  	 //Medidor de agarre
- 	 AG = game.add.sprite(950, 100, 'interiorPis');
+ 	 AG = game.add.sprite(950, 100, 'barraAgarrador');
  	 AG.height = 20;
  	 AG.width = 0;
  	 AG.visible = false;
