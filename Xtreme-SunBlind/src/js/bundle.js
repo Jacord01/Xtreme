@@ -302,7 +302,8 @@ var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grab
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   this.reescala_imagen(1.5,1.5);
   this.aleatorio = 0;
-    this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.add('stuned', [8,9,10,11,12,13,14,15], 3, true);
   this.animations.play('mueve');
 
 }
@@ -312,11 +313,15 @@ agarrador.prototype.constructor = agarrador;
 
 
 agarrador.prototype.update = function(){
-	if(this.golpeado) this.stunt = true;
-	//this.juego.debug.body(this);
-	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, this.x , this.y);
-	//this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
-	//this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
+	if (this.golpeado){
+		this.stunt = true;
+		this.animations.play('stuned');
+		}
+	
+	else{
+	this.stunt = false;
+	this.animations.play('mueve');
+	}
 
 	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;
@@ -1461,7 +1466,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   			enem.cont = enem.cont + 0.25;
   			if (enem.cont > 2) 
   				enem.cont = 2;
-  			setTimeout(function(){ enem.golpeado = false;}, 3000);
+        if(enem.grabber)
+            setTimeout(function(){ enem.golpeado = false;}, 6000);
+          else
+  			   setTimeout(function(){ enem.golpeado = false;}, 3000);
   		}
   		else {
   			enem.golpeado = false;
@@ -1587,8 +1595,8 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
 
       if (pinta){
 
-        juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
-        juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
+        juego.add.text(300, 80 + i * 60, "NOMBRE: " + nombre, style);
+        juego.add.text(710, 80 + i * 60, "PUNTUACION: " + punct, style);
       }
 
       //Vamos a ver si el nombre ya existe dentro del top 10 de puntuaciones. Si existe, guardamos su puntuación para despues
@@ -1675,7 +1683,7 @@ var PreloaderScene = {
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
-    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
+    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,16);
     this.game.load.spritesheet('crabby', 'images/crabby.png', 64, 57, 4);
     this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.spritesheet('fireball', 'images/fireball.png', 64, 32, 2);
@@ -2382,13 +2390,13 @@ perd.Perder = function(){
 	perder.visible = true; //Texto de perder en visible
 
     setTimeout(function(){
-      var nombre = "abcdefsgufjsl"
+      var nombre = "abcdefsgufjslh"
       var cont = 0;
-      while(nombre.length > 11){
+      while(nombre.length > 12){
         if(cont <= 3)
     	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
        else
-        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
+        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MÁXIMO 12 CARACTERES!)");
       cont++;
     } 
 
@@ -2398,7 +2406,7 @@ perd.Perder = function(){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
-			alert("¡" + nombre + " tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
+			alert("¡" + nombre + " Tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor

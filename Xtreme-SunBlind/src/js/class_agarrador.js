@@ -14,7 +14,8 @@ var agarrador =  function(game, entradax, entraday, entradasprite, jugador, grab
   this.espacio = this.juego.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   this.reescala_imagen(1.5,1.5);
   this.aleatorio = 0;
-    this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.add('mueve',[0,1,2,3,4,5,6,7], 3, true);
+  this.animations.add('stuned', [8,9,10,11,12,13,14,15], 3, true);
   this.animations.play('mueve');
 
 }
@@ -24,11 +25,15 @@ agarrador.prototype.constructor = agarrador;
 
 
 agarrador.prototype.update = function(){
-	if(this.golpeado) this.stunt = true;
-	//this.juego.debug.body(this);
-	//this.juego.debug.text('POSICION: ' + this.x + 'Y: ' + this.y, this.x , this.y);
-	//this.juego.debug.text('MEDIDOR AGARRADO: ' + this.medAgarro, 500, 70);
-	//this.juego.debug.text('JUGADOR AGARRADO: ' + this.jug.agarrado, 500, 90);
+	if (this.golpeado){
+		this.stunt = true;
+		this.animations.play('stuned');
+		}
+	
+	else{
+	this.stunt = false;
+	this.animations.play('mueve');
+	}
 
 	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;

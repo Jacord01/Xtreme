@@ -83,8 +83,8 @@ handleRequest.Peticion = function(juego, pinta, mandaDatos, Datos){
 
       if (pinta){
 
-        juego.add.text(300, 80 + i * 60, "NOMBRE:  " + nombre, style);
-        juego.add.text(700, 80 + i * 60, "PUNTUACION:  " + punct, style);
+        juego.add.text(300, 80 + i * 60, "NOMBRE: " + nombre, style);
+        juego.add.text(710, 80 + i * 60, "PUNTUACION: " + punct, style);
       }
 
       //Vamos a ver si el nombre ya existe dentro del top 10 de puntuaciones. Si existe, guardamos su puntuación para despues

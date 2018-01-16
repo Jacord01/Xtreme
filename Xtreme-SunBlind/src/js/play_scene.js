@@ -405,13 +405,13 @@ perd.Perder = function(){
 	perder.visible = true; //Texto de perder en visible
 
     setTimeout(function(){
-      var nombre = "abcdefsgufjsl"
+      var nombre = "abcdefsgufjslh"
       var cont = 0;
-      while(nombre.length > 11){
+      while(nombre.length > 12){
         if(cont <= 3)
     	nombre = prompt("Introduce tu nombre para el ranking: \n (no introduzcas nada si no quieres guardar la puntuación,\nMáximo 12 caracteres <3)");
        else
-        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MENOS DE 12 CARACTERES!)");
+        nombre = prompt("Introduce tu nombre para el ranking: \n (¡MÁXIMO 12 CARACTERES!)");
       cont++;
     } 
 
@@ -421,7 +421,7 @@ perd.Perder = function(){
         
 		datos = [nombre, puntuation.toString(), nivel.toString()];
 		if(puntuation <= 0)
-			alert("¡" + nombre + " tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
+			alert("¡" + nombre + " Tu puntuación es 0!"  +"\n" + "(Mejor vuelve a intentarlo, que queda feo poner un 0)");
     
     	else
    		Put.mandaDatos(datos);} //Mandamos los datos al servidor
