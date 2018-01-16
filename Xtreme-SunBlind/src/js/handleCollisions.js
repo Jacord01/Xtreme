@@ -125,7 +125,10 @@ colisiones.collisionHandlerEnem = function(jug, enem){
   			enem.cont = enem.cont + 0.25;
   			if (enem.cont > 2) 
   				enem.cont = 2;
-  			setTimeout(function(){ enem.golpeado = false;}, 3000);
+        if(enem.grabber)
+            setTimeout(function(){ enem.golpeado = false;}, 6000);
+          else
+  			   setTimeout(function(){ enem.golpeado = false;}, 3000);
   		}
   		else {
   			enem.golpeado = false;

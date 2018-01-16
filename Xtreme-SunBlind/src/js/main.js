@@ -61,7 +61,7 @@ var PreloaderScene = {
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
-    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,8);
+    this.game.load.spritesheet('enemigo', 'images/Grabber.png', 64,64,16);
     this.game.load.spritesheet('crabby', 'images/crabby.png', 64, 57, 4);
     this.game.load.spritesheet('fly', 'images/fly.png', 64,64, 6);
     this.game.load.spritesheet('fireball', 'images/fireball.png', 64, 32, 2);
