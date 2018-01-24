@@ -11,40 +11,55 @@ var PA;
 var juego;
 var fullscreen;
 var vidaExtra;
+var vidas = [];
 
 HUD.create = function(game){
 
 	juego = game;
-	//VidasPlayer
-	
-	vida1 =  game.add.sprite(10,10,'vidas');
-	vida2 = game.add.sprite(74, 10, 'vidas');
-	vida3 = game.add.sprite(138, 10, 'vidas');
-	
 
+ 	//VidasPlayer (el jugador siempre comienza con 3 vidas)
+ 	//Hacemos 2 bucles para colocar las vidas del jugador en la posición que deben tener
+ 	//Como máximo el jugador podrá tener 8 vidas
+	for(var i = 0; i < 4; i++){
+			vidas[i] = game.add.sprite(10 + 64 * i , 10,'vidas');
+		}
+
+		vidas[3].visible = false; //Recordamos que solo tienes 3 vidas al comenzar, por lo que ocultamos la cuarta
+
+	for(var i = 0; i < 4; i++){
+
+		vidas[i + 4] = game.add.sprite(10 + 64 * i , 70,'vidas');
+		vidas[i + 4].visible = false;
+		}	
 
 
 	//Nivel
 
- 	nivel = game.add.sprite(200,100, 'nivel');
+	//Letras "Nivel"
+ 	nivel = game.add.sprite(300,100, 'nivel');
  	nivel.width = 100;
  	nivel.height = 50;
 
-	punct1 = game.add.sprite(300, 80, 'numeros');
+ 	//Número izda
+	punct1 = game.add.sprite(400, 80, 'numeros');
  	punct1.width = 50;
  	punct1.height = 80;
 
- 	punct2 = game.add.sprite(350,80, 'numeros');
+ 	//Número dcha
+ 	punct2 = game.add.sprite(450,80, 'numeros');
  	punct2.width = 50;
  	punct2.height = 80;
 
- 	//temporizador para los niveles extra
+ 	//Temporizador para los niveles extra
+
+ 	//Número izquierda
  	Temp1 = game.add.sprite(300, 80, 'numeros');
  	Temp1.width = 50;
  	Temp1.height = 80;
  	Temp1.visible = false;
  	Temp1.x = 600; Temp1.y = 20;
 
+ 	//Número derecha
  	Temp2 = game.add.sprite(350,80, 'numeros');
  	Temp2.width = 50;
  	Temp2.height = 80;
@@ -53,18 +68,22 @@ HUD.create = function(game){
 
 
  	//Medidor de Pis
+ 	//Para el retrete
  	fondoRet = game.add.sprite(870, 25, 'fondoRetrete');
  	fondoRet.height = 60;
  	fondoRet.width = 400;
 
+ 	//Barra de pis interior
  	pisDentro = game.add.sprite(950,50, 'interiorPis');
  	pisDentro.height = 10;
  	pisDentro.width = 0;
 
+ 	//Barra de pis exterior
  	pisFuera = game.add.sprite(950,50, 'exteriorPis');
  	pisFuera.height = 10;
  	pisFuera.width = 300; 	
 
+ 	//medidor de pis del retrete
  	medPis = game.add.sprite(890,20, 'medPis');
  	medPis.width = 50;
  	medPis.height = 50;
@@ -74,7 +93,6 @@ HUD.create = function(game){
  	//Jugador ebrio
  	 ebrio = game.add.sprite(0 ,0,'borracho');
  	 ebrio.visible = false;
-
  	 ebrio.animations.add('drunk', [0,1,2,3], 6, true);
  	 ebrio.play('drunk');
 
@@ -98,59 +116,47 @@ HUD.create = function(game){
 
 HUD.actualizaVida = function(jug){
 
-	if(jug.vidas >= 3){
-		vida1.visible = true;
-		vida2.visible = true;
-		vida3.visible = true;
+	//Hacemos visibles las vidas que tenga el jugador
+	for(var i = 0; i < jug.vidas; i++){
+		vidas[i].visible = true;
 	}
-
-	else if(jug.vidas === 2){
-		vida1.visible = true;
-		vida2.visible = true;
-		vida3.visible = false;
-	}
-
-	else if(jug.vidas === 1){
-		vida1.visible = true;
-		vida2.visible = false;
-		vida3.visible = false;
-	}	
-
-	else {
-		vida1.visible = false;
-		vida2.visible = false;
-		vida3.visible = false;
+	//Y hacemos invisibles las que haya perdido
+	for(var j = jug.vidas; j < 8; j++){
+		vidas[i].visible = false;
 	}
 }
 
 HUD.nivel = function(lvl){
 
+	//Hacemos visibles los números
   punct1.visible = true; punct2.visible = true; nivel.visible = true;
 
+  	//Cálculo para los dos números de nivel
   punct1.frame = Math.floor(lvl / 10);
-
   punct2.frame = lvl % 10;
 
+	//Ocultamos los números y las letras de nivel
   setTimeout(function(){punct1.visible = false; punct2.visible = false; nivel.visible = false;}, 3000);
 }
 
 HUD.tempLevel = function(temp){
 
-
+	//Para los números del temporizador igual que para los de nivel
  Temp1.frame = Math.floor(temp / 10);
-
  Temp2.frame = temp % 10;
 
 }
 
 HUD.ocultaTempLevel = function(){
 
-	 Temp1.visible = false; Temp2.visible = false;
+	//Ocultamos el temporizador
+ Temp1.visible = false; Temp2.visible = false;
 
 }
 
 HUD.muestraTempLevel = function(){
 
+	//Mostramos el temporizador
 	Temp1.visible = true; Temp2.visible = true;
 }
 
@@ -158,17 +164,18 @@ HUD.cambiaPis = function(pis){
 
 	 	pisDentro.width = pis * 30;
 	 	
+	 	//Para la animación del retrete, si el pis está a 0 la paramos y ponemos el medidor a cero
 	 	if(pis === 0){
-
 	 		medPis.animations.stop(null, true);
 	 		medPis.frame = 0;
 	 	}
+	 	//Si está a 10, reproducimos la animación
 	 	else if(pis >= 10){
 	 		medPis.animations.play('maximo', 2, true);
 	 		
 	 	}
-	 	else {
-	 		
+	 	//Sino, actualizamos el retrete
+	 	else {	
 	 		medPis.frame = pis - 1;
 	 	}
 	 	
@@ -185,7 +192,7 @@ HUD.noBorracho = function(){
 }
 
 HUD.cambiaGrabber = function(llega){
-
+	//Método para cambiar la barra del grabber
 	AG.width = llega * 1.5;
 
 }
@@ -204,7 +211,7 @@ HUD.GrabberInvisible = function(){
 
 HUD.Pausa = function(){
 
-juego.world.bringToTop(PA);
+juego.world.bringToTop(PA); //Para que se vea por delante de todo el menú de pausa
 PA.visible = true;
 
 }
@@ -215,6 +222,7 @@ HUD.quitaPausa = function(){
 }
 
 HUD.fullscreen = function(){
+	//Método para poner el juego en modo pantalla completa
 
     if (juego.scale.isFullScreen)
     {
@@ -228,6 +236,7 @@ HUD.fullscreen = function(){
 
 HUD.cambiaExtra = function(){
 
+	//Cuando ganas una vida en los niveles extra, aparece un mensaje que te lo dice
 	vidaExtra.visible = !vidaExtra.visible;
 }
 

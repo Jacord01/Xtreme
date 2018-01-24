@@ -23,20 +23,22 @@ var puntuaciones = {
 
     back = juego.add.audio('back');
 
-    puntuaciones.ActualizaTabla();
+    puntuaciones.ActualizaTabla(); //Actualizamos la tabla de puntuaciones nada más entrar
 	}
 }
 
 puntuaciones.ActualizaTabla = function () {
 	
-	handle.Peticion(juego, true, false, null);
+	handle.Peticion(juego, true, false, null); //Llamamos a handle rquest con los parámetros de Pintar = true, MandaInfo = False y Datos = null
 }
 
 puntuaciones.mandaDatos = function(datos){
   
-  handle.Peticion(juego, false, true, datos);
+  //Este método será llamado desde fuera para mandar los datos al servidor a través de handleRequest
+  handle.Peticion(juego, false, true, datos); //Lo llamaremos con Pintar = false, mandaInfo = true y Datos = datos
 }
 
+//Para volver al menú principal
 puntuaciones.vuelveAMenu = function(){
   back.play();
 	juego.state.start('menu');

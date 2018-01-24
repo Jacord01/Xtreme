@@ -11,8 +11,8 @@ creaMonedas.creaGrupo = function(juego){
 
 creaMonedas.devuelveGrupo = function(juego, numMonedas){
   var n = numMonedas;
-
-  while (n > 0){
+  //Bucle para crear las monedas de los niveles extra en el mapa
+  for(var n = numMonedas; n > 0; n--){
     var aux = new object(juego, 0, 0, 'coin');
     aux.reescala_imagen(0.4, 0.4);
     if(n>=7)
@@ -22,8 +22,6 @@ creaMonedas.devuelveGrupo = function(juego, numMonedas){
     else
       aux.cambia_pos(400*(n),50);
     monedas.add(aux);
-
-    n--;
   }
 
   return monedas;

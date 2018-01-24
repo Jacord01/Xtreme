@@ -25,6 +25,7 @@ agarrador.prototype.constructor = agarrador;
 
 
 agarrador.prototype.update = function(){
+	//En el update el agarrador comprobará si está golpead, para estar de un color o de otro
 	if (this.golpeado){
 		this.stunt = true;
 		this.animations.play('stuned');
@@ -35,12 +36,14 @@ agarrador.prototype.update = function(){
 	this.animations.play('mueve');
 	}
 
+	//En el update registramos el input del espacio por si el jugador está agarrado e incrementamos el medidor de agarre.
 	if(this.jug.agarrado === true && this.espacio.isDown && this.espacio.downDuration(50)){
 		this.medAgarro += 10 / 4;
 		HUD.cambiaGrabber(this.medAgarro);
 
 	}
-	
+
+	//Si el medidor es mayor o igual a 100, agarrador soltará al jugador, si no, lo matará.
 	if(this.medAgarro >= 100){
 		this.aleatorio = this.juego.rnd.integerInRange(0,1);
 		if(this.aleatorio === 0)
@@ -59,13 +62,12 @@ agarrador.prototype.update = function(){
 		this.medAgarro = 50;
 		HUD.GrabberInvisible();
 		escena.estadosJugador.jugadorMuerte();
-	}
-
-	
+	}	
 }
 
 agarrador.prototype.agarra = function(jug){
-	var ag = this; //Cagon el this de las narices la de tiempo que he estado para esta bobada
+	//Cuando el jugador es agarrado, llamamos a este método para que se muestre la barra de agarre
+	var ag = this; 
 	ag.medAgarro = 50;
 	ag.agarrando = true;
 	jug.agarrado = true;
@@ -76,6 +78,7 @@ agarrador.prototype.agarra = function(jug){
 
 agarrador.prototype.cambiaAgarre = function(ag, jug){
 
+	//En este otro método, la barra de agarre se irá decrementando tras un tiempo (350 en este caso)
 	HUD.cambiaGrabber(ag.medAgarro);
 	ag.medAgarro -= 10;
 	if(ag.jug.agarrado)

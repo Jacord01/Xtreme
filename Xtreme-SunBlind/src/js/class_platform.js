@@ -40,13 +40,15 @@ plataforma.prototype.jump = function(){
 	this.body.gravity.y = 400;
 	this.body.velocity.y = -100
 
-
+	//Utilizamos un temporizador de phaser para devolver la plataforma a su sitio original después de que esta caiga, 
+	//ya que no siempre vuelve a quedarse en la posición original.
 	this.temporizador.loop(500, vuelve, this);
   	this.temporizador.start();
 }
 	
 }
 
+//Sirve para apagar una plataforma de fuego
 plataforma.prototype.cambiaSprite = function(){
 
 	this.loadTexture('plat2', 0);

@@ -11,7 +11,7 @@ var enemigoRandom = {};
 var enemies;
 
 enemigoRandom.creaGrupo = function(juego){
-
+	//Creamos un grupo de enemigos. Este será llamado en el create del playscene, por lo tanto sólo una vez por partida
   enemies = juego.add.physicsGroup();
 }
 
@@ -20,8 +20,9 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
     //Vamos a esperar x tiempo antes de crear un nuevo enemigo para que no se generen 2 en el mismo punto
     setTimeout(function(){
 
-    var aleatorioEnem = juego.rnd.integerInRange(0,3);
+    var aleatorioEnem = 0; 
 
+    //Dependiendo del nivel, generaremos un tipo concreto de enemigo, por eso el aleatorio enem tiene unos valores concretos para algunos niveles
     if(nivel < 3) aleatorioEnem = 0;
     else if(nivel >= 3 && nivel < 5) aleatorioEnem = 1;
     else if(nivel === 5) aleatorioEnem = 2;
@@ -33,7 +34,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
       else
         aleatorioEnem = 2; 
     }
-
+    //después de esos niveles, será completamente aleatorio los enemigos que nos salgan
     else if(nivel >= 7) aleatorioEnem = juego.rnd.integerInRange(0,3);
       
     var x = 0;
@@ -44,7 +45,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
     var yAG;
 
     y = juego.rnd.integerInRange(0, 600);
-    var ctrl = juego.rnd.integerInRange(0,2);
+    var ctrl = juego.rnd.integerInRange(0,2); //Variable para determinar la posición de salida de determiandos enemigos
 
     if(ctrl === 0){
       yFly = 0;
@@ -75,6 +76,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
       xAG = 1150;
     }
 
+    //Dependiendo del aleatorioEnem, crearemos un tipo de enemigo u otro
     if (aleatorioEnem === 0){
       var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150, false);
     }
@@ -95,10 +97,10 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
     else //Para curarnos de espanto, porque hay veces que las otras condiciones no se cumplen
       var enemigo = new tort(juego, x, 0, 'tortuguita', 1, 150);
 
-    enemies.add(enemigo);
+    enemies.add(enemigo); //Añadimos el enemigo al grupo de enemigos
 
     if (x >= 950)
-      enemigo.cambia_dir();
+      enemigo.cambia_dir(); //Cambiamos la dirección del enemigo si este es creado en la parte derecha de la pantalla
 
     enemigo.velocidad = nivel * 3 + enemigo.velocidad; //Cada nivel los enemigos irán más rápido
 
@@ -106,7 +108,7 @@ enemigoRandom.creaEnemigoRandom = function(juego, nivel, auxRn, jugador) {
 } 
 
   enemigoRandom.devuelveGrupo = function(){
-
+  	
     return enemies;
   }
 
