@@ -13,7 +13,7 @@ agua.prototype = Object.create(PU.prototype);
 agua.prototype.constructor = agua;
 
 agua.prototype.efecto = function(jug){
-	console.log('El agua no hace nada, pringado.');
+	console.log('El agua no hace nada, pringado.'); //Easter Egg del juego (no estaba escrito este comentario en la entrega de marketing por razones obvias)
 	sound.play();
 }
 

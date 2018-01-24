@@ -19,6 +19,8 @@ movibl.prototype.actualiza_pos = function(vl){
 };
 
 movibl.prototype.cambia_dir = function(){
+	///Al cambiar la direccion, tenemos que cambiar también la escala del personaje para que vaya
+	//hacia el otro lado
 	this.direction = this.direction * (-1);
 	this.scale.x = this.scale.x * this.direction;
 }

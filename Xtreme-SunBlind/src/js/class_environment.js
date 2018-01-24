@@ -1,4 +1,4 @@
-//clase para los elementos del entorno
+//clase para los elementos del entorno (Plataformas sobre todo)
 
 "use strict"; 
 var GO = require('./class_object');

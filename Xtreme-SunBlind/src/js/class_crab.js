@@ -15,6 +15,7 @@ crab.prototype = Object.create(enemy.prototype);
 crab.prototype.constructor = crab;
 
 crab.prototype.update = function(){
+	//Si el enemigo no está enfadado y es golpeado, pasará a estar enfadado. Al siguiente toque, se pondrá estuneado
 	if (this.golpeado && !this.enfado){
 		this.enfado = true;
 		this.golpeado = false;

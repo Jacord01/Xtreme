@@ -16,6 +16,7 @@ var menuInformacion = {
 	//Cargamos las imágenes del menú
 	fondo = juego.add.sprite(0,0,'Potenciadores');
 
+	//Añadimos sonidos
     click = juego.add.audio('click');
     back = juego.add.audio('back');
 
@@ -27,32 +28,41 @@ var menuInformacion = {
 
 
 function vuelveAMenu(){
+
+	//Para volver al estado de menú principal
 	back.play();
 	juego.state.start('menu');
 }
 
 
 function cambiainfoD(){
+	//Pasamos a la pestaña dela derecha
 	click.play();
 	cont++;
 
 	if (cont >= 5)
 		cont = 0;
 
-	cambiaImagenes();
+	cambiaImagenes(); //Llamamos al método que cambia las pestañas
 }
 
 function cambiainfoI(){
+	//Pasamos a la pestaña de la izquierda
 	back.play();
 	cont--;
 
 	if (cont < 0)
 		cont = 4;
 
-	cambiaImagenes();
+	cambiaImagenes(); //Llamamos al método que cambia las pestañas
 }
 
 function cambiaImagenes(){
+
+	//En cada una de las diferentes pestañas tenemos que generar las imagenes y los botones de nuevo, 
+	//así como en la pestaña del pis crear los vídeos, ponerlos al principio y reproducirlos.
+	//Esto se debe a que no hemos encontrado ningún método para ocultar los vídeos (como .visible para los sprites)
+	// y no hemos encontrado ninguna mejor forma de hacerlo.
 
 	if(cont === 0){
 		juego.add.sprite(0,0,'Potenciadores');
@@ -92,7 +102,7 @@ function cambiaImagenes(){
 
 function creaBotones(){
 
-		 //Boton para cambiar entre la info Derecha
+	//Boton para cambiar entre la info Derecha
     buttonInfoD = juego.add.button(juego.world.centerX + 500, 650, 'button', cambiainfoD, this, 2,1,0);
     buttonInfoD.animations.add('button');
     buttonInfoD.animations.play('button', 4, true );

@@ -19,6 +19,7 @@ GO.prototype.cambia_pos = function(newposx, newposy){
     this.y = 720; 
 };
 
+//Método para reescalar cualquier sprite
 GO.prototype.reescala_imagen = function (x, y){
   this.scale.setTo(x,y);
 };

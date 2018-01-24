@@ -19,6 +19,7 @@ plataforma.creaPlataforma = function(juego, nivel) {
   platforms = juego.add.physicsGroup();
   platformsIni = juego.add.physicsGroup();
 
+  //Determinamos de forma aleatoria si nos encontramos ante un nivel de fuego o hielo
   var aleatorio = juego.rnd.integerInRange(0,1);
   if (aleatorio === 0)
     fug = false;
@@ -77,11 +78,14 @@ plataforma.creaPlataforma = function(juego, nivel) {
 
       var fuego = false; var hielo = false;
 
+      //En cada nivel las plataformas son destruidas y vueltas a crear para que, a partir del nivel 6, podamos decidir qué tipo
+      //de plataforma tenemos
+
     if(level >= 6 && !superior && !ini){
-      var aleatorio = juego.rnd.integerInRange(0,100);
+      var aleatorio = juego.rnd.integerInRange(0,100); //porcentaje para que una plataforma pueda ser de fuego o hielo
     
 
-        if (aleatorio <= 95){
+        if (aleatorio <= 95){ //Sólo será de fuegoo o hielo la plataforma si entra en el 5%
 
            var sprite = 'plat2';}
 

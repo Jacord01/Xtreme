@@ -13,14 +13,15 @@ var menu = {
   create: function () {
     juego = this.game;
 
-    juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-
+    juego.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT; //para que la pantalla completa se ajuste a los bordes
+    //Añadimos estados al juego
     juego.state.add('info', menuInformacion);
 
     juego.state.add('tutorial', tuto); 
 
     juego.state.add('puntuation', Put);
 
+    //Añadimos audios
     click = juego.add.audio('click');
     back = juego.add.audio('back');
     gameSound = juego.add.audio('game');
@@ -65,11 +66,13 @@ var menu = {
 };
 
 function actionOnClickPunt (){
+    //Abrimos la ventana de puntuaciones (ranking) cambiando de estado
     click.play();
     juego.state.start('puntuation');
 }
 
 function actionOnClickJuego () {
+    //Paramos el sonido de la musica del menú y arrancamos el estado de tutorial antes que el juego en sí
     juego.sound.stopAll();
     gameSound.loopFull();
     click.play();
@@ -77,11 +80,13 @@ function actionOnClickJuego () {
 }
 
 function actionOnClickInfo(){
+    //Estado de información
     click.play();
     juego.state.start('info');
 }
 
 function fullscreen(){
+    //Botón para la pantalla completa
     if (this.game.scale.isFullScreen)
     {
         back.play();
@@ -95,6 +100,7 @@ function fullscreen(){
 }
 
 function muteSound(){
+    //Boton para silenciar audio.
   this.game.sound.mute = !this.game.sound.mute;
   click.play();
 }

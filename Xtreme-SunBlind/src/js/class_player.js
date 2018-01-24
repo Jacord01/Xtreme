@@ -15,6 +15,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
 	movible.call(this, game, entradax, entraday, entradasprite, dir, velx);
 	this.vidas = vidas;
 	this.juego = game;
+  //Todos los boleanos y variables de control que necesitamos para saber qué está haciendo el player en cada momento
   this.revive = false;
   this.muerto = false;
   this.orina = 0;
@@ -43,6 +44,8 @@ Protagonista.prototype.create = function (){
   this.anchor.x = 0.5;
   this.anchor.y = 0.5;
   this.reescala_imagen(1.4, 1.2);
+
+  //Añadimos todas las animaciones del jugador
   this.animations.add('walk', [0,1,2,3]);
   this.animations.add('stay', [4,5], 6, true);
   this.animations.add('jump', [6,7,8,9,10,11,12,13,14]);
@@ -51,6 +54,7 @@ Protagonista.prototype.create = function (){
   this.animations.add('attack2', [27]);
   this.animations.add('attack3', [28, 29],2);
   this.animations.play('stay');
+
   //añadimos sonidos del player
   salta1 = this.juego.add.audio('jumpa1');
   salta2 = this.juego.add.audio('jumpa2');
@@ -59,11 +63,16 @@ Protagonista.prototype.create = function (){
   hurt3 = this.juego.add.audio('hurt3');
   pisSpound = this.juego.add.audio('pis');
 
+  //Creamos el escudo del jugador, que siempre lo acompañará pero sólo estará activo cuando este beba batido de proteinas
   escudo = this.game.add.sprite(this.x ,this.y,'escudo');
   escudo.visible = false;
   escudo.width = 250;
   escudo.height = 250;
-  //this.body.setSize(20,60, 20, 0);
+
+  //Hemos creado una nueva colisión invisible para la mecánica del pis.
+  //Esta va con el jugador y se activa cuando este hace pis. 
+  //Sirve para no utilizar el mismo collider del jugador ya que daba muchos fallos con las plataformas 
+  //de los bordes y las de fuego.
   this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
   this.juego.physics.arcade.enable(this.pis);
   this.pis.visible = false;
@@ -103,11 +112,11 @@ Protagonista.prototype.update = function (){
   if(this.agarrado)
     this.vel = 0;
 
-  if(!this.atacando){
+  if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
     if (cursors.left.isDown)
     {
-        facingRight = false;
+        facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
         if(!this.borracho)
           this.scale.x = -this.escala;
@@ -136,7 +145,7 @@ Protagonista.prototype.update = function (){
 
     {
       this.animations.play('jump', 10 , true);
-      var n = this.juego.rnd.integerInRange(0,1);
+      var n = this.juego.rnd.integerInRange(0,1); //Aleatorio para los dos sonidos distintos de salto
       if (n === 0)
         salta1.play();
       else
@@ -187,6 +196,7 @@ Protagonista.prototype.update = function (){
         this.invencible = true;
     	this.body.touching.down = true;
        if (!this.haAtacado){
+        //Seleccionamos un aleatorio para las 3 animaciones de ataque distintas que tenemos
         var num = this.juego.rnd.integerInRange(1,3);
         var prota = this;
         if (num === 1)
@@ -196,19 +206,27 @@ Protagonista.prototype.update = function (){
         else
           hurt3.play();
         prota.haAtacado = true;
+
+        //Tras el tiempo de ataque, volvemos a poner al jugador en su estado anterior
        setTimeout(function(){prota.atacando = false;cols.reduceEnem(); prota.haAtacado = false; prota.invencible = false;}, 700);
      }
-     this.animations.play('attack'+num,4,false);
+     this.animations.play('attack'+num,4,false); //finalmente hacemos la animación
       }
 }
 
 Protagonista.prototype.incrementaOrina = function (orina){
 
+//Método que es llamado cuando el jugador toma una bebida para incrementar su orina
   this.orina = this.orina + orina;
   if(this.orina>10)
     this.orina = 10; 
+  //actualizamos en el HUD el medidor de pis
   HUD.cambiaPis(this.orina);
 
 }
 
+function dejaDeAtacar(){
+
+
+}
 module.exports = Protagonista;

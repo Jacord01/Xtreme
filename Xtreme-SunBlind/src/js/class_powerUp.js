@@ -3,13 +3,11 @@
 
 var GO = require('./class_object');
 var escena = require('./play_scene');
-//module.Modulo.creaPower
 
 var powerUp = function(game, entradasprite, orina){
 	this.Rx = game.rnd.integerInRange(0, 1200);
  	this.Ry = game.rnd.integerInRange(0, 500);
  	this.timer;
- 	//this.llama();
  	
   GO.call(this, game, this.Rx, this.Ry, entradasprite);
   this.orina = orina;

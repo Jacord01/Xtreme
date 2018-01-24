@@ -22,10 +22,7 @@ enemigo.prototype.create = function (){
  	this.body.gravity.y = 4000;
 }
 
-enemigo.prototype.cambia_vel = function (vl){
-	this.velocidad = vl;
-}
-
+//Devolvemos los puntos que da cada enemigo por ser eliminado
 enemigo.prototype.devuelvePuntos = function(){
 
 	return this.puntos;
