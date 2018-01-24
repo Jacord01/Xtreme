@@ -1,30 +1,39 @@
 Xtreme SunBlind!
+
 Juan Ruiz Jiménez y Javier Cordero Calvo
 
-Descripción: Reconstrucción del clásico “Mario Bros” (Arcade) de 1983 con una estética renovada y nuevas mecánicas.
+Reconstrucción del clásico “Mario Bros” (Arcade) de 1983 con una estética renovada y nuevas mecánicas.
 
 La experiencia deseada es que el jugador cuente con el juego base, pero con nuevos elementos que permitan aumentar la diversión y el tiempo de juego. 
-Trasmitirá una sensación “rebelde” y nada seria, llegando a resultar gamberro, con un gameplay muy dinámico y frenético. 
 
-Como mecánicas principales, se mantienen las mecánicas base del juego original y se implementarán algunas nuevas (siempre y cuando al terminar con las principales de tiempo), como: 
-1)	Sistema de bebidas y ganas de orinar: Se podrá ir tomando bebidas que servirán como power ups (explicados más adelante), que irán aumentando un contador (barra de ganas de orinar) que al estar completa ralentizará al jugador y para deshacerse de este efecto deberá orinar.
-La barra de orinar tomará valores de 0 a 10. Cuando llegue a 10 podrás activar la función de orinar, pero te moverás más despacio. 
+Trasmitirá una sensación “rebelde” y nada seria, llegando a resultar gamberro, con un gameplay muy dinámico. 
 
-1.1)	Bebida energética: Aumentará la velocidad del jugador (+2 orina).
-1.2)	Batido de proteínas: Generará un escudo alrededor del jugador hasta que lo golpeen (+2 orina).
-1.3)	Agua: No hace nada. Sólo aumentará el medidor de orina (+1 orina).
-1.4)	Alcohol etílico: Invierte los controles (+3 orina).
+Como mecánicas principales, se mantienen las mecánicas base del juego original y se implementarán algunas nuevas: 
 
-2)	Nuevas animaciones: Según el juego original, existe una única animación a la hora de eliminar enemigos. Se añadirán nuevas animaciones que saldrán de forma aleatoria.
+Sistema de bebidas y ganas de orinar: Se podrá ir tomando bebidas que servirán como Power Up, que irán aumentando un contador que progresivamente ralentizará al jugador y para deshacerse de este efecto deberá orinar.
 
-3)	Plataformas ardientes: saldrá fuego vertical de algunas plataformas. Este fuego podrá ser apagado mediante la orina.
+La barra de orinar tomará valores de 0 a 10. Cuando llegue a 10 podrás activar la función de orinar. 
 
-4)	Nuevo enemigo: Agarrará al jugador y no le dejará moverse. Para deshacerse de él, el jugador tendrá que pulsar repetidas veces la barra espaciadora. 
+Bebida energética: Aumentará la velocidad del jugador.
 
-5)	Como opción poco probable, intentaremos meter un modo de dos jugadores.
+Batido de proteínas: Generará un escudo alrededor del jugador hasta que lo golpeen o pase un tiempo determinado.
+
+Agua: No hace nada.
+
+Alcohol etílico: Invierte los controles.
+
+Nuevas animaciones: Según el juego original, existe una única animación a la hora de eliminar enemigos. Se añadirán nuevas animaciones que saldrán de forma aleatoria.
+
+Plataformas ardientes: Estas plataformas podrán ser apagadas mediante la orina.
+
+Nuevo enemigo: Agarrará al jugador y no le dejará moverse. Para deshacerse de él, el jugador tendrá que pulsar repetidas veces la barra espaciadora. 
 
 Los controles del juego serán las teclas de dirección izquierda y derecha para moverse, tecla de dirección superior para orinar y barra espaciadora para saltar. 
-Como sistema de puntuación, las monedas del juego original serán sustituidas por trozos de pizza y pizzas enteras marca “Burrito”. Las primeras sumarán 5 de puntuación y las segundas 20. Cada paso de nivel sumará 100. Cada enemigo eliminado sumará 10. 
-El jugador contará con 3 vidas y cada golpe de enemigo quitará 1 vida. 
-La interfaz y menús del juego se mantendrán como los originales, sólo con cambios estéticos. 
-La estética del juego será rediseñada para que se mantenga dentro del ambiente que queremos trasmitir. El tema de la estética será espacial (alienígenas) con tono de humor constante y muy colorida. 
+
+El jugador contará con 3 vidas y cada golpe de enemigo quitará 1 vida. Podrá ganar una a cada nivel extra (cada cinco niveles).
+
+La interfaz ha sido renovada acorde con la estética del juego. 
+
+La estética del juego será rediseñada para que se mantenga dentro del ambiente que queremos trasmitir. El tema será espacial (alienígenas) con tono de humor constante y muy colorido. 
+
+La motivación principal y nuestro mayor gancho a la hora de jugar a Xtreme-SunBlind!  es su sistema de puntuaciones con un ranking para que todo el mundo pueda competir e intentar entrar en el Top 10 de mejores jugadores.
