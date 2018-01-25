@@ -8,15 +8,14 @@ var ebrio;
 var Temp1; var Temp2; 
 var AG; 
 var PA;
-var juego; var jugador;
+var juego;
 var fullscreen;
 var vidaExtra;
 var vidas = [];
 
-HUD.create = function(game, jug){
+HUD.create = function(game){
 
 	juego = game;
-	jugador = jug;
 
  	//VidasPlayer (el jugador siempre comienza con 3 vidas)
  	//Hacemos 2 bucles para colocar las vidas del jugador en la posición que deben tener

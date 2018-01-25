@@ -129,8 +129,6 @@ window.onload = function () {
     //Creamos el juego
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
 
-  game.movil = false; //Para poder jugar desde el movil
-
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('menu', Menu);
