@@ -73,7 +73,7 @@ var menu = {
  },
 };
 
-function moviClick(){
+function movilClick(){
     juego.movil = true;
     movil.visible = false;
 }
