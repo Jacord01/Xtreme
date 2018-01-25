@@ -86,10 +86,10 @@ Protagonista.prototype.update = function (){
 
 if(this.juego.movil){
   if(this.juego.input.pointer1.isDown){
-    if(this.game.input.pointer1.positionOnDown.x >= this.juego.width / 2){
+    if(this.game.input.pointer1.positionOnDown.x >= 650){
       this.derecha = true;
     }
-   else if(this.game.input.pointer1.positionOnDown.x < this.juego.width / 2){
+   else if(this.game.input.pointer1.positionOnDown.x < 650){
       this.izquierda = true;
     }
   }
