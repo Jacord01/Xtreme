@@ -31,6 +31,8 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.atacando = false;
   this.haAtacado = false;
   this.pis;
+  this.derecha = false;
+  this.izquierda = false;
   this.create();
 }
 
@@ -76,10 +78,26 @@ Protagonista.prototype.create = function (){
   this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
   this.juego.physics.arcade.enable(this.pis);
   this.pis.visible = false;
+
 }
+
 
 Protagonista.prototype.update = function (){
 
+if(this.juego.movil){
+  if(this.juego.input.pointer1.isDown){
+    if(this.game.input.pointer1.positionOnDown.x >= this.juego.width / 2){
+      this.derecha = true;
+    }
+   else if(this.game.input.pointer1.positionOnDown.x < this.juego.width / 2){
+      this.izquierda = true;
+    }
+  }
+  else{
+    this.derecha = false;
+    this.izquierda = false;
+  }
+}
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
@@ -114,7 +132,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || this.izquierda)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -126,7 +144,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown)
+    else if (cursors.right.isDown || this.derecha)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;

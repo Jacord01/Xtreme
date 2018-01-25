@@ -818,6 +818,8 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.atacando = false;
   this.haAtacado = false;
   this.pis;
+  this.derecha = false;
+  this.izquierda = false;
   this.create();
 }
 
@@ -863,10 +865,26 @@ Protagonista.prototype.create = function (){
   this.pis = this.game.add.sprite(this.x, this.y, 'enemigo');
   this.juego.physics.arcade.enable(this.pis);
   this.pis.visible = false;
+
 }
+
 
 Protagonista.prototype.update = function (){
 
+if(this.juego.movil){
+  if(this.juego.input.pointer1.isDown){
+    if(this.game.input.pointer1.positionOnDown.x >= this.juego.width / 2){
+      this.derecha = true;
+    }
+   else if(this.game.input.pointer1.positionOnDown.x < this.juego.width / 2){
+      this.izquierda = true;
+    }
+  }
+  else{
+    this.derecha = false;
+    this.izquierda = false;
+  }
+}
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
@@ -901,7 +919,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || this.izquierda)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -913,7 +931,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown)
+    else if (cursors.right.isDown || this.derecha)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -1856,6 +1874,8 @@ window.onload = function () {
     //Creamos el juego
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
 
+  game.movil = false;
+
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('menu', Menu);
@@ -1873,6 +1893,7 @@ var Put = require('./puntuaciones');
 var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
 var juego;
 var click; var back; var gameSound;
+var movil;
 
 var menu = {
 
@@ -1928,8 +1949,20 @@ var menu = {
     punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
+
+    //Boton para movil
+    movil = juego.add.button(juego.world.centerX - 535, 300, 'button', movilClick, this, 2,1,0);
+    movil.animations.add('button');
+    movil.animations.play('button', 4, true );
+    movil.width = 150;
+    movil.height = 60;
  },
 };
+
+function moviClick(){
+    juego.movil = true;
+    movil.visible = false;
+}
 
 function actionOnClickPunt (){
     //Abrimos la ventana de puntuaciones (ranking) cambiando de estado
