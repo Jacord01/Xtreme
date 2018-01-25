@@ -9,15 +9,14 @@ var ebrio;
 var Temp1; var Temp2; 
 var AG; 
 var PA;
-var juego; var jugador;
+var juego;
 var fullscreen;
 var vidaExtra;
 var vidas = [];
 
-HUD.create = function(game, jug){
+HUD.create = function(game){
 
 	juego = game;
-	jugador = jug;
 
  	//VidasPlayer (el jugador siempre comienza con 3 vidas)
  	//Hacemos 2 bucles para colocar las vidas del jugador en la posición que deben tener
@@ -818,9 +817,6 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.agarrado = false;
   this.atacando = false;
   this.haAtacado = false;
-  this.mueveIzda = false;
-  this.mueveDcha = false;
-  this.salta = false;
   this.pis;
   this.create();
 }
@@ -871,12 +867,6 @@ Protagonista.prototype.create = function (){
 
 Protagonista.prototype.update = function (){
 
-  if(this.juego.movil){
-     if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x >= this.juego.width / 2)
-        this.mueveDcha = true;
-      else if(this.juego.input.pointer1.onDown && this.juego.input.mousePointer.x < this.juego.width / 2)
-        this.mueveIzda = true;
-    }
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
@@ -911,7 +901,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown || this.mueveIzda)
+    if (cursors.left.isDown)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -923,7 +913,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown || this.mueveDcha)
+    else if (cursors.right.isDown)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -937,7 +927,7 @@ Protagonista.prototype.update = function (){
 
     }
 
-    if ((jumpButton.isDown || this.salta) && !this.agarrado && !this.orinando &&(this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -950,10 +940,6 @@ Protagonista.prototype.update = function (){
 
         this.body.velocity.y = -1000;
     }
-
-    this.salta = false;
-    this.mueveDcha = false;
-    this.mueveIzda = false;
 }
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
@@ -1870,8 +1856,6 @@ window.onload = function () {
     //Creamos el juego
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
 
-  game.movil = false; //Para poder jugar desde el movil
-
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('menu', Menu);
@@ -1886,7 +1870,7 @@ var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb; var buttonMovil;
+var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
 var juego;
 var click; var back; var gameSound;
 
@@ -1944,21 +1928,8 @@ var menu = {
     punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
-
-     //Boton para el modo movil
-    buttonMovil = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
-    buttonMovil.animations.add('button');
-    buttonMovil.animations.play('button', 4, true );
-    buttonMovil.width = 150;
-    buttonMovil.height = 60;
  },
 };
-
-function modoMovil()
-{
-    juego.movil = !juego.movil;
-    buttonMovil.visible = false;
-}
 
 function actionOnClickPunt (){
     //Abrimos la ventana de puntuaciones (ranking) cambiando de estado
@@ -2245,7 +2216,7 @@ var PlayScene = {
   jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
-  HUD.create(juego, jugador);
+  HUD.create(juego);
   cols.create(juego);
 
   //variables de audio

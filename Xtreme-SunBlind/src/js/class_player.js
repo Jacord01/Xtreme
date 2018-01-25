@@ -30,9 +30,6 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.agarrado = false;
   this.atacando = false;
   this.haAtacado = false;
-  this.mueveIzda = false;
-  this.mueveDcha = false;
-  this.salta = false;
   this.pis;
   this.create();
 }
@@ -83,12 +80,6 @@ Protagonista.prototype.create = function (){
 
 Protagonista.prototype.update = function (){
 
-  if(this.juego.movil){
-     if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x >= this.juego.width / 2)
-        this.mueveDcha = true;
-      else if(this.juego.input.pointer1.onDown && this.juego.input.mousePointer.x < this.juego.width / 2)
-        this.mueveIzda = true;
-    }
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
@@ -123,7 +114,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown || this.mueveIzda)
+    if (cursors.left.isDown)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -135,7 +126,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown || this.mueveDcha)
+    else if (cursors.right.isDown)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -149,7 +140,7 @@ Protagonista.prototype.update = function (){
 
     }
 
-    if ((jumpButton.isDown || this.salta) && !this.agarrado && !this.orinando &&(this.body.onFloor() 
+    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -162,10 +153,6 @@ Protagonista.prototype.update = function (){
 
         this.body.velocity.y = -1000;
     }
-
-    this.salta = false;
-    this.mueveDcha = false;
-    this.mueveIzda = false;
 }
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
