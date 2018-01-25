@@ -4,7 +4,7 @@ var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
+var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb; var buttonMovil;
 var juego;
 var click; var back; var gameSound;
 
@@ -64,17 +64,18 @@ var menu = {
     punt.height = 60;
 
      //Boton para el modo movil
-    buttonJuego = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
-    buttonJuego.animations.add('button');
-    buttonJuego.animations.play('button', 4, true );
-    buttonJuego.width = 150;
-    buttonJuego.height = 60;
+    buttonMovil = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
+    buttonMovil.animations.add('button');
+    buttonMovil.animations.play('button', 4, true );
+    buttonMovil.width = 150;
+    buttonMovil.height = 60;
  },
 };
 
 function modoMovil()
 {
     juego.movil = !juego.movil;
+    buttonMovil.visible = false;
 }
 
 function actionOnClickPunt (){

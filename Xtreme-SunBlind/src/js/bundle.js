@@ -872,9 +872,9 @@ Protagonista.prototype.create = function (){
 Protagonista.prototype.update = function (){
 
   if(this.juego.movil){
-     if(this.juego.input.pointer1.isDown && this.juego.input.pointer1.x >= this.juego.width / 2)
+     if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x >= this.juego.width / 2)
         this.mueveDcha = true;
-      else if(this.juego.input.pointer1.isDown && this.juego.input.mousePointer.x < this.juego.width / 2)
+      else if(this.juego.input.pointer1.onDown && this.juego.input.mousePointer.x < this.juego.width / 2)
         this.mueveIzda = true;
     }
   //Si no hay inputs consideramos que el jugador está parado
@@ -1886,7 +1886,7 @@ var tuto = require('./Tutorial.js');
 var menuInformacion = require('./menuInformacion');
 var Put = require('./puntuaciones');
 
-var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
+var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb; var buttonMovil;
 var juego;
 var click; var back; var gameSound;
 
@@ -1946,17 +1946,18 @@ var menu = {
     punt.height = 60;
 
      //Boton para el modo movil
-    buttonJuego = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
-    buttonJuego.animations.add('button');
-    buttonJuego.animations.play('button', 4, true );
-    buttonJuego.width = 150;
-    buttonJuego.height = 60;
+    buttonMovil = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
+    buttonMovil.animations.add('button');
+    buttonMovil.animations.play('button', 4, true );
+    buttonMovil.width = 150;
+    buttonMovil.height = 60;
  },
 };
 
 function modoMovil()
 {
     juego.movil = !juego.movil;
+    buttonMovil.visible = false;
 }
 
 function actionOnClickPunt (){
