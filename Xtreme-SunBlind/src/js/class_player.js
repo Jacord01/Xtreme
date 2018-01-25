@@ -89,15 +89,15 @@ if(this.juego.movil){
   if(this.juego.input.pointer1.isDown || this.juego.input.pointer2.isDown){
 
     if(this.game.input.pointer1.positionDown.x >= this.game.width / 2 &&
-      this.game.input.pointer1.positionDown.y < this.game.height / 1.5){
+      this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
       this.derecha = true;
     }
    else if(this.game.input.pointer1.positionDown.x < this.game.width / 2 &&
-    this.game.input.pointer1.positionDown.y < this.game.height / 1.5){
+    this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
       this.izquierda = true;
     }
-    if( this.game.input.pointer1.positionDown.y >= this.game.height / 1.5 || 
-      this.game.input.pointer2.positionDown.y >= this.game.height / 1.5){
+    if( this.game.input.pointer1.positionDown.y <= this.game.height / 1.5 || 
+      this.game.input.pointer2.positionDown.y <= this.game.height / 1.5){
     this.salta = true;
   }
 
