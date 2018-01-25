@@ -33,6 +33,7 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.pis;
   this.derecha = false;
   this.izquierda = false;
+  this.salta = true;
   this.create();
 }
 
@@ -85,17 +86,26 @@ Protagonista.prototype.create = function (){
 Protagonista.prototype.update = function (){
 
 if(this.juego.movil){
-  if(this.juego.input.pointer1.isDown){
-    if(this.game.input.pointer1.positionDown.x >= 650){
+  if(this.juego.input.pointer1.isDown || this.juego.input.pointer2.isDown){
+
+    if(this.game.input.pointer1.positionDown.x >= this.game.width / 2 &&
+      this.game.input.pointer1.positionDown.y < this.game.height / 1.5){
       this.derecha = true;
     }
-   else if(this.game.input.pointer1.positionDown.x < 650){
+   else if(this.game.input.pointer1.positionDown.x < this.game.width / 2 &&
+    this.game.input.pointer1.positionDown.y < this.game.height / 1.5){
       this.izquierda = true;
     }
+    if( this.game.input.pointer1.positionDown.y >= this.game.height / 1.5 || 
+      this.game.input.pointer2.positionDown.y >= this.game.height / 1.5){
+    this.salta = true;
+  }
+
   }
   else{
     this.derecha = false;
     this.izquierda = false;
+    this.salta = false;
   }
 }
   //Si no hay inputs consideramos que el jugador está parado
@@ -158,7 +168,7 @@ if(this.juego.movil){
 
     }
 
-    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
+    if ((jumpButton.isDown || this.salta) && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
