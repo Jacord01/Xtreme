@@ -180,6 +180,14 @@ var PlayScene = {
 
     style = { font: "bold 32px Arial", fill: "#F7FE2E", boundsAlignH: "center", boundsAlignV: "middle"}; //Tipogragía para la puntiación
     letras = juego.add.text(300, 20, "PUNTUACION:  " + puntos.daPuntos(), style);  //Puntuación	
+
+
+    var pepito = this.game.add.sprite(200, 150, 'enemigo');
+ 	pepito.events.mousePointer.isDown.add(clickListener);
+
+ 	function clickListener(){
+ 		console.log('hola');
+ 	}
  },
 
   update: function (){

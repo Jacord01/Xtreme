@@ -82,12 +82,18 @@ Protagonista.prototype.create = function (){
 }
 
 Protagonista.prototype.update = function (){
+  this.game.debug.text(this.juego.input.pointer1.x, 100, 100);
 
   if(this.juego.movil){
-     if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x >= this.juego.width / 2)
+     if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x >= this.juego.width / 2 &&
+      this.juego.input.pointer1.y >= this.juego.height / 1.5)
         this.mueveDcha = true;
-      else if(this.juego.input.pointer1.onDown && this.juego.input.mousePointer.x < this.juego.width / 2)
+      else if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.x < this.juego.width / 2 &&
+        this.juego.input.pointer1.y >= this.juego.height / 1.5)
         this.mueveIzda = true;
+
+      if(this.juego.input.pointer1.onDown && this.juego.input.pointer1.y < this.juego.height / 1.5)
+        this.salta = true;
     }
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
