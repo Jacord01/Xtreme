@@ -83,6 +83,12 @@ Protagonista.prototype.create = function (){
 
 Protagonista.prototype.update = function (){
 
+  if(this.juego.movil){
+     if(this.juego.input.pointer1.isDown && this.juego.input.pointer1.x >= this.juego.width / 2)
+        this.mueveDcha = true;
+      else if(this.juego.input.pointer1.isDown && this.juego.input.mousePointer.x < this.juego.width / 2)
+        this.mueveIzda = true;
+    }
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
