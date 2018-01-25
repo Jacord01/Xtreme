@@ -13,7 +13,6 @@ var juego; var jugador;
 var fullscreen;
 var vidaExtra;
 var vidas = [];
-var buttonDcha; var buttonIzda; var buttonSalto;
 
 HUD.create = function(game, jug){
 
@@ -115,53 +114,8 @@ HUD.create = function(game, jug){
  	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
- 	 if(juego.movil) HUD.creaBotonesMovil();
-
 }
 
-HUD.creaBotonesMovil = function(){
-
-	//Boton para Dcha
-    buttonDcha = juego.add.button(juego.world.centerX + 450, 650, 'button', modoMovilDcha, this, 2,1,0);
-    buttonDcha.animations.add('button');
-    buttonDcha.animations.play('button', 4, true );
-    buttonDcha.width = 150;
-    buttonDcha.height = 60;
-
-    //Boton para izda
-    buttonIzda = juego.add.button(juego.world.centerX - 600, 650, 'button', modoMovilIzda, this, 2,1,0);
-    buttonIzda.animations.add('button');
-    buttonIzda.animations.play('button', 4, true );
-    buttonIzda.width = 150;
-    buttonIzda.height = 60;
-
-    //Boton para salto
-    buttonSalto = juego.add.button(juego.world.centerX - 70, 650, 'button', modoMovilSalta, this, 2,1,0);
-    buttonSalto.animations.add('button');
-    buttonSalto.animations.play('button', 4, true );
-    buttonSalto.width = 150;
-    buttonSalto.height = 60;
-
-	 buttonDcha.onInputDown.add(modoMovilDcha, this);
-}
-
-
-function modoMovilDcha(){
-
-jugador.mueveDcha = true;
-}
-
-function modoMovilIzda(){
-
-	jugador.mueveIzda = true;
-
-}
-
-function modoMovilSalta(){
-
-	jugador.salta = true;
-
-}
 HUD.actualizaVida = function(jug){
 
 	//Hacemos visibles las vidas que tenga el jugador
@@ -917,6 +871,12 @@ Protagonista.prototype.create = function (){
 
 Protagonista.prototype.update = function (){
 
+  if(this.juego.movil){
+     if(this.juego.input.pointer1.isDown && this.juego.input.pointer1.x >= this.juego.width / 2)
+        this.mueveDcha = true;
+      else if(this.juego.input.pointer1.isDown && this.juego.input.mousePointer.x < this.juego.width / 2)
+        this.mueveIzda = true;
+    }
   //Si no hay inputs consideramos que el jugador está parado
 	 this.body.velocity.x = 0;
    this.vel = this.origVel - (this.orina * 10);
