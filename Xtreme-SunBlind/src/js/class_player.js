@@ -30,6 +30,9 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.agarrado = false;
   this.atacando = false;
   this.haAtacado = false;
+  this.mueveIzda = false;
+  this.mueveDcha = false;
+  this.salta = false;
   this.pis;
   this.create();
 }
@@ -114,7 +117,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || this.mueveIzda)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -126,7 +129,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown)
+    else if (cursors.right.isDown || this.mueveDcha)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -140,7 +143,7 @@ Protagonista.prototype.update = function (){
 
     }
 
-    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
+    if ((jumpButton.isDown || this.salta) && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -153,6 +156,10 @@ Protagonista.prototype.update = function (){
 
         this.body.velocity.y = -1000;
     }
+
+    this.salta = false;
+    this.mueveDcha = false;
+    this.mueveIzda = false;
 }
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
