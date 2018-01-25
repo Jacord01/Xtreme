@@ -9,14 +9,16 @@ var ebrio;
 var Temp1; var Temp2; 
 var AG; 
 var PA;
-var juego;
+var juego; var jugador;
 var fullscreen;
 var vidaExtra;
 var vidas = [];
+var buttonDcha; var buttonIzda; var buttonSalto;
 
-HUD.create = function(game){
+HUD.create = function(game, jug){
 
 	juego = game;
+	jugador = jug;
 
  	//VidasPlayer (el jugador siempre comienza con 3 vidas)
  	//Hacemos 2 bucles para colocar las vidas del jugador en la posición que deben tener
@@ -113,8 +115,53 @@ HUD.create = function(game){
  	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
+ 	 if(juego.movil) HUD.creaBotonesMovil();
+
 }
 
+HUD.creaBotonesMovil = function(){
+
+	//Boton para Dcha
+    buttonDcha = juego.add.button(juego.world.centerX + 450, 650, 'button', modoMovilDcha, this, 2,1,0);
+    buttonDcha.animations.add('button');
+    buttonDcha.animations.play('button', 4, true );
+    buttonDcha.width = 150;
+    buttonDcha.height = 60;
+
+    //Boton para izda
+    buttonIzda = juego.add.button(juego.world.centerX - 600, 650, 'button', modoMovilIzda, this, 2,1,0);
+    buttonIzda.animations.add('button');
+    buttonIzda.animations.play('button', 4, true );
+    buttonIzda.width = 150;
+    buttonIzda.height = 60;
+
+    //Boton para salto
+    buttonSalto = juego.add.button(juego.world.centerX - 70, 650, 'button', modoMovilSalta, this, 2,1,0);
+    buttonSalto.animations.add('button');
+    buttonSalto.animations.play('button', 4, true );
+    buttonSalto.width = 150;
+    buttonSalto.height = 60;
+
+	 buttonDcha.onInputDown.add(modoMovilDcha, this);
+}
+
+
+function modoMovilDcha(){
+
+jugador.mueveDcha = true;
+}
+
+function modoMovilIzda(){
+
+	jugador.mueveIzda = true;
+
+}
+
+function modoMovilSalta(){
+
+	jugador.salta = true;
+
+}
 HUD.actualizaVida = function(jug){
 
 	//Hacemos visibles las vidas que tenga el jugador
@@ -817,6 +864,9 @@ var Protagonista = function(game, entradax, entraday, entradasprite, dir, velx, 
   this.agarrado = false;
   this.atacando = false;
   this.haAtacado = false;
+  this.mueveIzda = false;
+  this.mueveDcha = false;
+  this.salta = false;
   this.pis;
   this.create();
 }
@@ -901,7 +951,7 @@ Protagonista.prototype.update = function (){
 
   if(!this.atacando){ //Si el protagonista no está atacando, puede moverse y saltar
 
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || this.mueveIzda)
     {
         facingRight = false; //Servriá para saber a dónde está mirando el protagonista a la hora de hacer pis
         this.body.velocity.x = -this.vel;
@@ -913,7 +963,7 @@ Protagonista.prototype.update = function (){
          if(this.orinando)
            this.pis.body.setSize(10,60, this.x - 270, this. y -620);
     }
-    else if (cursors.right.isDown)
+    else if (cursors.right.isDown || this.mueveDcha)
     {
         facingRight = true;
         this.body.velocity.x = this.vel;
@@ -927,7 +977,7 @@ Protagonista.prototype.update = function (){
 
     }
 
-    if (jumpButton.isDown && !this.agarrado && !this.orinando &&(this.body.onFloor() 
+    if ((jumpButton.isDown || this.salta) && !this.agarrado && !this.orinando &&(this.body.onFloor() 
       || this.body.touching.down))
 
     {
@@ -940,6 +990,10 @@ Protagonista.prototype.update = function (){
 
         this.body.velocity.y = -1000;
     }
+
+    this.salta = false;
+    this.mueveDcha = false;
+    this.mueveIzda = false;
 }
 
     if(!this.body.touching.down) //Si no toca el suelo, está saltando. Servirá para hacer pis
@@ -1856,6 +1910,8 @@ window.onload = function () {
     //Creamos el juego
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
 
+  game.movil = false; //Para poder jugar desde el movil
+
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('menu', Menu);
@@ -1928,8 +1984,20 @@ var menu = {
     punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
+
+     //Boton para el modo movil
+    buttonJuego = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
+    buttonJuego.animations.add('button');
+    buttonJuego.animations.play('button', 4, true );
+    buttonJuego.width = 150;
+    buttonJuego.height = 60;
  },
 };
+
+function modoMovil()
+{
+    juego.movil = !juego.movil;
+}
 
 function actionOnClickPunt (){
     //Abrimos la ventana de puntuaciones (ranking) cambiando de estado
@@ -2216,7 +2284,7 @@ var PlayScene = {
   jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
-  HUD.create(juego);
+  HUD.create(juego, jugador);
   cols.create(juego);
 
   //variables de audio

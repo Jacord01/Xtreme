@@ -110,7 +110,7 @@ var PlayScene = {
   jugador.body.setSize(25, 60, 15,-3);
 
   //Creamos el hud
-  HUD.create(juego);
+  HUD.create(juego, jugador);
   cols.create(juego);
 
   //variables de audio

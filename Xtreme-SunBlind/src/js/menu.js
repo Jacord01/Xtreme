@@ -62,8 +62,20 @@ var menu = {
     punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
+
+     //Boton para el modo movil
+    buttonJuego = juego.add.button(juego.world.centerX + 400, 300, 'button', modoMovil, this, 2,1,0);
+    buttonJuego.animations.add('button');
+    buttonJuego.animations.play('button', 4, true );
+    buttonJuego.width = 150;
+    buttonJuego.height = 60;
  },
 };
+
+function modoMovil()
+{
+    juego.movil = !juego.movil;
+}
 
 function actionOnClickPunt (){
     //Abrimos la ventana de puntuaciones (ranking) cambiando de estado

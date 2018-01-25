@@ -8,14 +8,16 @@ var ebrio;
 var Temp1; var Temp2; 
 var AG; 
 var PA;
-var juego;
+var juego; var jugador;
 var fullscreen;
 var vidaExtra;
 var vidas = [];
+var buttonDcha; var buttonIzda; var buttonSalto;
 
-HUD.create = function(game){
+HUD.create = function(game, jug){
 
 	juego = game;
+	jugador = jug;
 
  	//VidasPlayer (el jugador siempre comienza con 3 vidas)
  	//Hacemos 2 bucles para colocar las vidas del jugador en la posición que deben tener
@@ -112,8 +114,53 @@ HUD.create = function(game){
  	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
+ 	 if(juego.movil) HUD.creaBotonesMovil();
+
 }
 
+HUD.creaBotonesMovil = function(){
+
+	//Boton para Dcha
+    buttonDcha = juego.add.button(juego.world.centerX + 450, 650, 'button', modoMovilDcha, this, 2,1,0);
+    buttonDcha.animations.add('button');
+    buttonDcha.animations.play('button', 4, true );
+    buttonDcha.width = 150;
+    buttonDcha.height = 60;
+
+    //Boton para izda
+    buttonIzda = juego.add.button(juego.world.centerX - 600, 650, 'button', modoMovilIzda, this, 2,1,0);
+    buttonIzda.animations.add('button');
+    buttonIzda.animations.play('button', 4, true );
+    buttonIzda.width = 150;
+    buttonIzda.height = 60;
+
+    //Boton para salto
+    buttonSalto = juego.add.button(juego.world.centerX - 70, 650, 'button', modoMovilSalta, this, 2,1,0);
+    buttonSalto.animations.add('button');
+    buttonSalto.animations.play('button', 4, true );
+    buttonSalto.width = 150;
+    buttonSalto.height = 60;
+
+	 buttonDcha.onInputDown.add(modoMovilDcha, this);
+}
+
+
+function modoMovilDcha(){
+
+jugador.mueveDcha = true;
+}
+
+function modoMovilIzda(){
+
+	jugador.mueveIzda = true;
+
+}
+
+function modoMovilSalta(){
+
+	jugador.salta = true;
+
+}
 HUD.actualizaVida = function(jug){
 
 	//Hacemos visibles las vidas que tenga el jugador
