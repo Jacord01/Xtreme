@@ -65,7 +65,7 @@ var menu = {
     punt.height = 60;
 
     //Boton para movil
-    movil = juego.add.button(juego.world.centerX + 535, 300, 'button', movilClick, this, 2,1,0);
+    movil = juego.add.button(juego.world.centerX + 400, 300, 'button', movilClick, this, 2,1,0);
     movil.animations.add('button');
     movil.animations.play('button', 4, true );
     movil.width = 150;

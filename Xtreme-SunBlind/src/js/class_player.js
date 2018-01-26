@@ -86,19 +86,20 @@ Protagonista.prototype.create = function (){
 Protagonista.prototype.update = function (){
 
 if(this.juego.movil){
+  
   if(this.juego.input.pointer1.isDown || this.juego.input.pointer2.isDown){
 
-    if(this.game.input.pointer1.positionDown.x >= this.game.width / 2 &&
-      this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
+    if(this.game.input.pointer1.positionDown.x >= this.game.width / 5 * 4 &&
+      this.game.input.pointer1.positionDown.y > this.game.height / 1.3){
       this.derecha = true;
     }
-   else if(this.game.input.pointer1.positionDown.x < this.game.width / 2 &&
-      this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
+   else if(this.game.input.pointer1.positionDown.x < this.game.width / 5 &&
+      this.game.input.pointer1.positionDown.y > this.game.height / 1.3){
       this.izquierda = true;
     }
     
-    if(this.game.input.pointer1.position.y <= this.game.height / 1.5 || 
-      this.game.input.pointer2.position.y <= this.game.height / 1.5){
+    if((this.game.input.pointer1.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 )) || 
+      (this.game.input.pointer2.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 ))){
       this.salta = true;
     }
 

@@ -112,6 +112,10 @@ HUD.create = function(game){
  	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
+ 	 
+ 	 if(juego.movil){
+ 	 	var mov = game.add.sprite(0,0, 'movilHUD');
+ 	 }
 }
 
 HUD.actualizaVida = function(jug){

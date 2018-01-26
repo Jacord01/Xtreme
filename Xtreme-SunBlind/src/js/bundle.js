@@ -113,6 +113,10 @@ HUD.create = function(game){
  	 PA = game.add.sprite(0,0, 'Pausa');
  	 PA.visible = false;
 
+ 	 
+ 	 if(juego.movil){
+ 	 	var mov = game.add.sprite(0,0, 'movilHUD');
+ 	 }
 }
 
 HUD.actualizaVida = function(jug){
@@ -873,19 +877,20 @@ Protagonista.prototype.create = function (){
 Protagonista.prototype.update = function (){
 
 if(this.juego.movil){
+  
   if(this.juego.input.pointer1.isDown || this.juego.input.pointer2.isDown){
 
-    if(this.game.input.pointer1.positionDown.x >= this.game.width / 2 &&
-      this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
+    if(this.game.input.pointer1.positionDown.x >= this.game.width / 5 * 4 &&
+      this.game.input.pointer1.positionDown.y > this.game.height / 1.3){
       this.derecha = true;
     }
-   else if(this.game.input.pointer1.positionDown.x < this.game.width / 2 &&
-      this.game.input.pointer1.positionDown.y > this.game.height / 1.5){
+   else if(this.game.input.pointer1.positionDown.x < this.game.width / 5 &&
+      this.game.input.pointer1.positionDown.y > this.game.height / 1.3){
       this.izquierda = true;
     }
     
-    if(this.game.input.pointer1.position.y <= this.game.height / 1.5 || 
-      this.game.input.pointer2.position.y <= this.game.height / 1.5){
+    if((this.game.input.pointer1.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 )) || 
+      (this.game.input.pointer2.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 ))){
       this.salta = true;
     }
 
@@ -1814,6 +1819,7 @@ var PreloaderScene = {
     this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
     this.game.load.image('vidaExtra', 'images/vidaExtra.png');
     this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
+    this.game.load.image('movilHUD', 'images/Menus/movilHUD.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -1962,7 +1968,7 @@ var menu = {
     punt.height = 60;
 
     //Boton para movil
-    movil = juego.add.button(juego.world.centerX + 535, 300, 'button', movilClick, this, 2,1,0);
+    movil = juego.add.button(juego.world.centerX + 400, 300, 'button', movilClick, this, 2,1,0);
     movil.animations.add('button');
     movil.animations.play('button', 4, true );
     movil.width = 150;
