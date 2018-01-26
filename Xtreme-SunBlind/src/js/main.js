@@ -58,6 +58,7 @@ var PreloaderScene = {
     this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
     this.game.load.image('vidaExtra', 'images/vidaExtra.png');
     this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
+    this.game.load.image('movilHUD', 'images/Menus/movilHUD.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
@@ -128,6 +129,8 @@ var PreloaderScene = {
 window.onload = function () {
     //Creamos el juego
   var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game');
+
+  game.movil = false;
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);

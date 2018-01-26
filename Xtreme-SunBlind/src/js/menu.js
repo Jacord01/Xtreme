@@ -7,6 +7,7 @@ var Put = require('./puntuaciones');
 var buttonJuego; var buttonInfo; var pantalla; var punt; var muteb;
 var juego;
 var click; var back; var gameSound;
+var movil;
 
 var menu = {
 
@@ -62,8 +63,20 @@ var menu = {
     punt.animations.play('button', 4, true );
     punt.width = 150;
     punt.height = 60;
+
+    //Boton para movil
+    movil = juego.add.button(juego.world.centerX + 400, 300, 'button', movilClick, this, 2,1,0);
+    movil.animations.add('button');
+    movil.animations.play('button', 4, true );
+    movil.width = 150;
+    movil.height = 60;
  },
 };
+
+function movilClick(){
+    juego.movil = true;
+    movil.visible = false;
+}
 
 function actionOnClickPunt (){
     //Abrimos la ventana de puntuaciones (ranking) cambiando de estado
