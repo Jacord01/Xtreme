@@ -58,7 +58,7 @@ var PreloaderScene = {
     this.game.load.image('fondoRetrete', 'images/FondoRetrete.png');
     this.game.load.image('vidaExtra', 'images/vidaExtra.png');
     this.game.load.image('barraAgarrador', 'images/barraAgarrador.png');
-    this.game.load.image('movilHUD', 'images/Menus/movilHUD.png');
+    this.game.load.image('movilHUD', 'images/Menus/MovilHUD.png');
 
     //Enemigos
     this.game.load.spritesheet('tortuguita', 'images/tortuguita.png', 64,64, 3);
