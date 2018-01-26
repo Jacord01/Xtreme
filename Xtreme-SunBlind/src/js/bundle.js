@@ -965,6 +965,7 @@ if(this.juego.movil){
       || this.body.touching.down))
 
     {
+      this.salta = false; 
       this.animations.play('jump', 10 , true);
       var n = this.juego.rnd.integerInRange(0,1); //Aleatorio para los dos sonidos distintos de salto
       if (n === 0)
