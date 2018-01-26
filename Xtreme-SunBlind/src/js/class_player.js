@@ -99,7 +99,7 @@ if(this.juego.movil){
     }
     
     if((this.game.input.pointer1.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 )) || 
-      (this.game.input.pointer2.position.y > this.game.height / 1.3 &&  (this.game.input.pointer1.position.x  > this.game.width / 5 * 2 && this.game.input.pointer1.position.x  < (this.game.width / 5 * 3) + 30 ))){
+      (this.game.input.pointer2.position.y > this.game.height / 1.3 &&  (this.game.input.pointer2.position.x  > this.game.width / 5 * 2 && this.game.input.pointer2.position.x  < (this.game.width / 5 * 3) + 30 ))){
       this.salta = true;
     }
 
